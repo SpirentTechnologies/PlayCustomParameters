@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+
+  <extension
+        point="com.testingtech.ttworkbench.ttman.parameters.parameters">
+     <editor
+           class="ttworkbench.ttman.parameters.impl.IPv4EditorFactory"
+           description="Creates editor for IPv4 parameters with charstring and octetstring types."
+           name="IPv4 address">
+     </editor>
+     <editor
+           class="com.testingtech.ttworkbench.ttman.parameters.impl.IPv6EditorFactory"
+           description="Creates editor for IPv6 parameters with charstring and octetstring types."
+           name="IPv6 address">
+     </editor>
+     <validator
+           class="com.testingtech.ttworkbench.ttman.parameters.impl.IPv4ValidatorFactory"
+           description="IPv4 address validator"
+           name="IPv4 address">
+     </validator>
+     <validator
+           class="com.testingtech.ttworkbench.ttman.parameters.impl.IPv6ValidatorFactory"
+           description="IPv6 address validator"
+           name="IPv6 address">
+     </validator>
+     <valueprovider
+           class="com.testingtech.ttworkbench.ttman.parameters.impl.IPv4ParameterValueProviderFactory"
+           description="IPv4 address local addresses"
+           name="IPv4 local address">
+     </valueprovider>
+     <valueprovider
+           class="com.testingtech.ttworkbench.ttman.parameters.impl.IPv6ParameterValueProviderFactory"
+           description="IPv6 address local addresses"
+           name="IPv6 local address">
+     </valueprovider>
+  </extension>
+
+</plugin>
