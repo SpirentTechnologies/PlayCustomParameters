@@ -4,6 +4,8 @@
 
 
   <extension
+        id="PlayParameters"
+        name="PlayCustomParameters"
         point="com.testingtech.ttworkbench.ttman.parameters.parameters">
      <editor
            class="ttworkbench.ttman.parameters.impl.IPv4EditorFactory"

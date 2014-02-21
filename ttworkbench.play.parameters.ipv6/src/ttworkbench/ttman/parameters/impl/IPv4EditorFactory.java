@@ -29,7 +29,6 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 
 	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -53,8 +52,62 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 
 	@Override
 	public IParameterEditor create() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return new IParameterEditor() {
+			
+			@Override
+			public void setVisible(boolean theVisible) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void setEnabled(boolean theEnable) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isEnabled() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void setAttribute(String theName, String theValue) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void parametersChanged(List<IParameter> theParameters) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public String getTitle() {
+				return "IPv4 Editor";
+			}
+			
+			@Override
+			public String getDescription() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public void setParameter(IParameter theParameter) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
 	}
 
 }
