@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="parameter_framework" name="Parameter Framework" schema="schema/parameter_framework.exsd"/>
 
 
   <extension
@@ -37,6 +38,16 @@
            description="IPv6 address local addresses"
            name="IPv6 local address">
      </valueprovider>
+     <widget
+           class="ttworkbench.ttman.parameters.impl.DefaultWidgetFactory"
+           description="default widget that contains the rest of the editors"
+           name="default widget">
+     </widget>
+     <widget
+           class="ttworkbench.ttman.parameters.impl.IPv6WidgetFactory"
+           description="IPv6 widget is a tab in the properties view for IPv6 specific parameter settings."
+           name="IPv6 widget">
+     </widget>
   </extension>
 
 </plugin>
