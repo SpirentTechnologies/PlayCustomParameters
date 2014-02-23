@@ -30,6 +30,8 @@ import com.testingtech.ttworkbench.ttman.parameters.impl.ModelController;
 
 public class ModelComposer implements IModelComposer {
 
+	private static ModelComposer singleton = null;
+	
 	public static final String PARAMETER_FRAMEWORK = "ttworkbench.play.parameters.ipv6.parameter_framework"; //$NON-NLS-1$
 
 	private IModelController modelController;
@@ -122,7 +124,7 @@ public class ModelComposer implements IModelComposer {
 	@Override
 	public void assign(IParameterEditor theEditor, IParameter theParameter,
 			IWidget theWidget) {
-		theWidget.setEditors( editors)
+		//theWidget.setEditors( editors)
 		// TODO Auto-generated method stub
 
 	}
@@ -147,5 +149,11 @@ public class ModelComposer implements IModelComposer {
 			
 		}
 	}
+	
+	 public static ModelComposer getSingletonInstance() {
+		  if ( singleton == null)
+			singleton = new ModelComposer();  
+		  return singleton;
+	  }
 
 }

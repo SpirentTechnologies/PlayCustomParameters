@@ -3,6 +3,8 @@ package ttworkbench.play.parameters.ipv6;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import ttworkbench.ttman.parameters.impl.ModelComposer;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -13,6 +15,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private ParameterFilter parameterFilter = new ParameterFilter();
 	
 	/**
 	 * The constructor
@@ -25,8 +29,10 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
+		super.start(context);		
 		plugin = this;
+		ModelComposer.getSingletonInstance().getParameterModel().getParameters();
+		// parameterFilter.filter( ModelComposer.getSingletonInstance().getParameterModel().getParameters());
 	}
 
 	/*

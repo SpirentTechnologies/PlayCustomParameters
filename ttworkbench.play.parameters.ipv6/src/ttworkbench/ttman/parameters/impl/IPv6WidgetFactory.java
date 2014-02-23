@@ -54,6 +54,8 @@ public class IPv6WidgetFactory implements IWidgetFactory {
 		// TODO Auto-generated method stub
 		return new IWidget() {
 			
+			protected static final String TITLE = "IPv6 Widget";
+			
 			@Override
 			public void setVisible(boolean theVisible) {
 				// TODO Auto-generated method stub
@@ -104,8 +106,7 @@ public class IPv6WidgetFactory implements IWidgetFactory {
 			
 			@Override
 			public String getTitle() {
-				// TODO Auto-generated method stub
-				return null;
+				return TITLE;
 			}
 			
 			@Override
