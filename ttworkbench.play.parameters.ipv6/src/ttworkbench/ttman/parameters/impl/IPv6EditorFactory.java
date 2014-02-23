@@ -1,5 +1,6 @@
 package ttworkbench.ttman.parameters.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
@@ -8,6 +9,10 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditorFactory;
 
 public class IPv6EditorFactory implements IParameterEditorFactory {
+
+	private String title;
+	private String description;
+	private List<IAttribute> attributes = new ArrayList<IAttribute>();
 
 	public IPv6EditorFactory() {
 		// TODO Auto-generated constructor stub
@@ -20,39 +25,36 @@ public class IPv6EditorFactory implements IParameterEditorFactory {
 	}
 
 	@Override
-	public void setTitle(String theTitle) {
-		// TODO Auto-generated method stub
-
+	public void setTitle( String theTitle) {
+	  this.title = theTitle;	
 	}
 
 	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
-		return null;
+	  return title;
 	}
 
 	@Override
 	public void setDescription(String theDescription) {
-		// TODO Auto-generated method stub
-
+	  this.description = theDescription;
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return description;
 	}
 
 	@Override
 	public List<IAttribute> getAttributes() {
-		// TODO Auto-generated method stub
-		return null;
+	  return attributes ;
 	}
 
 	@Override
 	public IParameterEditor create() {
 		// TODO Auto-generated method stub
 		return new IParameterEditor() {
+			
+			private static final String TITLE = "IPv6 Parameter Editor";
 			
 			@Override
 			public void setVisible(boolean theVisible) {
@@ -92,8 +94,7 @@ public class IPv6EditorFactory implements IParameterEditorFactory {
 			
 			@Override
 			public String getTitle() {
-				// TODO Auto-generated method stub
-				return null;
+				return TITLE;
 			}
 			
 			@Override

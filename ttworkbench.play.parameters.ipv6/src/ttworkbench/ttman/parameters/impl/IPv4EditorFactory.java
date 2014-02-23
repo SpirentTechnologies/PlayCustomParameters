@@ -55,6 +55,8 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 		
 		return new IParameterEditor() {
 			
+			private static final String TITLE = "IPv4 Parameter Editor";
+			
 			@Override
 			public void setVisible(boolean theVisible) {
 				// TODO Auto-generated method stub
@@ -93,7 +95,7 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 			
 			@Override
 			public String getTitle() {
-				return "IPv4 Editor";
+				return TITLE;
 			}
 			
 			@Override

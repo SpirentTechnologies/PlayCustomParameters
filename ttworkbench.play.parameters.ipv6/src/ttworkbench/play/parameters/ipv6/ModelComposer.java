@@ -1,4 +1,4 @@
-package ttworkbench.ttman.parameters.impl;
+package ttworkbench.play.parameters.ipv6;
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +38,9 @@ public class ModelComposer implements IModelComposer {
 	private final Set<IParameterEditorFactory> editorFactories = new HashSet<IParameterEditorFactory>();
 	private final Set<IParameterValueProviderFactory> valueProviderFactories = new HashSet<IParameterValueProviderFactory>();
 	private final Set<IParameterValidatorFactory> parameterValidatorFactories = new HashSet<IParameterValidatorFactory>();
+	private final Set<IParameterEditor> assignedEditors = new HashSet<IParameterEditor>();
+	private final Set<IParameterValueProvider> assignedValueProviders = new HashSet<IParameterValueProvider>();
+	private final Set<IParameterValidator> assignedValidator = new HashSet<IParameterValidator>();
 	
 	public ModelComposer() {
 		super();
@@ -143,12 +146,6 @@ public class ModelComposer implements IModelComposer {
 
 	}
 	
-	private void initWidgets() {
-		Set<IWidget> widgets = getWidgets();
-		for (IWidget widget : widgets) {
-			
-		}
-	}
 	
 	 public static ModelComposer getSingletonInstance() {
 		  if ( singleton == null)
