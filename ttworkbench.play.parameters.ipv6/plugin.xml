@@ -6,37 +6,37 @@
         name="PlayCustomParameters"
         point="com.testingtech.ttworkbench.ttman.parameters.parameters">
      <editor
-           class="ttworkbench.ttman.parameters.impl.IPv4EditorFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv4EditorFactory"
            description="Creates editor for IPv4 parameters with charstring and octetstring types."
            name="IPv4 address">
      </editor>
      <editor
-           class="ttworkbench.ttman.parameters.impl.IPv6EditorFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv6EditorFactory"
            description="Creates editor for IPv6 parameters with charstring and octetstring types."
            name="IPv6 address">
      </editor>
      <validator
-           class="ttworkbench.ttman.parameters.impl.IPv4ValidatorFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv4ValidatorFactory"
            description="IPv4 address validator"
            name="IPv4 address">
      </validator>
      <validator
-           class="ttworkbench.ttman.parameters.impl.IPv6ValidatorFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv6ValidatorFactory"
            description="IPv6 address validator"
            name="IPv6 address">
      </validator>
      <valueprovider
-           class="ttworkbench.ttman.parameters.impl.IPv4ParameterValueProviderFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv4ParameterValueProviderFactory"
            description="IPv4 address local addresses"
            name="IPv4 local address">
      </valueprovider>
      <valueprovider
-           class="ttworkbench.ttman.parameters.impl.IPv6ParameterValueProviderFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv6ParameterValueProviderFactory"
            description="IPv6 address local addresses"
            name="IPv6 local address">
      </valueprovider>
      <composer
-           class="ttworkbench.play.parameters.ipv6.ConfigurationComposerFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.ConfigurationComposerFactory"
            description="IPv6 widget composer, creates a set of IPv6 specific Widgets"
            name="IPv6 widget composer">
      </composer>
