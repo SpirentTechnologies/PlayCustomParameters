@@ -70,6 +70,11 @@ public abstract class AbstractEditor implements IParameterEditor {
 	public void setParameter(IParameter theParameter) {
 		this.parameter = theParameter;
 	}
+	
+	@Override
+	public IParameter getParameter() {
+		return parameter;
+	}
 
 
 }

@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public abstract class AbstractWidget implements IWidget {
 	private String description;
 	private Image image;
 	private Set<IAttribute> attributes;
-	private Set<IParameterEditor> editors;
+	private Set<IParameterEditor> editors = new HashSet<IParameterEditor>();
 	private Set<IParameterValidator> validators;
 	private Set<IParameterValueProvider> valueProvider;
 	
@@ -60,15 +61,27 @@ public abstract class AbstractWidget implements IWidget {
 	public void setAttributes(Set<IAttribute> theAttributes) {
 		this.attributes = theAttributes;
 	}
+	
+	protected Set<IAttribute> getAttributes() {
+		return attributes;
+	}
 
 	@Override
-	public void setEditors(Set<IParameterEditor> theEditors) {
-		editors = theEditors;
+	public void addEditor( IParameterEditor theEditors) {
+		editors.add( theEditors);
+	}
+	
+	protected Set<IParameterEditor> getEditors() {
+		return editors;
 	}
 
 	@Override
 	public void setValidators(Set<IParameterValidator> theValidator) {
 		validators = theValidator;
+	}
+	
+	protected Set<IParameterValidator> getValidators() {
+		return validators;
 	}
 
 	@Override
@@ -76,6 +89,10 @@ public abstract class AbstractWidget implements IWidget {
 		valueProvider = theValueProvider;
 	}
 
+	protected Set<IParameterValueProvider> getValueProvider() {
+		return valueProvider;
+	}
+	
 	@Override
 	public abstract Control createControl(Composite theParent);
 

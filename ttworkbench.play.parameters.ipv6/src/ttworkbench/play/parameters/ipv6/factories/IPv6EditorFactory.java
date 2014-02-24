@@ -1,4 +1,4 @@
-package ttworkbench.ttman.parameters.impl;
+package ttworkbench.play.parameters.ipv6.factories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +107,12 @@ public class IPv6EditorFactory implements IParameterEditorFactory {
 			public void setParameter(IParameter theParameter) {
 				// TODO Auto-generated method stub
 				
+			}
+
+			@Override
+			public IParameter getParameter() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		};
 	}

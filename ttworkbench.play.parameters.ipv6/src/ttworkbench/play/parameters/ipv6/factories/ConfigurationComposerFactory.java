@@ -1,6 +1,8 @@
-package ttworkbench.play.parameters.ipv6;
+package ttworkbench.play.parameters.ipv6.factories;
 
 import java.util.List;
+
+import ttworkbench.play.parameters.ipv6.IPv6ConfigurationComposer;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
