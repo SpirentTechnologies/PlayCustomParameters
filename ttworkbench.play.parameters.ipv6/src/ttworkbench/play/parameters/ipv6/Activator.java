@@ -1,11 +1,7 @@
 package ttworkbench.play.parameters.ipv6;
 
-import java.util.Set;
-
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 
 /**
