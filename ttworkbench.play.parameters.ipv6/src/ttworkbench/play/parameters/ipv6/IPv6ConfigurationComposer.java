@@ -13,7 +13,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 
 public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
-	private static IWidget createAndComposeDefaultWidget( IConfigurator theConfigurator) {
+	private static void createAndComposeDefaultWidget( IConfigurator theConfigurator) {
 		IWidget defaultWidget = new DefaultWidget();
 		theConfigurator.addWidget( defaultWidget);
 		
@@ -22,13 +22,13 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		for (IParameter parameter : parameters) {
 			theConfigurator.assign( new DefaultEditor(), parameter, defaultWidget);	
 		}
-		
-		return defaultWidget;
 	}
 	
 	
-	private static IWidget createAndComposeIPv6Widget( IConfigurator theConfigurator) {
-	  return new IPv6Widget();
+	private static void createAndComposeIPv6Widget( IConfigurator theConfigurator) {
+		IWidget IPv6Widget = new IPv6Widget();
+		theConfigurator.addWidget( IPv6Widget);
+		
 	}
 	
 	@Override
