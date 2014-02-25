@@ -12,6 +12,7 @@ import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerCon
 import ttworkbench.play.parameters.ipv6.widgets.tableviewer.TableParameterColumnType;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 public class DefaultWidget extends AbstractWidget {
 
