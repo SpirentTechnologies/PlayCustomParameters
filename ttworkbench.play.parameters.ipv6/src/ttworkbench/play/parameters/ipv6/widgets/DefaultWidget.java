@@ -35,4 +35,10 @@ public class DefaultWidget extends AbstractWidget {
 		return theParameters;
 	}
 
+	@Override
+	public void addEditor(IParameterEditor theTheEditor) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

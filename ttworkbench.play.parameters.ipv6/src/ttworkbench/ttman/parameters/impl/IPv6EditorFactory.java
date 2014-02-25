@@ -3,7 +3,10 @@ package ttworkbench.ttman.parameters.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.widgets.Composite;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
+import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditorFactory;
@@ -105,6 +108,25 @@ public class IPv6EditorFactory implements IParameterEditorFactory {
 			
 			@Override
 			public void setParameter(IParameter theParameter) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public IParameter getParameter() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Composite createControl(Composite theTheParent,
+					Object... theParams) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void setConfiguration(IConfiguration theTheConfiguration) {
 				// TODO Auto-generated method stub
 				
 			}

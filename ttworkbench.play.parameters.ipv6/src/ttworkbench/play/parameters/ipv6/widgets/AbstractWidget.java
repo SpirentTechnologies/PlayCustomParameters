@@ -61,7 +61,6 @@ public abstract class AbstractWidget implements IWidget {
 		this.attributes = theAttributes;
 	}
 
-	@Override
 	public void setEditors(Set<IParameterEditor> theEditors) {
 		editors = theEditors;
 	}

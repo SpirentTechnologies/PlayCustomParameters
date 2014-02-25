@@ -71,5 +71,8 @@ public abstract class AbstractEditor implements IParameterEditor {
 		this.parameter = theParameter;
 	}
 
+	public IParameter getParameter() {
+		return parameter;
+	}
 
 }

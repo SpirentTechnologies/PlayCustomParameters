@@ -36,4 +36,10 @@ public class IPv6Widget extends AbstractWidget {
 		return null;
 	}
 
+	@Override
+	public void addEditor(IParameterEditor theTheEditor) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
