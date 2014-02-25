@@ -3,6 +3,8 @@ package ttworkbench.play.parameters.ipv6.factories;
 import java.util.ArrayList;
 import java.util.List;
 
+import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -51,70 +53,7 @@ public class IPv6EditorFactory implements IParameterEditorFactory {
 
 	@Override
 	public IParameterEditor create() {
-		// TODO Auto-generated method stub
-		return new IParameterEditor() {
-			
-			private static final String TITLE = "IPv6 Parameter Editor";
-			
-			@Override
-			public void setVisible(boolean theVisible) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void setEnabled(boolean theEnable) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public boolean isVisible() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public boolean isEnabled() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public void setAttribute(String theName, String theValue) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void parametersChanged(List<IParameter> theParameters) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public String getTitle() {
-				return TITLE;
-			}
-			
-			@Override
-			public String getDescription() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public void setParameter(IParameter theParameter) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public IParameter getParameter() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
+		return new IPv6Editor();
 	}
 
 }

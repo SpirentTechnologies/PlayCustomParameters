@@ -3,6 +3,9 @@ package ttworkbench.play.parameters.ipv6.editors;
 import java.util.List;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
+import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
+import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
+import com.testingtech.ttworkbench.ttman.parameters.api.IMediator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
@@ -15,7 +18,8 @@ public abstract class AbstractEditor implements IParameterEditor {
 	private String description;
 	private IAttribute attribute;
 	private IParameter parameter;
-
+	private IConfiguration configuration;
+	
 	
 	public AbstractEditor( final String theTitle, final String theDescription) {
 		super();
@@ -65,6 +69,7 @@ public abstract class AbstractEditor implements IParameterEditor {
 		// TODO Auto-generated method stub
 		
 	}
+	
 
 	@Override
 	public void setParameter(IParameter theParameter) {
@@ -75,6 +80,14 @@ public abstract class AbstractEditor implements IParameterEditor {
 	public IParameter getParameter() {
 		return parameter;
 	}
+	
+	@Override
+	public void setConfiguration(IConfiguration theConfiguration) {
+	  this.configuration = theConfiguration;
+	}
+	
+	
+
 
 
 }

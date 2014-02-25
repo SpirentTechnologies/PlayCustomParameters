@@ -2,7 +2,11 @@ package ttworkbench.play.parameters.ipv6.factories;
 
 import java.util.List;
 
+import org.eclipse.swt.widgets.Composite;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
+import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
+import com.testingtech.ttworkbench.ttman.parameters.api.IMediator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditorFactory;
@@ -115,6 +119,21 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
+			@Override
+			public Composite createControl(Composite theTheParent,
+					Object... theParams) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void setConfiguration(IConfiguration theTheConfiguration) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
 		};
 	}
 

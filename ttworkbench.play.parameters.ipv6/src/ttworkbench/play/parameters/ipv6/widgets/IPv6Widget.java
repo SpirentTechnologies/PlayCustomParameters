@@ -2,11 +2,18 @@ package ttworkbench.play.parameters.ipv6.widgets;
 
 import java.util.Set;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 
 public class IPv6Widget extends AbstractWidget {
@@ -21,8 +28,32 @@ public class IPv6Widget extends AbstractWidget {
 	
 	@Override
 	public Control createControl(Composite theParent) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		theParent.setLayout( new FillLayout(SWT.HORIZONTAL));
+		
+		ScrolledComposite scrolledComposite = new ScrolledComposite( theParent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		scrolledComposite.setExpandHorizontal( true);
+		scrolledComposite.setExpandVertical( true);
+		
+		
+		Composite editorContainer = new Composite( scrolledComposite, SWT.None);
+	
+		/*
+		 * TODO replace this later with the TableViewer component
+		 * final TableViewer tableViewer = new TableViewer( editorContainer);
+		 */
+		
+		GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, false);
+		editorContainer.setLayout( new GridLayout( 1, false));
+	    Set<IParameterEditor> editors = getEditors();
+	    for ( IParameterEditor editor : editors) {
+	    	editor.createControl( editorContainer, gridData, new GridLayout( 3, false));
+		}
+
+		scrolledComposite.setContent( editorContainer);
+		scrolledComposite.setMinSize( editorContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+				// TODO Auto-generated method stub
+		return scrolledComposite;
 	}
 
 	@Override
