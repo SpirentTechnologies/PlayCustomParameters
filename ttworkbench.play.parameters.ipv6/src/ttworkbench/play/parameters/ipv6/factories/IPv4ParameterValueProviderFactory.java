@@ -1,15 +1,16 @@
-package ttworkbench.ttman.parameters.impl;
+package ttworkbench.play.parameters.ipv6.factories;
 
 import java.util.List;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidatorFactory;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProviderFactory;
 
-public class IPv4ValidatorFactory implements IParameterValidatorFactory {
+public class IPv4ParameterValueProviderFactory implements
+		IParameterValueProviderFactory {
 
-	public IPv4ValidatorFactory() {
+	public IPv4ParameterValueProviderFactory() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -50,7 +51,7 @@ public class IPv4ValidatorFactory implements IParameterValidatorFactory {
 	}
 
 	@Override
-	public IParameterValidator create() {
+	public IParameterValueProvider create() {
 		// TODO Auto-generated method stub
 		return null;
 	}

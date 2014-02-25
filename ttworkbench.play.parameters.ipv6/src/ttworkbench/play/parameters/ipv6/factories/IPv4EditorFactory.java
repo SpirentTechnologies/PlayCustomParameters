@@ -1,6 +1,5 @@
-package ttworkbench.ttman.parameters.impl;
+package ttworkbench.play.parameters.ipv6.factories;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
@@ -11,53 +10,55 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditorFactory;
 
-public class IPv6EditorFactory implements IParameterEditorFactory {
+public class IPv4EditorFactory implements IParameterEditorFactory {
 
-	private String title;
-	private String description;
-	private List<IAttribute> attributes = new ArrayList<IAttribute>();
-
-	public IPv6EditorFactory() {
+	public IPv4EditorFactory() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public boolean isApplicable(IParameter<? extends Object> theParameter) {
+	public boolean isApplicable(IParameter<? extends Object> parameter) {
 		// TODO Auto-generated method stub
+		parameter.getType(); //"Module1.Type2"
+		parameter.getName(); //"Module1.Parameter2"
 		return false;
 	}
 
 	@Override
-	public void setTitle( String theTitle) {
-	  this.title = theTitle;	
+	public void setTitle(String title) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public String getTitle() {
-	  return title;
+		return null;
 	}
 
 	@Override
-	public void setDescription(String theDescription) {
-	  this.description = theDescription;
+	public void setDescription(String description) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public List<IAttribute> getAttributes() {
-	  return attributes ;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public IParameterEditor create() {
-		// TODO Auto-generated method stub
+		
 		return new IParameterEditor() {
 			
-			private static final String TITLE = "IPv6 Parameter Editor";
+			private static final String TITLE = "IPv4 Parameter Editor";
 			
 			@Override
 			public void setVisible(boolean theVisible) {
@@ -134,3 +135,4 @@ public class IPv6EditorFactory implements IParameterEditorFactory {
 	}
 
 }
+

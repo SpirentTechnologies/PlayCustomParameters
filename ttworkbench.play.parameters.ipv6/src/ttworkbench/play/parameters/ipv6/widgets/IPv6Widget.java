@@ -6,12 +6,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
-import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
+
 
 public class IPv6Widget extends AbstractWidget {
 
