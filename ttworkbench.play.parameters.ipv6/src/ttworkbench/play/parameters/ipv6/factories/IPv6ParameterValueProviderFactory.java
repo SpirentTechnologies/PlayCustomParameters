@@ -2,6 +2,8 @@ package ttworkbench.play.parameters.ipv6.factories;
 
 import java.util.List;
 
+import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ParameterValueProvider;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
@@ -53,7 +55,7 @@ public class IPv6ParameterValueProviderFactory implements
 	@Override
 	public IParameterValueProvider create() {
 		// TODO Auto-generated method stub
-		return null;
+		return new IPv6ParameterValueProvider();
 	}
 
 }

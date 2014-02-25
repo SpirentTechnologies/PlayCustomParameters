@@ -13,19 +13,29 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 
 public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
-	@Override
-	public void createWidgets(IConfigurator configurator) {
-		// first added widget will be set automatically as default widget.
+	private static IWidget createAndComposeDefaultWidget( IConfigurator theConfigurator) {
 		IWidget defaultWidget = new DefaultWidget();
-		configurator.addWidget( defaultWidget);
+		theConfigurator.addWidget( defaultWidget);
 		
 		// TODO: replace demo composition 
-		Set<IParameter> parameters = configurator.getParameterModel().getParameters();
+		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
-			configurator.assign( new DefaultEditor(), parameter, defaultWidget);	
+			theConfigurator.assign( new DefaultEditor(), parameter, defaultWidget);	
 		}
 		
-		configurator.addWidget(new IPv6Widget());
+		return defaultWidget;
+	}
+	
+	
+	private static IWidget createAndComposeIPv6Widget( IConfigurator theConfigurator) {
+	  return new IPv6Widget();
+	}
+	
+	@Override
+	public void createWidgets(IConfigurator theConfigurator) {
+		// first added widget will be set automatically as default widget.
+		createAndComposeDefaultWidget( theConfigurator);
+		createAndComposeIPv6Widget( theConfigurator);
 		
 		
 	}
