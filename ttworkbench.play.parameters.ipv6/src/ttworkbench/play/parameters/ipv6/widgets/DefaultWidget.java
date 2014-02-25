@@ -40,7 +40,7 @@ public class DefaultWidget extends AbstractWidget {
 		
 		Composite composite = new WidgetTableViewerControl(scrolledComposite)
 		
-			.addParamterEditorHolders("All parameters", getEditors())
+			.addParameterEditorHolders("All parameters", getEditors())
 			
 			.addTableColumn(TableParameterColumnType.COLUMN_PARAMETER_NAME, "Parameter Name")
 			.addTableColumn(TableParameterColumnType.COLUMN_PARAMETER_VALUE, "Value")

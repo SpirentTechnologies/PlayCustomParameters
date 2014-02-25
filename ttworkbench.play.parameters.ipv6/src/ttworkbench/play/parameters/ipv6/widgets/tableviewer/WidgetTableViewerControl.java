@@ -100,7 +100,7 @@ public class WidgetTableViewerControl {
 	}
 
 	
-	public WidgetTableViewerControl addParamterEditorHolders(String label, Collection<IParameterEditor> editors) {
+	public WidgetTableViewerControl addParameterEditorHolders(String label, Collection<IParameterEditor> editors) {
 		holders.add( new ParameterEditorHolder(label, editors));
 		return this;
 	}
