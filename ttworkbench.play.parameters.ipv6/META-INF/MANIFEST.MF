@@ -17,4 +17,4 @@ Require-Bundle: org.eclipse.ui,
  com.testingtech.ttworkbench.ttthree.aux;bundle-version="1.0.17",
  com.testingtech.ttworkbench.ttthree.core;bundle-version="1.0.28"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

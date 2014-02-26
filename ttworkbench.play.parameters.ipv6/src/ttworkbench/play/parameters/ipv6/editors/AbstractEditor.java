@@ -92,6 +92,4 @@ public abstract class AbstractEditor implements IParameterEditor {
 	
 	
 
-
-
 }

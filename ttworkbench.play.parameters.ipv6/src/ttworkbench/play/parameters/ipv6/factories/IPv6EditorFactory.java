@@ -2,10 +2,10 @@ package ttworkbench.play.parameters.ipv6.factories;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
-
+import org.eclipse.swt.widgets.Composite;
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
+import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditorFactory;

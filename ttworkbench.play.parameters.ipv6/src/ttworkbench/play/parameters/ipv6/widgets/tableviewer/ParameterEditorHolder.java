@@ -8,7 +8,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 public class ParameterEditorHolder {
 
-	private List<IParameterEditor> parameterEditors = new LinkedList<>();
+	private List<IParameterEditor> parameterEditors = new LinkedList<IParameterEditor>();
 	private String label;
 	
 	
