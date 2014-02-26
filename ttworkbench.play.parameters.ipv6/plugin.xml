@@ -26,12 +26,12 @@
            name="IPv6 address">
      </validator>
      <valueprovider
-           class="ttworkbench.play.parameters.ipv6.factories.IPv4ParameterValueProviderFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv4ValueProviderFactory"
            description="IPv4 address local addresses"
            name="IPv4 local address">
      </valueprovider>
      <valueprovider
-           class="ttworkbench.play.parameters.ipv6.factories.IPv6ParameterValueProviderFactory"
+           class="ttworkbench.play.parameters.ipv6.factories.IPv6ValueProviderFactory"
            description="IPv6 address local addresses"
            name="IPv6 local address">
      </valueprovider>

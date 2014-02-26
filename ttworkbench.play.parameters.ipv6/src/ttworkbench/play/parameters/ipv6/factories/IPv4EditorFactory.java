@@ -56,65 +56,65 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 	@Override
 	public IParameterEditor create() {
 		
-		return new IParameterEditor() {
-			
+		return new IParameterEditor<Integer>() {
+
 			private static final String TITLE = "IPv4 Parameter Editor";
-			
-			@Override
-			public void setVisible(boolean theVisible) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void setEnabled(boolean theEnable) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public boolean isVisible() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public boolean isEnabled() {
-				// TODO Auto-generated method stub
-				return false;
-			}
 			
 			@Override
 			public void setAttribute(String theName, String theValue) {
 				// TODO Auto-generated method stub
 				
 			}
-			
+
 			@Override
-			public void parametersChanged(List<IParameter> theParameters) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public String getTitle() {
-				return TITLE;
-			}
-			
-			@Override
-			public String getDescription() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public void setParameter(IParameter theParameter) {
+			public void parametersChanged(List<IParameter<?>> theParameters) {
 				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
-			public IParameter getParameter() {
+			public String getTitle() {
+				return TITLE;
+			}
+
+			@Override
+			public String getDescription() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void setEnabled(boolean theEnable) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public boolean isEnabled() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void setVisible(boolean theVisible) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void setParameter(IParameter<Integer> theParameter) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public IParameter<Integer> getParameter() {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -131,7 +131,15 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 				// TODO Auto-generated method stub
 				
 			}
+
+			@Override
+			public void update() {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		};
+				
 	}
 
 }

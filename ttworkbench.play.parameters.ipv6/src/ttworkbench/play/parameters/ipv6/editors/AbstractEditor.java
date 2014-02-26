@@ -1,15 +1,19 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMediator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 
-public abstract class AbstractEditor implements IParameterEditor {
+public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	private boolean enabled = true;
 	private boolean visible = true;
@@ -17,8 +21,9 @@ public abstract class AbstractEditor implements IParameterEditor {
 	private String title;
 	private String description;
 	private IAttribute attribute;
-	private IParameter parameter;
+	private IParameter<T> parameter;
 	private IConfiguration configuration;
+	private Set<T> values = new TreeSet<T>();
 	
 	
 	public AbstractEditor( final String theTitle, final String theDescription) {
@@ -65,19 +70,19 @@ public abstract class AbstractEditor implements IParameterEditor {
 	}
 
 	@Override
-	public void parametersChanged(List<IParameter> theParameters) {
+	public void parametersChanged(List<IParameter<?>> theParameters) {
 		// TODO Auto-generated method stub
 		
 	}
 	
 
 	@Override
-	public void setParameter(IParameter theParameter) {
+	public void setParameter(IParameter<T> theParameter) {
 		this.parameter = theParameter;
 	}
 	
 	@Override
-	public IParameter getParameter() {
+	public IParameter<T> getParameter() {
 		return parameter;
 	}
 	
@@ -89,7 +94,18 @@ public abstract class AbstractEditor implements IParameterEditor {
 	protected IConfiguration getConfiguration() {
 		return configuration;
 	}
-	
+
+	protected void loadProvidedValues() {
+		Set<IParameterValueProvider> competentValueProviders = configuration.getValueProviders( parameter);
+		for (IParameterValueProvider competentValueProvider : competentValueProviders) {
+			values.addAll( competentValueProvider.getAvailableValues( parameter));
+		}
+	}
+
+	@Override
+	public void update() {
+      loadProvidedValues();
+	}
 	
 
 }

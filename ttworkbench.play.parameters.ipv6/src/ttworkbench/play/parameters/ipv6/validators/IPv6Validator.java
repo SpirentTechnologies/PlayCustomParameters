@@ -15,7 +15,7 @@ public class IPv6Validator implements IParameterValidator {
 	}
 
 	@Override
-	public void parametersChanged(List<IParameter> theParameters) {
+	public void parametersChanged(List<IParameter<?>> theParameters) {
 		// TODO Auto-generated method stub
 		
 	}
