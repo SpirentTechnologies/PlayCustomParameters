@@ -12,6 +12,7 @@ import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerCon
 import ttworkbench.play.parameters.ipv6.widgets.tableviewer.TableParameterColumnType;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 public class DefaultWidget extends AbstractWidget {
 
@@ -58,10 +59,16 @@ public class DefaultWidget extends AbstractWidget {
 
 	
 
+	@Deprecated
 	@Override
 	protected Set<IParameter> filterRelevantParameters(Set<IParameter> theParameters) {
 		return theParameters;
 	}
 
+	@Override
+	public void addEditor(IParameterEditor theTheEditor) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

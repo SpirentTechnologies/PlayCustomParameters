@@ -3,6 +3,8 @@ package ttworkbench.play.parameters.ipv6;
 import java.util.Set;
 
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
+import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
+import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
 import ttworkbench.play.parameters.ipv6.widgets.DefaultWidget;
 import ttworkbench.play.parameters.ipv6.widgets.IPv6Widget;
 
@@ -28,7 +30,12 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	private static void createAndComposeIPv6Widget( IConfigurator theConfigurator) {
 		IWidget IPv6Widget = new IPv6Widget();
 		theConfigurator.addWidget( IPv6Widget);
-		
+
+		// TODO: replace demo composition 
+		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
+		for (IParameter parameter : parameters) {
+			theConfigurator.assign( new MacAddressEditor(), parameter, IPv6Widget);	
+		}
 	}
 	
 	@Override

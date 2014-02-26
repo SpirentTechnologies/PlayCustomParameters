@@ -38,16 +38,11 @@ public class IPv6Widget extends AbstractWidget {
 		
 		Composite editorContainer = new Composite( scrolledComposite, SWT.None);
 	
-		/*
-		 * TODO replace this later with the TableViewer component
-		 * final TableViewer tableViewer = new TableViewer( editorContainer);
-		 */
-		
 		GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, false);
 		editorContainer.setLayout( new GridLayout( 1, false));
 	    Set<IParameterEditor> editors = getEditors();
 	    for ( IParameterEditor editor : editors) {
-	    	editor.createControl( editorContainer, gridData, new GridLayout( 3, false));
+	    	editor.createControl( editorContainer, gridData, new GridLayout( 1, false));
 		}
 
 		scrolledComposite.setContent( editorContainer);
@@ -61,6 +56,12 @@ public class IPv6Widget extends AbstractWidget {
 			Set<IParameter> theParameters) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void addEditor(IParameterEditor theTheEditor) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

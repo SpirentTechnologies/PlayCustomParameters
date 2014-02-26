@@ -111,6 +111,7 @@ public abstract class AbstractWidget implements IWidget {
 		return image;
 	}
 	
+	@Deprecated
 	protected abstract Set<IParameter> filterRelevantParameters( Set<IParameter> theParameters);
 
 }

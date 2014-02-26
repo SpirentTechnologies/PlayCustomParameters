@@ -86,6 +86,10 @@ public abstract class AbstractEditor implements IParameterEditor {
 	  this.configuration = theConfiguration;
 	}
 	
+	protected IConfiguration getConfiguration() {
+		return configuration;
+	}
+	
 	
 
 
