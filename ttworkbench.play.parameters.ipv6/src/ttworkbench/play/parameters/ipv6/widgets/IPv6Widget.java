@@ -22,8 +22,36 @@ public class IPv6Widget extends AbstractWidget {
 	private static final String DESCRIPTION = "";
 	private static final Image IMAGE = null;
 	
+	private Composite editorContainer;
+	
 	public IPv6Widget() {
 		super( TITLE, DESCRIPTION, IMAGE);
+	}
+	
+	@Override
+	public void update() {
+	    // TODO better add editors incremental
+		deleteParameterEditors();
+		createParameterEditors();
+	}
+	
+	private void deleteParameterEditors() {
+		if ( editorContainer != null) {	
+		 Control[] controls = editorContainer.getChildren();
+			for (Control control : controls) {
+			  control.dispose();	
+			}
+		}
+	}
+
+	private void createParameterEditors() {
+		GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, false);
+		if ( editorContainer != null) {	
+			Set<IParameterEditor> editors = getEditors();
+			for ( IParameterEditor editor : editors) {
+				editor.createControl( editorContainer, gridData, new GridLayout( 1, false));
+			}
+		}
 	}
 	
 	@Override
@@ -36,14 +64,10 @@ public class IPv6Widget extends AbstractWidget {
 		scrolledComposite.setExpandVertical( true);
 		
 		
-		Composite editorContainer = new Composite( scrolledComposite, SWT.None);
-	
-		GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, false);
+	    editorContainer = new Composite( scrolledComposite, SWT.None);
 		editorContainer.setLayout( new GridLayout( 1, false));
-	    Set<IParameterEditor> editors = getEditors();
-	    for ( IParameterEditor editor : editors) {
-	    	editor.createControl( editorContainer, gridData, new GridLayout( 1, false));
-		}
+	    
+        createParameterEditors();
 
 		scrolledComposite.setContent( editorContainer);
 		scrolledComposite.setMinSize( editorContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
@@ -58,10 +82,5 @@ public class IPv6Widget extends AbstractWidget {
 		return null;
 	}
 
-	@Override
-	public void addEditor(IParameterEditor theTheEditor) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

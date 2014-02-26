@@ -23,6 +23,12 @@ public class DefaultWidget extends AbstractWidget {
 	public DefaultWidget() {
 		super( TITLE, DESCRIPTION, IMAGE);
 	}
+	
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public Control createControl(Composite theParent) {
@@ -63,12 +69,6 @@ public class DefaultWidget extends AbstractWidget {
 	@Override
 	protected Set<IParameter> filterRelevantParameters(Set<IParameter> theParameters) {
 		return theParameters;
-	}
-
-	@Override
-	public void addEditor(IParameterEditor theTheEditor) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

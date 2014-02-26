@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -69,6 +70,7 @@ public abstract class AbstractWidget implements IWidget {
 	@Override
 	public void addEditor( IParameterEditor theEditors) {
 		editors.add( theEditors);
+		
 	}
 	
 	protected Set<IParameterEditor> getEditors() {
@@ -93,7 +95,6 @@ public abstract class AbstractWidget implements IWidget {
 		return valueProvider;
 	}
 	
-	@Override
 	public abstract Control createControl(Composite theParent);
 
 	@Override
@@ -113,5 +114,6 @@ public abstract class AbstractWidget implements IWidget {
 	
 	@Deprecated
 	protected abstract Set<IParameter> filterRelevantParameters( Set<IParameter> theParameters);
+	
 
 }

@@ -39,12 +39,11 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	}
 	
 	@Override
+	// TODO refactor: rename method to "compose()" ?
 	public void createWidgets(IConfigurator theConfigurator) {
 		// first added widget will be set automatically as default widget.
 		createAndComposeDefaultWidget( theConfigurator);
 		createAndComposeIPv6Widget( theConfigurator);
-		
-		
 	}
 
 }
