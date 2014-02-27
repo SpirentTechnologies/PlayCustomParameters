@@ -39,7 +39,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// TODO: replace demo composition 
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
-			theConfigurator.assign( new MacAddressEditor(), parameter, IPv6Widget);
+			theConfigurator.assign( new IPv6Editor(), parameter, IPv6Widget);
 		}
 		theConfigurator.assign( new IPv6Validator(), new ArrayList<IParameter>(parameters), IPv6Widget);
 		theConfigurator.assign( new IPv6ValueProvider(), new ArrayList<IParameter>(parameters), IPv6Widget);
@@ -48,9 +48,11 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	@Override
 	// TODO refactor: rename method to "compose()" ?
 	public void createWidgets(IConfigurator theConfigurator) {
+		theConfigurator.beginConfigure();
 		// first added widget will be set automatically as default widget.
 		createAndComposeDefaultWidget( theConfigurator);
 		createAndComposeIPv6Widget( theConfigurator);
+		theConfigurator.endConfigure();
 	}
 
 }

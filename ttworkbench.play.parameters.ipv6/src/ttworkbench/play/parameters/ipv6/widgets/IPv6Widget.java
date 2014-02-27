@@ -11,6 +11,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -33,6 +34,7 @@ public class IPv6Widget extends AbstractWidget {
 	    // TODO better add editors incremental
 		deleteParameterEditors();
 		createParameterEditors();
+		
 	}
 	
 	private void deleteParameterEditors() {
@@ -45,33 +47,32 @@ public class IPv6Widget extends AbstractWidget {
 	}
 
 	private void createParameterEditors() {
-		GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, false);
+		GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
+		GridLayout gridLayout = new GridLayout( 1, false);
+		gridLayout.makeColumnsEqualWidth = false;
 		if ( editorContainer != null) {	
 			Set<IParameterEditor> editors = getEditors();
 			for ( IParameterEditor editor : editors) {
-				editor.createControl( editorContainer, gridData, new GridLayout( 1, false));
+				editor.createControl( editorContainer, gridData, gridLayout);
 			}
+			editorContainer.setSize( editorContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+			editorContainer.layout();
 		}
 	}
 	
 	@Override
 	public Control createControl(Composite theParent) {
-		
+
 		theParent.setLayout( new FillLayout(SWT.HORIZONTAL));
-		
-		ScrolledComposite scrolledComposite = new ScrolledComposite( theParent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		scrolledComposite.setExpandHorizontal( true);
-		scrolledComposite.setExpandVertical( true);
-		
-		
+
+	    ScrolledComposite scrolledComposite = new ScrolledComposite( theParent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 	    editorContainer = new Composite( scrolledComposite, SWT.None);
 		editorContainer.setLayout( new GridLayout( 1, false));
 	    
         createParameterEditors();
-
-		scrolledComposite.setContent( editorContainer);
-		scrolledComposite.setMinSize( editorContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-				// TODO Auto-generated method stub
+        
+	    scrolledComposite.setContent( editorContainer);
+		
 		return scrolledComposite;
 	}
 

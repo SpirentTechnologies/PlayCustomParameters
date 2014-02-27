@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
@@ -30,6 +29,10 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 		super();
 		this.title = theTitle;
 		this.description = theDescription;
+	}
+	
+	protected Set<T> getValues() {
+		return values;
 	}
 	
 	@Override
@@ -96,9 +99,11 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	}
 
 	protected void loadProvidedValues() {
-		Set<IParameterValueProvider> competentValueProviders = configuration.getValueProviders( parameter);
-		for (IParameterValueProvider competentValueProvider : competentValueProviders) {
-			values.addAll( competentValueProvider.getAvailableValues( parameter));
+		if ( configuration != null) {
+			Set<IParameterValueProvider> competentValueProviders = configuration.getValueProviders( parameter);
+			for (IParameterValueProvider competentValueProvider : competentValueProviders) {
+				values.addAll( competentValueProvider.getAvailableValues( parameter));
+			}
 		}
 	}
 
