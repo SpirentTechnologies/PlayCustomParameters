@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -8,11 +9,14 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMediator;
+import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
-public abstract class AbstractEditor<T> implements IParameterEditor<T> {
+public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessageHandler {
 
 	private boolean enabled = true;
 	private boolean visible = true;
@@ -110,6 +114,24 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	@Override
 	public void update() {
       loadProvidedValues();
+      // validate();
+	}
+	
+	protected List<ValidationResult> validate() {
+		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+		if ( configuration != null) {
+			Set<IParameterValidator> validators = configuration.getValidators( parameter);
+			for (IParameterValidator validator : validators) {
+				validationResults.addAll( validator.validate( parameter));
+			}
+		}
+		return validationResults;
+	}
+	
+	@Override
+	public void report(IParameterValidator theValidator,
+			Set<ValidationResult> theValidationResult, IParameter theParameter) {
+		System.out.println( String.format("Validator %s reported %d validation results for parameter %s.", theValidator.getTitle(), theValidationResult.size(), theParameter.getName()));
 	}
 	
 

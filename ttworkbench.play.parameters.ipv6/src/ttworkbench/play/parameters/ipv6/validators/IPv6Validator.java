@@ -1,41 +1,25 @@
 package ttworkbench.play.parameters.ipv6.validators;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
-public class IPv6Validator implements IParameterValidator {
+public class IPv6Validator extends AbstractValidator {
 
-	@Override
-	public void setAttribute(String theName, String theValue) {
-		// TODO Auto-generated method stub
-		
+	private static final String TITLE = "IPv6 Validator";
+	private static final String DESCRIPTION = "";
+	
+	public IPv6Validator() {
+		super( TITLE, DESCRIPTION);
 	}
 
 	@Override
-	public void parametersChanged(List<IParameter<?>> theParameters) {
-		// TODO Auto-generated method stub
-		
+	protected List<ValidationResult> validateParameter(IParameter theParameter) {
+		return new ArrayList<ValidationResult>();
 	}
 
-	@Override
-	public String getTitle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ValidationResult> validate(IParameter theParameter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
