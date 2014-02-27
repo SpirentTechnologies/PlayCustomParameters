@@ -53,7 +53,7 @@ public class IPv6Editor extends AbstractEditor<String> {
 		label.setLayoutData( layoutData);
 		
 		label = new CLabel( container, SWT.LEFT);
-		label.setText( this.getParameter().getValue().toString());
+		label.setText( this.getParameter().getValue());
 		label.setLayoutData( layoutData);
 		
 		String valueString = "";

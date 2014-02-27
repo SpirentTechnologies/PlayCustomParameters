@@ -32,6 +32,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
 			theConfigurator.assign( new DefaultEditor(), parameter, defaultWidget);	
+			System.out.println( String.format("name: %-80s \t\t type: %-30s \t\t default value: %s", parameter.getName(), parameter.getType(), ((com.testingtech.muttcn.statements.impl.ConstDeclarationImpl)parameter.getDefaultValue()).basicGetTheValue()));
 		}
 	}
 	
@@ -39,7 +40,6 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	private static void createAndComposeIPv6Widget( IConfigurator theConfigurator) {
 		IWidget IPv6Widget = new IPv6Widget();
 		theConfigurator.addWidget( IPv6Widget);
-
 		
 		IParameterValidator njetValidator = new AbstractValidator( "No Validator", ""){
             @Override
@@ -48,7 +48,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 					l.add( new ValidationResult( "nay-sayer", ErrorKind.error));
 					return l;
 			}
-			
+            
 		};
 		
 		IParameterValidator yeahValidator = new AbstractValidator("Yes Validator", ""){
@@ -91,7 +91,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		theConfigurator.beginConfigure();
 		// first added widget will be set automatically as default widget.
 		createAndComposeDefaultWidget( theConfigurator);
-		createAndComposeIPv6Widget( theConfigurator);
+		//createAndComposeIPv6Widget( theConfigurator);
 		theConfigurator.endConfigure();
 	}
 
