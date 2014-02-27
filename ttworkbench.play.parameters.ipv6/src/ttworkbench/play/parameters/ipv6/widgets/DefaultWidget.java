@@ -59,7 +59,6 @@ public class DefaultWidget extends AbstractWidget {
 		
 
 		scrolledComposite.setContent( composite);
-		scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		return scrolledComposite;
 	}
 
