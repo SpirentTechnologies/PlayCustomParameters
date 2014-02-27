@@ -8,8 +8,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerControl;
-import ttworkbench.play.parameters.ipv6.widgets.tableviewer.TableParameterColumnType;
+import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerAdvancedControl;
+import ttworkbench.play.parameters.ipv6.widgets.tableviewer.ParameterEditorColumnType;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -45,15 +45,17 @@ public class DefaultWidget extends AbstractWidget {
 			.getComposite();
 		*/
 		
-		Composite composite = new WidgetTableViewerControl(scrolledComposite)
 		
-			.addParameterEditorHolders("All parameters", getEditors())
+		Composite composite = new WidgetTableViewerAdvancedControl(scrolledComposite)
+		
+		
+			.addParameterEditorHolders("All parameters", getEditors().toArray( new IParameterEditor<?>[0] ))
 			
-			.addTableColumn(TableParameterColumnType.COLUMN_PARAMETER_NAME, "Parameter Name")
-			.addTableColumn(TableParameterColumnType.COLUMN_PARAMETER_VALUE, "Value")
-			.addTableColumn(TableParameterColumnType.COLUMN_PARAMETER_DEFAULT, "Default")
-			.addTableColumn(TableParameterColumnType.COLUMN_PARAMETER_TYPE, "Type")
-			.addTableColumn(TableParameterColumnType.COLUMN_PARAMETER_DESCRIPTION, "Description")
+			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_NAME, "Parameter Name")
+			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_VALUE, "Value")
+			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_DEFAULT, "Default")
+			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_TYPE, "Type")
+			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_DESCRIPTION, "Description")
 			
 			.getComposite();
 		

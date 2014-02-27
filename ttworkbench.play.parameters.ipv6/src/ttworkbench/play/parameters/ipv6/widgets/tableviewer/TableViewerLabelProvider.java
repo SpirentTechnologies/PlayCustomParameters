@@ -28,8 +28,8 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 	}
 
 
-	private LinkedList<TableParameterColumnType> registeredColumns = new LinkedList<TableParameterColumnType>(); 
-	public void addColumn(TableParameterColumnType columnType) {
+	private LinkedList<ParameterEditorColumnType> registeredColumns = new LinkedList<ParameterEditorColumnType>(); 
+	public void addColumn(ParameterEditorColumnType columnType) {
 		registeredColumns.add( columnType);
 	}
 	
@@ -43,8 +43,8 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 	 * @return String
 	 */
 	public String getColumnText(Object element, int columnIndex) {
-		IParameterEditor editor = (IParameterEditor) element;
-		return String.valueOf( TableParameterColumnType.valueOf( registeredColumns.get( columnIndex), editor));
+		IParameterEditor<?> editor = (IParameterEditor<?>) element;
+		return String.valueOf( registeredColumns.get( columnIndex).valueOf( editor));
 	}
 
 	/**

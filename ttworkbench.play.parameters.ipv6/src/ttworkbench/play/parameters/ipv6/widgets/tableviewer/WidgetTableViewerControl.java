@@ -19,11 +19,11 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 public class WidgetTableViewerControl {
 
 
-	private class ColumnDefinition {
-		public TableParameterColumnType columnType;
+	protected class ColumnDefinition {
+		public ParameterEditorColumnType columnType;
 		public String name;
 		public int direction;
-		public ColumnDefinition(TableParameterColumnType columnType, String name, int direction) {
+		public ColumnDefinition(ParameterEditorColumnType columnType, String name, int direction) {
 			this.columnType = columnType;
 			this.name = name;
 			this.direction = direction;
@@ -61,7 +61,7 @@ public class WidgetTableViewerControl {
 		combo.setLayoutData( new GridData( GridData.FILL_HORIZONTAL));
 
 		// Set the content and label providers
-		tv = new TableViewer( composite, SWT.None);
+		tv = new TableViewer( composite, SWT.FULL_SELECTION);
 		
 		tv.setContentProvider( new TableViewerContentProvider());
 		tv.setLabelProvider( parameterLabelProvider);
@@ -72,11 +72,13 @@ public class WidgetTableViewerControl {
 	}
 
 	
+	public TableViewer getTableViewer() {
+		return tv;
+	}
 
 	private void configureTableColumns() {
 		for(final ColumnDefinition coldef : columnDefinitions) {
-			TableColumn tc = new TableColumn( tv.getTable(), coldef.direction);
-			tc.setText( coldef.name);
+			TableColumn tc = createTableViewerColumn(coldef);
 			tc.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent event) {
 					( (TableViewerSorter) tv.getSorter()).doSort( coldef.columnType);
@@ -87,20 +89,29 @@ public class WidgetTableViewerControl {
 		}
 	}
 
-
 	
-	public WidgetTableViewerControl addTableColumn(TableParameterColumnType columnType, String name) {
+	protected TableColumn createTableViewerColumn(ColumnDefinition coldef) {
+		TableColumn tc = new TableColumn( tv.getTable(), coldef.direction);
+		tc.setText( coldef.name);
+		return tc;
+	}
+
+	public WidgetTableViewerControl addTableColumn(ParameterEditorColumnType columnType, String name) {
 		addTableColumn(columnType, name, SWT.LEFT);
 		return this;
 	}
 	
-	public WidgetTableViewerControl addTableColumn(TableParameterColumnType columnType, String name, int direction) {
+	public WidgetTableViewerControl addTableColumn(ParameterEditorColumnType columnType, String name, int direction) {
 		columnDefinitions.add( new ColumnDefinition(columnType, name, direction));
 		return this;
 	}
 
-	
-	public WidgetTableViewerControl addParameterEditorHolders(String label, Collection<IParameterEditor> editors) {
+
+	public WidgetTableViewerControl addParameterEditorHolders(String label, Collection<IParameterEditor<?>> editors) {
+		holders.add( new ParameterEditorHolder(label, editors.toArray( new IParameterEditor<?>[0])));
+		return this;
+	}
+	public WidgetTableViewerControl addParameterEditorHolders(String label, IParameterEditor<?>... editors) {
 		holders.add( new ParameterEditorHolder(label, editors));
 		return this;
 	}

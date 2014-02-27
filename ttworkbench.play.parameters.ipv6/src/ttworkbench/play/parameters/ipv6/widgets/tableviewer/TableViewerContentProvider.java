@@ -18,7 +18,7 @@ public class TableViewerContentProvider implements IStructuredContentProvider {
    */
   public Object[] getElements(Object arg0) {
     // Returns all the players in the specified team
-    return ((ParameterEditorHolder) arg0).getParameterEditors().toArray();
+    return ((ParameterEditorHolder) arg0).getParameterEditors();
   }
 
   /**

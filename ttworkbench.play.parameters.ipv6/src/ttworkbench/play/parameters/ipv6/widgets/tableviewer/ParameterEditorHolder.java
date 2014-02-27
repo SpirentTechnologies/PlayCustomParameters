@@ -1,24 +1,20 @@
 package ttworkbench.play.parameters.ipv6.widgets.tableviewer;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 public class ParameterEditorHolder {
 
-	private List<IParameterEditor> parameterEditors = new LinkedList<IParameterEditor>();
+	private IParameterEditor<?>[] parameterEditors = new IParameterEditor<?>[0];
 	private String label;
 	
 	
-	public ParameterEditorHolder(String label, Collection<IParameterEditor> editors) {
+	public ParameterEditorHolder(String label, IParameterEditor<?>... editors) {
 		this.label = label;
-		this.parameterEditors.addAll(editors);
+		this.parameterEditors = editors;
 	}
 
 
-	public List<IParameterEditor> getParameterEditors() {
+	public IParameterEditor<?>[] getParameterEditors() {
 		return parameterEditors;
 	}
 
