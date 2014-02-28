@@ -12,7 +12,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 public class TableViewerSorter extends ViewerSorter {
 	private static final int ASCENDING = 0;
 	private static final int DESCENDING = 1;
-	private TableParameterColumnType column;
+	private ParameterEditorColumnType column;
 	private int direction;
 
 	public TableViewerSorter() {
@@ -27,7 +27,7 @@ public class TableViewerSorter extends ViewerSorter {
 	 * 
 	 * @param column
 	 */
-	public void doSort(TableParameterColumnType column) {
+	public void doSort(ParameterEditorColumnType column) {
 		if (column == this.column) {
 			// Same column as last sort; toggle the direction
 			direction = 1 - direction;
@@ -42,15 +42,13 @@ public class TableViewerSorter extends ViewerSorter {
 	 * Compares the object for sorting
 	 */
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		IParameterEditor p1 = (IParameterEditor) e1;
-		IParameterEditor p2 = (IParameterEditor) e2;
+		IParameterEditor<?> p1 = (IParameterEditor<?>) e1;
+		IParameterEditor<?> p2 = (IParameterEditor<?>) e2;
 
-		int rc = 0;
-
-		Object v1 = TableParameterColumnType.valueOf(column, p1);
-		Object v2 = TableParameterColumnType.valueOf(column, p2);
-		rc = String.valueOf( v1).compareTo( String.valueOf( v2));
-		
+		int rc = column!=null
+				? String.valueOf( column.valueOf( p1)).compareTo( String.valueOf( column.valueOf( p2)))
+				: 0;
+				
 		// If descending order, flip the direction
 		if (direction == DESCENDING)
 			rc = -rc;
