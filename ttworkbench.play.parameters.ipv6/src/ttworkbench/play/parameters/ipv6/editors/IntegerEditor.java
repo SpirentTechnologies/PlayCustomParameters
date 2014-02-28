@@ -2,6 +2,9 @@ package ttworkbench.play.parameters.ipv6.editors;
 
 import java.math.BigInteger;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -13,9 +16,12 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 
 import com.testingtech.muttcn.statements.ConstDeclaration;
 import com.testingtech.muttcn.values.IntegerValue;
@@ -26,9 +32,10 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	
 	/**
+	 * Use this enum instead of a ValueProvider, cause to check against all possible integers values is far from being efficient like test the codomain boundaries.
 	 * @see module /TTsuite-IPv6_1.1.3/ttcn3/Library/LibCommon/LibCommon_BasicTypesAndValues.ttcn3
 	 */
-	private enum IntegerType {
+	public enum IntegerType {
 		UNDEFINED( "Undefined", +0L, -0L),
 		
 		// unsigned integer
@@ -140,7 +147,10 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 
 	private static final String TITLE = "Integer Editor";
 	private static final String DESCRIPTION = "";
-	private static IntegerType integerType = IntegerType.UNSIGNED_INT;
+	
+	private IntegerType integerType = IntegerType.UNSIGNED_INT;
+	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
+	private Runnable validationTask = null;
 	
 	public IntegerEditor() {
 		super( TITLE, DESCRIPTION);
@@ -196,11 +206,54 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		
 		return layoutData;
 	}
+	
 
+	private Listener createDelayedValidationListener(final int theDelayInSeconds) {
+		return new Listener() {
+
+			@Override
+			public void handleEvent(Event theArg0) {
+				validateDelayed();
+			}
+
+			private void validateDelayed() {
+				validationTask = new Runnable() {
+					public void run() {
+						if (this.equals( validationTask)) {
+							// this happens only if no further task was scheduled later
+							validate();
+						}
+					}
+				};
+				validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
+			}
+		};
+	}
+	
+	
+	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
+		Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
+		text.setText( getParameter().getValue().getTheNumber().toString());
+		text.setTextLimit( integerType.getMaxValue().toString().length());
+		text.setLayoutData( theLayoutData);
+		text.addListener( SWT.CHANGED, createDelayedValidationListener( 2));
+	}
+	
+	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
+		Spinner spinner = new Spinner ( theComposite, SWT.BORDER);
+		spinner.setMinimum( integerType.getMinValue().intValue());
+		spinner.setMaximum( integerType.getMaxValue().intValue());
+		spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
+		spinner.setIncrement( 1);
+		spinner.setPageIncrement( 100);
+		spinner.setTextLimit( integerType.getMaxValue().toString().length());
+		spinner.setLayoutData( theLayoutData);
+		spinner.addListener( SWT.Verify, createDelayedValidationListener( 2));
+	}
+	
+	
 	@Override
 	public Composite createControl(Composite theParent, Object... theParams) {
-		
-		// TODO solve problems with GridLayout: Width of each cell in a row has the width of the smallest cell. 
 		
 		Layout layout = extractLayoutFromParams( new RowLayout(), theParams);
 		Object[] layoutData = extractLayoutDataFromParams( new RowData(), 3, theParams);
@@ -214,23 +267,11 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		
 		if ( integerType.getMinValue() < Integer.MIN_VALUE ||
 				 integerType.getMaxValue() > Integer.MAX_VALUE) {
-			Text text = new Text( container, SWT.BORDER);
-			text.setText( getParameter().getValue().getTheNumber().toString());
-     
-
-			text.setTextLimit( integerType.getMaxValue().toString().length());
-			text.setLayoutData( layoutData[1]);
+			createTextInputWidget( container, layoutData[0]);
 		} else {
-			Spinner spinner = new Spinner ( container, SWT.BORDER);
-			spinner.setMinimum( integerType.getMinValue().intValue());
-			spinner.setMaximum( integerType.getMaxValue().intValue());
-			spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
-			spinner.setIncrement( 1);
-			spinner.setPageIncrement( 100);
-			spinner.setTextLimit( integerType.getMaxValue().toString().length());
-			spinner.setLayoutData( layoutData[1]);
+			createSpinnerInputWidget( container, layoutData[0]);
 		}
-		
+			
     label = new CLabel( container, SWT.LEFT);
 		label.setText( this.getParameter().getDescription());
 		label.setLayoutData( layoutData[2]);
