@@ -3,7 +3,6 @@ package ttworkbench.play.parameters.ipv6.editors;
 import java.math.BigInteger;
 import java.util.Set;
 
-import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
@@ -11,14 +10,20 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
 
+import com.testingtech.muttcn.statements.ConstDeclaration;
+import com.testingtech.muttcn.values.IntegerValue;
+import com.testingtech.muttcn.values.impl.IntegerValueImpl;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class IntegerEditor extends AbstractEditor<Integer> {
+public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	
 	/**
 	 * @see module /TTsuite-IPv6_1.1.3/ttcn3/Library/LibCommon/LibCommon_BasicTypesAndValues.ttcn3
@@ -112,6 +117,10 @@ public class IntegerEditor extends AbstractEditor<Integer> {
 			return typeName; 
 		}
 		
+		public Long getMinValue() {
+			return minValue;
+		}
+		
 		public Long getMaxValue() {
 			return maxValue;
 		}
@@ -138,7 +147,7 @@ public class IntegerEditor extends AbstractEditor<Integer> {
 	}
 	
 	@Override
-	public void setParameter(IParameter<Integer> theParameter) {
+	public void setParameter(IParameter<IntegerValue> theParameter) {
 		super.setParameter( theParameter);
 		determineIntegerType();
 	}
@@ -147,52 +156,90 @@ public class IntegerEditor extends AbstractEditor<Integer> {
 		String parameterType = getParameter().getType();
 		integerType = IntegerType.valueOfTypeName( parameterType);
 	}
+	
+	
+	private Layout extractLayoutFromParams( final Layout theDefaultLayout, final Object ...theParams) {
+		Layout layout = theDefaultLayout; 
+		for (Object object : theParams) {
+			if ( object instanceof Layout)
+		    layout = (Layout) object;
+		}
+		return layout;
+	}
+	
+	private Object[] extractLayoutDataFromParams( final Object theDefaultLayoutData, final int theCountOfCells, final Object[] theParams) {
+		if ( theCountOfCells < 1) {
+			Object[] defaultResult = {theDefaultLayoutData};
+			return defaultResult;
+		}
+		
+		Object[] layoutData = new Object[theCountOfCells];
+		layoutData[0] = theDefaultLayoutData;
+		
+		int i = 0;
+		for (Object object : theParams) {
+			if ( object instanceof GridData || 
+				   object instanceof RowData ||	  
+			     object instanceof FormData) {
+				layoutData[i] = object;
+				i++;
+				if ( i >= theCountOfCells)
+					break;
+			}
+		} 
+		
+		if ( i < theCountOfCells) {
+			for ( int j = i; j < layoutData.length; j++) {
+				layoutData[j] = layoutData[0];
+			}
+		}
+		
+		return layoutData;
+	}
 
 	@Override
 	public Composite createControl(Composite theParent, Object... theParams) {
 		
 		// TODO solve problems with GridLayout: Width of each cell in a row has the width of the smallest cell. 
 		
-		Object layoutData = new GridData( SWT.FILL, SWT.FILL, true, false);
-		Layout layout = new GridLayout( 3, false);
-		
-		for (Object object : theParams) {
-		  if ( object instanceof GridData || 
-			   object instanceof RowData ||	  
-		       object instanceof FormData)
-			  layoutData = object;
-		  if ( object instanceof Layout)
-		    layout = (Layout) object;
-		}
-		
+		Layout layout = extractLayoutFromParams( new RowLayout(), theParams);
+		Object[] layoutData = extractLayoutDataFromParams( new RowData(), 3, theParams);
 		
 		Composite container = new Composite( theParent, SWT.None);
 		container.setLayout( layout);
-		Color color = Display.getCurrent().getSystemColor( SWT.COLOR_DARK_MAGENTA);
-		container.setBackground( color);
 		
-        CLabel label = new CLabel( container, SWT.LEFT);
-		label.setText( this.getParameter().getName());
-		label.setLayoutData( layoutData);
+    CLabel label = new CLabel( container, SWT.LEFT);
+		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
+		label.setLayoutData( layoutData[0]);
 		
-		label = new CLabel( container, SWT.LEFT);
-		label.setText( this.getParameter().getValue());
-		label.setLayoutData( layoutData);
-		
-		String valueString = "";
-		Set<Integer> values = getValues();
-		for (Integer value : values) {
-		  valueString += value + ", ";	
+		if ( integerType.getMinValue() < Integer.MIN_VALUE ||
+				 integerType.getMaxValue() > Integer.MAX_VALUE) {
+			Text text = new Text( container, SWT.BORDER);
+			text.setText( getParameter().getValue().getTheNumber().toString());
+     
+
+			text.setTextLimit( integerType.getMaxValue().toString().length());
+			text.setLayoutData( layoutData[1]);
+		} else {
+			Spinner spinner = new Spinner ( container, SWT.BORDER);
+			spinner.setMinimum( integerType.getMinValue().intValue());
+			spinner.setMaximum( integerType.getMaxValue().intValue());
+			spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
+			spinner.setIncrement( 1);
+			spinner.setPageIncrement( 100);
+			spinner.setTextLimit( integerType.getMaxValue().toString().length());
+			spinner.setLayoutData( layoutData[1]);
 		}
 		
-		label = new CLabel( container, SWT.LEFT);
-		label.setText( valueString);
-		label.setLayoutData( layoutData);
+    label = new CLabel( container, SWT.LEFT);
+		label.setText( this.getParameter().getDescription());
+		label.setLayoutData( layoutData[2]);
 		
 		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		container.layout();
 		
 		return container;
 	}
+
 
 }

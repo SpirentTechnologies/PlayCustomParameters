@@ -47,13 +47,13 @@ public class IPv6Widget extends AbstractWidget {
 	}
 
 	private void createParameterEditors() {
-		GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
-		GridLayout gridLayout = new GridLayout( 1, false);
-		gridLayout.makeColumnsEqualWidth = false;
+		//GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
+		//GridLayout gridLayout = new GridLayout( 1, false);
+		//gridLayout.makeColumnsEqualWidth = false;
 		if ( editorContainer != null) {	
 			Set<IParameterEditor> editors = getEditors();
 			for ( IParameterEditor editor : editors) {
-				editor.createControl( editorContainer, gridData, gridLayout);
+				editor.createControl( editorContainer/*, gridData, gridLayout*/);
 			}
 			editorContainer.setSize( editorContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 			editorContainer.layout();

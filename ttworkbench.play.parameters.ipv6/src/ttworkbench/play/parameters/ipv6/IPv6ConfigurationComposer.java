@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
+import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
 import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
@@ -32,7 +34,6 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
 			theConfigurator.assign( new DefaultEditor(), parameter, defaultWidget);	
-			System.out.println( String.format("name: %-80s \t\t type: %-30s \t\t default value: %s", parameter.getName(), parameter.getType(), ((com.testingtech.muttcn.statements.impl.ConstDeclarationImpl)parameter.getDefaultValue()).basicGetTheValue()));
 		}
 	}
 	
@@ -68,7 +69,11 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// TODO: replace demo composition 
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
-			IPv6Editor editor = new IPv6Editor();
+			AbstractEditor editor;
+			if ( parameter.getType().matches( "^(UInt\\d{0,2}|Int\\d{0,2})$"))
+			  editor = new IntegerEditor();	
+			else 
+				continue;//editor = new IPv6Editor();
 			theConfigurator.assign( editor, parameter, IPv6Widget);
 			njetValidator.registerForMessages( editor);
 			yeahValidator.registerForMessages( editor);
@@ -91,7 +96,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		theConfigurator.beginConfigure();
 		// first added widget will be set automatically as default widget.
 		createAndComposeDefaultWidget( theConfigurator);
-		//createAndComposeIPv6Widget( theConfigurator);
+		createAndComposeIPv6Widget( theConfigurator);
 		theConfigurator.endConfigure();
 	}
 
