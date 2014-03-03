@@ -147,7 +147,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessage
 	
 	@Override
 	public void report(IParameterValidator theValidator,
-			Set<ValidationResult> theValidationResults, IParameter theParameter) {
+			List<ValidationResult> theValidationResults, IParameter theParameter) {
 		
 	}
 	

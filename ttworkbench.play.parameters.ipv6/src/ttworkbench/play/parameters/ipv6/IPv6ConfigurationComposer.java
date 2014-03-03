@@ -112,10 +112,10 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		int comparision;
 		BigInteger n = new BigInteger( "0");
 		do { 
-			comparision = n.compareTo( getFibonacciNumber( theValue));
+			comparision = theValue.compareTo( getFibonacciNumber( n));
 			if ( comparision == 0)
 				return true;
-			n.add(  new BigInteger( "1"));
+			n = n.add(  new BigInteger( "1"));
 		} while( !( comparision > 0));
 		return false;
 	}
@@ -125,9 +125,9 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		BigInteger n = new BigInteger( "0");
 		BigInteger nextFib;
 		do { 
-			nextFib = getFibonacciNumber( theValue);
-			comparision = n.compareTo( nextFib);
-			n.add(  new BigInteger( "1"));
+			nextFib = getFibonacciNumber( n);
+			comparision = theValue.compareTo( nextFib);
+			n = n.add(  new BigInteger( "1"));
 		} while( !( comparision > 0));
 		return nextFib;
 	}
@@ -195,8 +195,8 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		theConfigurator.beginConfigure();
 		// first added widget will be set automatically as default widget.
 		createAndComposeDefaultWidget( theConfigurator);
-		createAndComposeIPv6Widget( theConfigurator);
-		//createAndComposeFibWidget( theConfigurator);
+		//createAndComposeIPv6Widget( theConfigurator);
+		createAndComposeFibWidget( theConfigurator);
 		theConfigurator.endConfigure();
 	}
 
