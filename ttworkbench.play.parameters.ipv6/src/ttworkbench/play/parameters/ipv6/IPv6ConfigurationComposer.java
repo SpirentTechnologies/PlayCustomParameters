@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,8 +15,10 @@ import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
 import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
 import ttworkbench.play.parameters.ipv6.widgets.DefaultWidget;
+import ttworkbench.play.parameters.ipv6.widgets.FibWidget;
 import ttworkbench.play.parameters.ipv6.widgets.IPv6Widget;
 
+import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -90,6 +94,101 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		theConfigurator.assign( new IPv6ValueProvider(), new ArrayList<IParameter>(parameters), IPv6Widget);
 	}
 	
+	
+	
+	
+	
+	
+	
+  private static BigInteger getFibonacciNumber( BigInteger theValue) {
+  	if ( theValue.compareTo( new BigInteger( "0")) <= 0)
+			return new BigInteger( "0");
+  	if ( theValue.compareTo( new BigInteger( "0")) <= 1)
+			return new BigInteger( "1");
+  	return getFibonacciNumber( theValue.subtract( new BigInteger( "1"))).add( getFibonacciNumber( theValue.subtract( new BigInteger( "2")))); 
+	}
+	
+	private static boolean isFibonacciNumber( BigInteger theValue) {
+		int comparision;
+		BigInteger n = new BigInteger( "0");
+		do { 
+			comparision = n.compareTo( getFibonacciNumber( theValue));
+			if ( comparision == 0)
+				return true;
+			n.add(  new BigInteger( "1"));
+		} while( !( comparision > 0));
+		return false;
+	}
+	
+	private static BigInteger nextFibonacciNumber( BigInteger theValue) {
+		int comparision;
+		BigInteger n = new BigInteger( "0");
+		BigInteger nextFib;
+		do { 
+			nextFib = getFibonacciNumber( theValue);
+			comparision = n.compareTo( nextFib);
+			n.add(  new BigInteger( "1"));
+		} while( !( comparision > 0));
+		return nextFib;
+	}
+	
+	
+	private static void createAndComposeFibWidget( IConfigurator theConfigurator) {
+		IWidget FibWidget = new FibWidget();
+		theConfigurator.addWidget( FibWidget);
+		
+		IParameterValidator fibValidator = new AbstractValidator( "Fibonacci Validator", ""){
+            @Override
+            protected List<ValidationResult> validateParameter( IParameter parameter) {
+            	List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+
+            	BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
+            	if ( isFibonacciNumber( theValue))
+            		validationResults.add( new ValidationResult( String.format( "%s: %s is a fibonacci number.", this.getTitle(), theValue), ErrorKind.success));
+            	else {
+            		validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a fibonacci number.", this.getTitle(), theValue), ErrorKind.error));
+            	  validationResults.add( new ValidationResult( String.format( "%s: Next succeeding fibonacci number to %s is %s.", this.getTitle(), theValue, nextFibonacciNumber( theValue)), ErrorKind.info));
+            	}
+							return validationResults;
+            }
+
+		};
+		
+		IParameterValidator fibSuccValidator = new AbstractValidator("Fibonacci Successor Validator", ""){
+
+			@Override
+			protected List<ValidationResult> validateParameter( IParameter parameter) {
+	    	List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+	    	
+	    	BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
+	    	// TODO need validateWidget or getParametersOfWidget or something like this ...
+				return validationResults;
+			}
+			
+		};
+
+		
+		
+		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
+		List<IParameter> parameterSelection = new ArrayList<IParameter>();
+		for (IParameter parameter : parameters) {
+			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_N")) {
+				AbstractEditor editorN = new IntegerEditor();
+				parameterSelection.add( parameter);
+				theConfigurator.assign( editorN, parameter, FibWidget); 
+			}
+			
+			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_FIB_NUMBER")) {
+				AbstractEditor editorFibNumber = new IntegerEditor();
+			  fibValidator.registerForMessages( editorFibNumber);
+			  parameterSelection.add( parameter);
+				theConfigurator.assign( editorFibNumber, parameter, FibWidget); 
+			}
+		}
+		
+		theConfigurator.assign( fibValidator, parameterSelection, FibWidget);
+	}
+	
 	@Override
 	// TODO refactor: rename method to "compose()" ?
 	public void createWidgets(IConfigurator theConfigurator) {
@@ -97,6 +196,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// first added widget will be set automatically as default widget.
 		createAndComposeDefaultWidget( theConfigurator);
 		createAndComposeIPv6Widget( theConfigurator);
+		//createAndComposeFibWidget( theConfigurator);
 		theConfigurator.endConfigure();
 	}
 

@@ -23,11 +23,15 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 
+import ttworkbench.play.parameters.ipv6.editors.components.MessagePanel;
+
 import com.testingtech.muttcn.statements.ConstDeclaration;
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.muttcn.values.impl.IntegerValueImpl;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	
@@ -152,6 +156,9 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
 	private Runnable validationTask = null;
 	
+	private MessagePanel messagePanel = null;
+	private Composite parentControl = null;	
+
 	public IntegerEditor() {
 		super( TITLE, DESCRIPTION);
 	}
@@ -249,38 +256,85 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		spinner.setTextLimit( integerType.getMaxValue().toString().length());
 		spinner.setLayoutData( theLayoutData);
 		spinner.addListener( SWT.Verify, createDelayedValidationListener( 2));
+		//spinner.setFont...
+	}
+	
+	private void createEditRow(Composite theParent, Layout theLayout, Object[] theLayoutData) {
+		parentControl = theParent;
+		
+		Composite container = new Composite( theParent, SWT.None);
+		container.setLayout( theLayout);
+		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+		
+		CLabel label = new CLabel( container, SWT.LEFT);
+		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
+		label.setLayoutData( theLayoutData[0]);
+		
+		if ( integerType.getMinValue() < Integer.MIN_VALUE ||
+				 integerType.getMaxValue() > Integer.MAX_VALUE) {
+			createTextInputWidget( container, theLayoutData[0]);
+		} else {
+			createSpinnerInputWidget( container, theLayoutData[0]);
+		}
+			
+    label = new CLabel( container, SWT.LEFT);
+		label.setText( this.getParameter().getDescription());
+		label.setLayoutData( theLayoutData[2]);
+	}
+
+	private void createMessageRow(Composite theParent) {
+		// TODO Auto-generated method stub
+		messagePanel = new MessagePanel( theParent, SWT.NONE);
+		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 	}
 	
 	
 	@Override
 	public Composite createControl(Composite theParent, Object... theParams) {
-		
-		Layout layout = extractLayoutFromParams( new RowLayout(), theParams);
-		Object[] layoutData = extractLayoutDataFromParams( new RowData(), 3, theParams);
+	
+		Layout editLayout = extractLayoutFromParams( new RowLayout( SWT.HORIZONTAL), theParams);
+		Object[] editLayoutData = extractLayoutDataFromParams( new RowData(), 3, theParams);
 		
 		Composite container = new Composite( theParent, SWT.None);
-		container.setLayout( layout);
+		container.setLayout( new GridLayout( 1, true));
+		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		
-    CLabel label = new CLabel( container, SWT.LEFT);
-		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
-		label.setLayoutData( layoutData[0]);
-		
-		if ( integerType.getMinValue() < Integer.MIN_VALUE ||
-				 integerType.getMaxValue() > Integer.MAX_VALUE) {
-			createTextInputWidget( container, layoutData[0]);
-		} else {
-			createSpinnerInputWidget( container, layoutData[0]);
-		}
-			
-    label = new CLabel( container, SWT.LEFT);
-		label.setText( this.getParameter().getDescription());
-		label.setLayoutData( layoutData[2]);
+		createMessageRow( container);
+		createEditRow( container, editLayout, editLayoutData);
 		
 		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		container.layout();
 		
 		return container;
 	}
+	
+
+
+	@Override
+	public void report( final IParameterValidator theValidator, final Set<ValidationResult> theValidationResults,
+			final IParameter theParameter) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				for (ValidationResult validationResult : theValidationResults) {
+				  //if ( Validator instanceof ...)
+					String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
+					messagePanel.addMessage( senderId, validationResult.getErrorMessage(), validationResult.getErrorKind());					
+				}
+				updateControl();
+			}
+		});
+	}
+	
+	/*
+	private void removeMessageDelayed( final Object theId, final int theDelayInSeconds) {
+		Runnable removeMessageTask = new Runnable() {
+			public void run() {
+				messages.remove( theId);
+			}
+		};
+		messageRemoveWorker.schedule( removeMessageTask, theDelayInSeconds, TimeUnit.SECONDS);
+	}
+  */
 
 
 }

@@ -22,16 +22,16 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 
-public class IPv6Widget extends AbstractWidget {
+public class FibWidget extends AbstractWidget {
 
-	private static final String TITLE = "IPv6 Widget";
-	private static final String DESCRIPTION = "";
+	private static final String TITLE = "Fib Widget";
+	private static final String DESCRIPTION = "Fibonacci sequence tester.";
 	private static final Image IMAGE = null;
 	
 	private Composite editorsContainer;
 	private ScrolledComposite scrolledComposite;
 	
-	public IPv6Widget() {
+	public FibWidget() {
 		super( TITLE, DESCRIPTION, IMAGE);
 	}
 	
@@ -40,7 +40,6 @@ public class IPv6Widget extends AbstractWidget {
 	    // TODO better add editors incremental
 		deleteParameterEditors();
 		createParameterEditors();
-		
 	}
 	
 	private void deleteParameterEditors() {

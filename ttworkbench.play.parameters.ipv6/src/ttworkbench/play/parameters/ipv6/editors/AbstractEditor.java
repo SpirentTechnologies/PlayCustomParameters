@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
@@ -27,6 +30,9 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessage
 	private IParameter<T> parameter;
 	private IConfiguration configuration;
 	private Set<T> values = new TreeSet<T>();
+	
+	private Listener controlChangedListener = null;
+	
 	
 	
 	public AbstractEditor( final String theTitle, final String theDescription) {
@@ -112,10 +118,21 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessage
 	}
 
 	@Override
-	public void update() {
+	public void updateConfig() {
       loadProvidedValues();
       // validate();
 	}
+	
+	public void updateControl() {
+		if ( controlChangedListener != null)
+	  	controlChangedListener.handleEvent( new Event());
+	}
+	
+	public void setControlChangedListener(Listener theControlChangedListener) {
+		this.controlChangedListener = theControlChangedListener;
+	}
+	
+	
 	
 	protected List<ValidationResult> validate() {
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
@@ -130,9 +147,11 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessage
 	
 	@Override
 	public void report(IParameterValidator theValidator,
-			Set<ValidationResult> theValidationResult, IParameter theParameter) {
-		System.out.println( String.format("Validator %s reported %d validation results for parameter %s.", theValidator.getTitle(), theValidationResult.size(), theParameter.getName()));
+			Set<ValidationResult> theValidationResults, IParameter theParameter) {
+		
 	}
+	
+	
 	
 
 }

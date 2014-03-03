@@ -133,7 +133,7 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 			}
 
 			@Override
-			public void update() {
+			public void updateConfig() {
 				// TODO Auto-generated method stub
 				
 			}

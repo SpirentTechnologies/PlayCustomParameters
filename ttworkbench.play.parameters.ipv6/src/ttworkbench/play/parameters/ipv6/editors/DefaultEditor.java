@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Label;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 
-public class DefaultEditor extends AbstractEditor {
+public class DefaultEditor extends AbstractEditor<Object> {
 
 	private static final String TITLE = "Default Editor";
 	private static final String DESCRIPTION = "";
@@ -31,5 +31,8 @@ public class DefaultEditor extends AbstractEditor {
 		// TODO Auto-generated method stub
 		
 	}
+
+
+
 
 }
