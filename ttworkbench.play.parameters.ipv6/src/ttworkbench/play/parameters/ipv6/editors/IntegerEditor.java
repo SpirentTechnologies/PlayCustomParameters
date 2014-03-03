@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -78,7 +79,7 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		UNSIGNED_INT_32( "UInt32", 0L, 4294967295L),
 		UNSIGNED_INT_48( "UInt48", 0L, 281474976710655L),
 		@Erroneous
-		UNSIGNED_INT_64( "UInt64", 0L, 281474976710655L),// Bug TAU//18446744073709551615;
+		UNSIGNED_INT_64( "UInt64", 0L, 281474976710655L),// TODO // Bug TAU//18446744073709551615;
 		// signed integer
 		SIGNED_INT( "Int", Long.MIN_VALUE, Long.MAX_VALUE),
 		SIGNED_INT_01( "Int1", -1L, 0L),
@@ -224,15 +225,20 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 			}
 
 			private void validateDelayed() {
-				validationTask = new Runnable() {
-					public void run() {
-						if (this.equals( validationTask)) {
-							// this happens only if no further task was scheduled later
-							validate();
+				synchronized(this)   {
+					validationTask = new Runnable() {
+						public void run() {
+							synchronized (IntegerEditor.this) {
+								if (this.equals( validationTask)) {
+									// this happens only if no further task was scheduled later
+									validate();
+								}
+							}
 						}
-					}
-				};
-				validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
+					};
+					validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
+					// TODO try validationWorker.submit( ...
+				}
 			}
 		};
 	}
@@ -311,7 +317,7 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 
 
 	@Override
-	public void report( final IParameterValidator theValidator, final Set<ValidationResult> theValidationResults,
+	public void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
 			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {

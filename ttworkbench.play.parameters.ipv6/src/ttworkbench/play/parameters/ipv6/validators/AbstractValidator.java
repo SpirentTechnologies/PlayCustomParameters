@@ -54,13 +54,13 @@ public abstract class AbstractValidator implements IParameterValidator {
 			results = new ArrayList<ValidationResult>();
 			
 		if ( !results.isEmpty())
-		  notifyMessageHandlers( this, new HashSet<ValidationResult>( results), theParameter);
+		  notifyMessageHandlers( this, results, theParameter);
 		
 		return results;
 	}
 
 	private void notifyMessageHandlers(AbstractValidator theAbstractValidator,
-			Set<ValidationResult> theResults, IParameter theParameter) {
+			List<ValidationResult> theResults, IParameter theParameter) {
 		for ( IMessageHandler messageHandler : messageHandlers) {
 			messageHandler.report( this, theResults, theParameter);
 		} 
