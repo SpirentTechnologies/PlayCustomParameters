@@ -15,6 +15,9 @@ Require-Bundle: org.eclipse.ui,
  com.testingtech.ttworkbench.ttman;bundle-version="1.1.17",
  com.testingtech.ttworkbench.ttman.core;bundle-version="1.1.17",
  com.testingtech.ttworkbench.ttthree.aux;bundle-version="1.0.17",
- com.testingtech.ttworkbench.ttthree.core;bundle-version="1.0.28"
+ com.testingtech.ttworkbench.ttthree.core;bundle-version="1.0.28",
+ org.eclipse.ui.forms;bundle-version="3.5.101"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .,
+ swing2swt.jar

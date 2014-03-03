@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
@@ -156,7 +157,7 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
-	private Runnable validationTask = null;
+	private ScheduledFuture<?> validationTaskFuture;
 	
 	private MessagePanel messagePanel = null;
 	private Composite parentControl = null;	
@@ -218,6 +219,7 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	
 
 	private Listener createDelayedValidationListener(final int theDelayInSeconds) {
+		
 		return new Listener() {
 
 			@Override
@@ -226,20 +228,15 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 			}
 
 			private void validateDelayed() {
-				synchronized(this)   {
-					validationTask = new Runnable() {
-						public void run() {
-							synchronized (IntegerEditor.this) {
-								if (this.equals( validationTask)) {
-									// this happens only if no further task was scheduled later
-									validate();
-								}
-							}
-						}
-					};
-					validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
-					// TODO try validationWorker.submit( ...
-				}
+				if ( validationTaskFuture != null) 
+					validationTaskFuture.cancel( true);
+				
+				Runnable validationTask = new Runnable() {
+					public void run() {
+						validate();
+					}
+				};
+				validationTaskFuture = validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
 			}
 		};
 	}
@@ -338,12 +335,12 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 
 
 	@Override
-	public void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
+	public synchronized void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
 			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				for (ValidationResult validationResult : theValidationResults) {
-				  //if ( Validator instanceof ...)
+					//if ( Validator instanceof ...)
 					String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
 					messagePanel.addMessage( senderId, validationResult.getErrorMessage(), validationResult.getErrorKind());					
 				}

@@ -47,7 +47,7 @@ public abstract class AbstractValidator implements IParameterValidator {
 	}
 	
 	@Override
-	public final List<ValidationResult> validate(IParameter theParameter) {
+	public synchronized final List<ValidationResult> validate(IParameter theParameter) {
 		List<ValidationResult> results = validateParameter( theParameter);
 		
 		if ( results == null)

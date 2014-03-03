@@ -136,7 +136,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessage
 	
 	protected List<ValidationResult> validate() {
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-		if ( configuration != null) {
+		if ( configuration != null) {			
 			Set<IParameterValidator> validators = configuration.getValidators( parameter);
 			for (IParameterValidator validator : validators) {
 				if ( !Thread.currentThread().isInterrupted())
