@@ -19,6 +19,12 @@ public class CellParameterEditorDialog extends Dialog {
 	}
 
 	@Override
+  protected void configureShell(Shell shell) {
+    super.configureShell(shell);
+    shell.setText(editor.getTitle());
+ }
+
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		if (parent instanceof Shell) {
 			((Shell) parent).setText( editor.getTitle());

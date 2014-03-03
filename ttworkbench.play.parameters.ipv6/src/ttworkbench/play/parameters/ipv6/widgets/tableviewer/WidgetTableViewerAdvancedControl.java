@@ -50,7 +50,13 @@ public class WidgetTableViewerAdvancedControl extends WidgetTableViewerControl {
 						IParameterEditor<?> editor = (IParameterEditor<?>) entity;
 						
 						if(PARAMETER_TYPE_STRING.equals( editor.getParameter().getType().toLowerCase())) {
-							((IParameterEditor<String>) editor).getParameter().setValue( String.valueOf( value));
+							try {
+								((IParameterEditor<String>) editor).getParameter().setValue( String.valueOf( value));
+							}
+							catch(Exception e) {
+								// TODO logger
+								e.printStackTrace();
+							}
 						}
 					}
 				}
