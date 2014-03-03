@@ -139,7 +139,8 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessage
 		if ( configuration != null) {
 			Set<IParameterValidator> validators = configuration.getValidators( parameter);
 			for (IParameterValidator validator : validators) {
-				validationResults.addAll( validator.validate( parameter));
+				if ( !Thread.currentThread().isInterrupted())
+				  validationResults.addAll( validator.validate( parameter));
 			}
 		}
 		return validationResults;

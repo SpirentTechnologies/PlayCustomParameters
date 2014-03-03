@@ -10,7 +10,9 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
@@ -243,12 +245,29 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	}
 	
 	
+	private static void setWidthForText( Text theTextControl, int visibleChars) {
+		 GC gc = new GC( theTextControl);
+		 int charWidth = gc.getFontMetrics().getAverageCharWidth();
+		 gc.dispose();
+
+		 int minWidth = visibleChars * charWidth;
+		 Object layout = theTextControl.getLayoutData();
+		 if ( layout instanceof GridData)
+			 ((GridData) layout).minimumWidth = minWidth;
+		 if ( layout instanceof RowData)
+			 ((RowData) layout).width = minWidth;		
+		 else
+			 theTextControl.setSize( theTextControl.computeSize( minWidth, SWT.DEFAULT));
+	}
+	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
 		Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
 		text.setText( getParameter().getValue().getTheNumber().toString());
-		if ( integerType.getMaxValue() != null)
-		  text.setTextLimit( integerType.getMaxValue().toString().length());
 		text.setLayoutData( theLayoutData);
+		int maxNeededChars = integerType.getMaxValue().toString().length();
+		if ( integerType.getMaxValue() != null)
+		  text.setTextLimit( maxNeededChars);
+		setWidthForText( text, maxNeededChars);
 		text.addListener( SWT.CHANGED, createDelayedValidationListener( 2));
 	}
 	
