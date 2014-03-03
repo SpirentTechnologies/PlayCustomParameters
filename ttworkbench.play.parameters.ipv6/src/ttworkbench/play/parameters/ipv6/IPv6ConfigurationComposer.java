@@ -30,6 +30,8 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
+	private static final String TYPE_MATCH_INTEGER = "^(UInt\\d{0,2}|Int\\d{0,2})$";
+
 	private static void createAndComposeDefaultWidget( IConfigurator theConfigurator) {
 		IWidget defaultWidget = new DefaultWidget();
 		theConfigurator.addWidget( defaultWidget);
@@ -37,7 +39,11 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// TODO: replace demo composition 
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
-			theConfigurator.assign( new DefaultEditor(), parameter, defaultWidget);	
+			IParameterEditor editor = new DefaultEditor();
+			if(parameter.getType().matches( TYPE_MATCH_INTEGER)) {
+				editor = new IntegerEditor();
+			}
+			theConfigurator.assign( editor, parameter, defaultWidget);
 		}
 	}
 	
@@ -74,7 +80,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
 			AbstractEditor editor;
-			if ( parameter.getType().matches( "^(UInt\\d{0,2}|Int\\d{0,2})$"))
+			if ( parameter.getType().matches( TYPE_MATCH_INTEGER))
 			  editor = new IntegerEditor();	
 			else 
 				continue;//editor = new IPv6Editor();
