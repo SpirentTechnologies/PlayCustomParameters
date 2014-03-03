@@ -41,99 +41,98 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	 * @see module /TTsuite-IPv6_1.1.3/ttcn3/Library/LibCommon/LibCommon_BasicTypesAndValues.ttcn3
 	 */
 	public enum IntegerType {
-		UNDEFINED( "Undefined", +0L, -0L),
+		UNDEFINED( "Undefined", null, null),
 		
 		// unsigned integer
-		UNSIGNED_INT( "UInt", 0L, Long.MAX_VALUE),
-		UNSIGNED_INT_01( "UInt1", 0L, 1L),
-		UNSIGNED_INT_02( "UInt2", 0L, 3L),
-		UNSIGNED_INT_03( "UInt3", 0L, 7L),
-		UNSIGNED_INT_04( "UInt4", 0L, 15L),
-		UNSIGNED_INT_05( "UInt5", 0L, 31L),
-		UNSIGNED_INT_06( "UInt6", 0L, 63L),
-		UNSIGNED_INT_07( "UInt7", 0L, 127L),
-		UNSIGNED_INT_08( "UInt8", 0L, 255L),
-		UNSIGNED_INT_09( "UInt9", 0L, 511L),
-		UNSIGNED_INT_10( "UInt10", 0L, 1023L),
-		UNSIGNED_INT_11( "UInt11", 0L, 2047L),
-		UNSIGNED_INT_12( "UInt12", 0L, 4095L),
-		UNSIGNED_INT_13( "UInt13", 0L, 8191L),
-		UNSIGNED_INT_14( "UInt14", 0L, 16383L),
-		UNSIGNED_INT_15( "UInt15", 0L, 32767L),
-		UNSIGNED_INT_16( "UInt16", 0L, 65535L),
-		UNSIGNED_INT_17( "UInt17", 0L, 131071L),
-		UNSIGNED_INT_18( "UInt18", 0L, 262143L),
-		UNSIGNED_INT_19( "UInt19", 0L, 524287L),
-		UNSIGNED_INT_20( "UInt20", 0L, 1048575L),
-		UNSIGNED_INT_21( "UInt21", 0L, 2097151L),
-		UNSIGNED_INT_22( "UInt22", 0L, 4194303L),
-		UNSIGNED_INT_23( "UInt23", 0L, 8388607L),
-		UNSIGNED_INT_24( "UInt24", 0L, 16777215L),
-		UNSIGNED_INT_25( "UInt25", 0L, 33554431L),
-		UNSIGNED_INT_26( "UInt26", 0L, 67108863L),
-		UNSIGNED_INT_27( "UInt27", 0L, 134217727L),
-		UNSIGNED_INT_28( "UInt28", 0L, 268435456L),
-		UNSIGNED_INT_29( "UInt29", 0L, 536870911L),
-		UNSIGNED_INT_30( "UInt30", 0L, 1073741823L),
-		UNSIGNED_INT_31( "UInt31", 0L, 2147483647L),
-		UNSIGNED_INT_32( "UInt32", 0L, 4294967295L),
-		UNSIGNED_INT_48( "UInt48", 0L, 281474976710655L),
-		@Erroneous
-		UNSIGNED_INT_64( "UInt64", 0L, 281474976710655L),// TODO // Bug TAU//18446744073709551615;
+		UNSIGNED_INT( "UInt", new BigInteger( "0"), null),
+		UNSIGNED_INT_01( "UInt1", new BigInteger( "0"), new BigInteger( "1")),
+		UNSIGNED_INT_02( "UInt2", new BigInteger("0"), new BigInteger( "3")),
+		UNSIGNED_INT_03( "UInt3", new BigInteger( "0"), new BigInteger( "7")),
+		UNSIGNED_INT_04( "UInt4", new BigInteger( "0"), new BigInteger( "15")),
+		UNSIGNED_INT_05( "UInt5", new BigInteger( "0"), new BigInteger( "31")),
+		UNSIGNED_INT_06( "UInt6", new BigInteger( "0"), new BigInteger( "63")),
+		UNSIGNED_INT_07( "UInt7", new BigInteger( "0"), new BigInteger( "127")),
+		UNSIGNED_INT_08( "UInt8", new BigInteger( "0"), new BigInteger( "255")),
+		UNSIGNED_INT_09( "UInt9", new BigInteger( "0"), new BigInteger( "511")),
+		UNSIGNED_INT_10( "UInt10", new BigInteger( "0"), new BigInteger( "1023")),
+		UNSIGNED_INT_11( "UInt11", new BigInteger( "0"), new BigInteger( "2047")),
+		UNSIGNED_INT_12( "UInt12", new BigInteger( "0"), new BigInteger( "4095")),
+		UNSIGNED_INT_13( "UInt13", new BigInteger( "0"), new BigInteger( "8191")),
+		UNSIGNED_INT_14( "UInt14", new BigInteger( "0"), new BigInteger( "16383")),
+		UNSIGNED_INT_15( "UInt15", new BigInteger( "0"), new BigInteger( "32767")),
+		UNSIGNED_INT_16( "UInt16", new BigInteger( "0"), new BigInteger( "65535")),
+		UNSIGNED_INT_17( "UInt17", new BigInteger( "0"), new BigInteger( "131071")),
+		UNSIGNED_INT_18( "UInt18", new BigInteger( "0"), new BigInteger( "262143")),
+		UNSIGNED_INT_19( "UInt19", new BigInteger( "0"), new BigInteger( "524287")),
+		UNSIGNED_INT_20( "UInt20", new BigInteger( "0"), new BigInteger( "1048575")),
+		UNSIGNED_INT_21( "UInt21", new BigInteger( "0"), new BigInteger( "2097151")),
+		UNSIGNED_INT_22( "UInt22", new BigInteger( "0"), new BigInteger( "4194303")),
+		UNSIGNED_INT_23( "UInt23", new BigInteger( "0"), new BigInteger( "8388607")),
+		UNSIGNED_INT_24( "UInt24", new BigInteger( "0"), new BigInteger( "16777215")),
+		UNSIGNED_INT_25( "UInt25", new BigInteger( "0"), new BigInteger( "33554431")),
+		UNSIGNED_INT_26( "UInt26", new BigInteger( "0"), new BigInteger( "67108863")),
+		UNSIGNED_INT_27( "UInt27", new BigInteger( "0"), new BigInteger( "134217727")),
+		UNSIGNED_INT_28( "UInt28", new BigInteger( "0"), new BigInteger( "268435456")),
+		UNSIGNED_INT_29( "UInt29", new BigInteger( "0"), new BigInteger( "536870911")),
+		UNSIGNED_INT_30( "UInt30", new BigInteger( "0"), new BigInteger( "1073741823")),
+		UNSIGNED_INT_31( "UInt31", new BigInteger( "0"), new BigInteger( "2147483647")),
+		UNSIGNED_INT_32( "UInt32", new BigInteger( "0"), new BigInteger( "4294967295")),
+		UNSIGNED_INT_48( "UInt48", new BigInteger( "0"), new BigInteger( "281474976710655")),
+		UNSIGNED_INT_64( "UInt64", new BigInteger( "0"), new BigInteger( "18446744073709551616")),// ignore Bug TAU//18446744073709551615;
 		// signed integer
-		SIGNED_INT( "Int", Long.MIN_VALUE, Long.MAX_VALUE),
-		SIGNED_INT_01( "Int1", -1L, 0L),
-		SIGNED_INT_02( "Int2", -2L, 1L),
-		SIGNED_INT_03( "Int3", -4L, 3L),
-		SIGNED_INT_04( "Int4", -8L, 7L),
-		SIGNED_INT_05( "Int5", -16L, 15L),
-		SIGNED_INT_06( "Int6", -32L, 31L),
-		SIGNED_INT_07( "Int7", -64L, 63L),
-		SIGNED_INT_08( "Int8", -128L, 127L),
-		SIGNED_INT_09( "Int9", -256L, 255L),
-		SIGNED_INT_10( "Int10", -512L, 511L),
-		SIGNED_INT_11( "Int11", -1024L, 1023L),
-		SIGNED_INT_12( "Int12", -2048L, 2047L),
-		SIGNED_INT_13( "Int13", -4096L, 4095L),
-		SIGNED_INT_14( "Int14", -8192L, 8191L),
-		SIGNED_INT_15( "Int15", -16384L, 16383L),
-		SIGNED_INT_16( "Int16", -32768L, 32767L),
-		SIGNED_INT_17( "Int17", -65536L, 65535L),
-		SIGNED_INT_18( "Int18", -131072L, 131071L),
-		SIGNED_INT_19( "Int19", -262144L, 262143L),
-		SIGNED_INT_20( "Int20", -524288L, 524287L),
-		SIGNED_INT_21( "Int21", -1048576L, 1048575L),
-		SIGNED_INT_22( "Int22", -2097152L, 2097151L),
-		SIGNED_INT_23( "Int23", -4194304L, 4194303L),
-		SIGNED_INT_24( "Int24", -8388608L, 8388607L),
-		SIGNED_INT_25( "Int25", -16777216L, 16777215L),
-		SIGNED_INT_26( "Int26", -33554432L, 33554431L),
-		SIGNED_INT_27( "Int27", -67108864L, 67108863L),
-		SIGNED_INT_28( "Int28", -134217728L, 134217727L),
-		SIGNED_INT_29( "Int29", -268435457L, 268435456L),
-		SIGNED_INT_30( "Int30", -536870912L, 536870911L),
-		SIGNED_INT_31( "Int31", -1073741824L, 1073741823L),
-		SIGNED_INT_32( "Int32", -2147483648L, 2147483647L);
+		SIGNED_INT( "Int", null, null),
+		SIGNED_INT_01( "Int1", new BigInteger("-1"), new BigInteger( "0")),
+		SIGNED_INT_02( "Int2", new BigInteger("-2"), new BigInteger( "1")),
+		SIGNED_INT_03( "Int3", new BigInteger("-4"), new BigInteger( "3")),
+		SIGNED_INT_04( "Int4", new BigInteger("-8"), new BigInteger( "7")),
+		SIGNED_INT_05( "Int5", new BigInteger("-16"), new BigInteger( "15")),
+		SIGNED_INT_06( "Int6", new BigInteger("-32"), new BigInteger( "31")),
+		SIGNED_INT_07( "Int7", new BigInteger("-64"), new BigInteger( "63")),
+		SIGNED_INT_08( "Int8", new BigInteger("-128"), new BigInteger( "127")),
+		SIGNED_INT_09( "Int9", new BigInteger("-256"), new BigInteger( "255")),
+		SIGNED_INT_10( "Int10", new BigInteger("-512"), new BigInteger( "511")),
+		SIGNED_INT_11( "Int11", new BigInteger("-1024"), new BigInteger( "1023")),
+		SIGNED_INT_12( "Int12", new BigInteger("-2048"), new BigInteger( "2047")),
+		SIGNED_INT_13( "Int13", new BigInteger("-4096"), new BigInteger( "4095")),
+		SIGNED_INT_14( "Int14", new BigInteger("-8192"), new BigInteger( "8191")),
+		SIGNED_INT_15( "Int15", new BigInteger("-16384"), new BigInteger( "16383")),
+		SIGNED_INT_16( "Int16", new BigInteger("-32768"), new BigInteger( "32767")),
+		SIGNED_INT_17( "Int17", new BigInteger("-65536"), new BigInteger( "65535")),
+		SIGNED_INT_18( "Int18", new BigInteger("-131072"), new BigInteger( "131071")),
+		SIGNED_INT_19( "Int19", new BigInteger("-262144"), new BigInteger( "262143")),
+		SIGNED_INT_20( "Int20", new BigInteger("-524288"), new BigInteger( "524287")),
+		SIGNED_INT_21( "Int21", new BigInteger("-1048576"), new BigInteger( "1048575")),
+		SIGNED_INT_22( "Int22", new BigInteger("-2097152"), new BigInteger( "2097151")),
+		SIGNED_INT_23( "Int23", new BigInteger("-4194304"), new BigInteger( "4194303")),
+		SIGNED_INT_24( "Int24", new BigInteger("-8388608"), new BigInteger( "8388607")),
+		SIGNED_INT_25( "Int25", new BigInteger("-16777216"), new BigInteger( "16777215")),
+		SIGNED_INT_26( "Int26", new BigInteger("-33554432"), new BigInteger( "33554431")),
+		SIGNED_INT_27( "Int27", new BigInteger("-67108864"), new BigInteger( "67108863")),
+		SIGNED_INT_28( "Int28", new BigInteger("-134217728"), new BigInteger( "134217727")),
+		SIGNED_INT_29( "Int29", new BigInteger("-268435457"), new BigInteger( "268435456")),
+		SIGNED_INT_30( "Int30", new BigInteger("-536870912"), new BigInteger( "536870911")),
+		SIGNED_INT_31( "Int31", new BigInteger("-1073741824"), new BigInteger( "1073741823")),
+		SIGNED_INT_32( "Int32", new BigInteger("-2147483648"), new BigInteger( "2147483647"));
 		
 		private final String typeName;
-		private final Long minValue;
-		private final Long maxValue;
+		private final BigInteger minValue;
+		private final BigInteger maxValue;
 		
-		private IntegerType( final String theTypeName, final Long theMinValue, final Long theMaxValue) {
+		private IntegerType( final String theTypeName, final BigInteger theMinValue, final BigInteger theMaxValue) {
 			this.typeName = theTypeName;
 			this.minValue = theMinValue;
 			this.maxValue = theMaxValue;
 		}
 		
 		public String getTypeName() {
-			return typeName; 
+			return typeName;
 		}
 		
-		public Long getMinValue() {
+		public BigInteger getMinValue() {
 			return minValue;
 		}
 		
-		public Long getMaxValue() {
+		public BigInteger getMaxValue() {
 			return maxValue;
 		}
 		
@@ -170,7 +169,7 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		determineIntegerType();
 	}
 
-	private void determineIntegerType() {
+	private void determineIntegerType() { BigInteger b;
 		String parameterType = getParameter().getType();
 		integerType = IntegerType.valueOfTypeName( parameterType);
 	}
@@ -247,7 +246,8 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
 		Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
 		text.setText( getParameter().getValue().getTheNumber().toString());
-		text.setTextLimit( integerType.getMaxValue().toString().length());
+		if ( integerType.getMaxValue() != null)
+		  text.setTextLimit( integerType.getMaxValue().toString().length());
 		text.setLayoutData( theLayoutData);
 		text.addListener( SWT.CHANGED, createDelayedValidationListener( 2));
 	}
@@ -276,8 +276,10 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
 		label.setLayoutData( theLayoutData[0]);
 		
-		if ( integerType.getMinValue() < Integer.MIN_VALUE ||
-				 integerType.getMaxValue() > Integer.MAX_VALUE) {
+		if ( integerType.getMinValue() == null ||
+				 integerType.getMaxValue() == null ||
+				 integerType.getMinValue().compareTo( new BigInteger( String.valueOf( Integer.MIN_VALUE))) < 0 ||
+				 integerType.getMaxValue().compareTo( new BigInteger( String.valueOf( Integer.MAX_VALUE))) > 0) {
 			createTextInputWidget( container, theLayoutData[0]);
 		} else {
 			createSpinnerInputWidget( container, theLayoutData[0]);
