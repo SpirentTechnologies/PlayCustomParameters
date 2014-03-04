@@ -106,10 +106,28 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
   private static BigInteger getFibonacciNumber( BigInteger theValue) {
   	if ( theValue.compareTo( new BigInteger( "0")) <= 0)
 			return new BigInteger( "0");
-  	if ( theValue.compareTo( new BigInteger( "0")) <= 1)
+  	if ( theValue.compareTo( new BigInteger( "1")) <= 0)
 			return new BigInteger( "1");
   	return getFibonacciNumber( theValue.subtract( new BigInteger( "1"))).add( getFibonacciNumber( theValue.subtract( new BigInteger( "2")))); 
 	}
@@ -122,7 +140,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			if ( comparision == 0)
 				return true;
 			n = n.add(  new BigInteger( "1"));
-		} while( !( comparision > 0));
+		} while( comparision > 0);
 		return false;
 	}
 	
@@ -134,7 +152,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			nextFib = getFibonacciNumber( n);
 			comparision = theValue.compareTo( nextFib);
 			n = n.add(  new BigInteger( "1"));
-		} while( !( comparision > 0));
+		} while( comparision > 0);
 		return nextFib;
 	}
 	
@@ -150,10 +168,10 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
             	BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
             	if ( isFibonacciNumber( theValue))
-            		validationResults.add( new ValidationResult( String.format( "%s: %s is a fibonacci number.", this.getTitle(), theValue), ErrorKind.success));
+            		validationResults.add( new ValidationResult( String.format( "%s: %s is a fibonacci number.", this.getTitle(), theValue), ErrorKind.success, "tag_is_fib"));
             	else {
-            		validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a fibonacci number.", this.getTitle(), theValue), ErrorKind.error));
-            	  validationResults.add( new ValidationResult( String.format( "%s: Next succeeding fibonacci number to %s is %s.", this.getTitle(), theValue, nextFibonacciNumber( theValue)), ErrorKind.info));
+            		validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a fibonacci number.", this.getTitle(), theValue), ErrorKind.error, "tag_is_fib"));
+            	  validationResults.add( new ValidationResult( String.format( "%s: Next succeeding fibonacci number to %s is %s.", this.getTitle(), theValue, nextFibonacciNumber( theValue)), ErrorKind.info, "tag_fib_hint"));
             	}
 							return validationResults;
             }

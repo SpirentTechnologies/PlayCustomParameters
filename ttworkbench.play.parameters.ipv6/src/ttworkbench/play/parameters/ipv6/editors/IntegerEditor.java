@@ -35,9 +35,10 @@ import com.testingtech.muttcn.values.impl.IntegerValueImpl;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
-public class IntegerEditor extends AbstractEditor<IntegerValue> {
+public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
 	/**
 	 * Use this enum instead of a ValueProvider, cause to check against all possible integers values is far from being efficient like test the codomain boundaries.
@@ -156,10 +157,7 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 	private static final String DESCRIPTION = "";
 	
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
-	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
-	private ScheduledFuture<?> validationTaskFuture;
 	
-	private MessagePanel messagePanel = null;
 	private Composite parentControl = null;	
 
 	public IntegerEditor() {
@@ -177,69 +175,24 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		integerType = IntegerType.valueOfTypeName( parameterType);
 	}
 	
-	
-	private Layout extractLayoutFromParams( final Layout theDefaultLayout, final Object ...theParams) {
-		Layout layout = theDefaultLayout; 
-		for (Object object : theParams) {
-			if ( object instanceof Layout)
-		    layout = (Layout) object;
-		}
-		return layout;
-	}
-	
-	private Object[] extractLayoutDataFromParams( final Object theDefaultLayoutData, final int theCountOfCells, final Object[] theParams) {
-		if ( theCountOfCells < 1) {
-			Object[] defaultResult = {theDefaultLayoutData};
-			return defaultResult;
-		}
-		
-		Object[] layoutData = new Object[theCountOfCells];
-		layoutData[0] = theDefaultLayoutData;
-		
-		int i = 0;
-		for (Object object : theParams) {
-			if ( object instanceof GridData || 
-				   object instanceof RowData ||	  
-			     object instanceof FormData) {
-				layoutData[i] = object;
-				i++;
-				if ( i >= theCountOfCells)
-					break;
-			}
-		} 
-		
-		if ( i < theCountOfCells) {
-			for ( int j = i; j < layoutData.length; j++) {
-				layoutData[j] = layoutData[0];
-			}
-		}
-		
-		return layoutData;
-	}
-	
+ 	protected Listener createDelayedValidationListener(final int theDelayInSeconds) {
+ 		
+ 		return new Listener() {
 
-	private Listener createDelayedValidationListener(final int theDelayInSeconds) {
-		
-		return new Listener() {
+ 			@Override
+ 			public void handleEvent(Event theEvent) {
+ 				if ( theEvent.widget instanceof Text)
+ 				  getParameter().getValue().setTheNumber( new BigInteger( ( ( Text)theEvent.widget).getText()));
+ 				if ( theEvent.widget instanceof Spinner && 
+ 						 !theEvent.text.isEmpty())
+ 				  getParameter().getValue().setTheNumber( new BigInteger( theEvent.text));
+ 				
+ 				validateDelayed( theDelayInSeconds);
+ 			}
 
-			@Override
-			public void handleEvent(Event theArg0) {
-				validateDelayed();
-			}
+ 		};
+ 	}
 
-			private void validateDelayed() {
-				if ( validationTaskFuture != null) 
-					validationTaskFuture.cancel( true);
-				
-				Runnable validationTask = new Runnable() {
-					public void run() {
-						validate();
-					}
-				};
-				validationTaskFuture = validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
-			}
-		};
-	}
 	
 	
 	private static void setWidthForText( Text theTextControl, int visibleChars) {
@@ -281,7 +234,8 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		//spinner.setFont...
 	}
 	
-	private void createEditRow(Composite theParent, Layout theLayout, Object[] theLayoutData) {
+	@Override
+	protected void createEditRow(Composite theParent, Layout theLayout, Object[] theLayoutData, Object[] theParams) {
 		parentControl = theParent;
 		
 		Composite container = new Composite( theParent, SWT.None);
@@ -306,59 +260,6 @@ public class IntegerEditor extends AbstractEditor<IntegerValue> {
 		label.setLayoutData( theLayoutData[2]);
 	}
 
-	private void createMessageRow(Composite theParent) {
-		// TODO Auto-generated method stub
-		messagePanel = new MessagePanel( theParent, SWT.NONE);
-		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
-	}
-	
-	
-	@Override
-	public Composite createControl(Composite theParent, Object... theParams) {
-	
-		Layout editLayout = extractLayoutFromParams( new RowLayout( SWT.HORIZONTAL), theParams);
-		Object[] editLayoutData = extractLayoutDataFromParams( new RowData(), 3, theParams);
-		
-		Composite container = new Composite( theParent, SWT.None);
-		container.setLayout( new GridLayout( 1, true));
-		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
-		
-		createMessageRow( container);
-		createEditRow( container, editLayout, editLayoutData);
-		
-		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		container.layout();
-		
-		return container;
-	}
-	
-
-
-	@Override
-	public synchronized void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
-			final IParameter theParameter) {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				for (ValidationResult validationResult : theValidationResults) {
-					//if ( Validator instanceof ...)
-					String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
-					messagePanel.addMessage( senderId, validationResult.getErrorMessage(), validationResult.getErrorKind());					
-				}
-				updateControl();
-			}
-		});
-	}
-	
-	/*
-	private void removeMessageDelayed( final Object theId, final int theDelayInSeconds) {
-		Runnable removeMessageTask = new Runnable() {
-			public void run() {
-				messages.remove( theId);
-			}
-		};
-		messageRemoveWorker.schedule( removeMessageTask, theDelayInSeconds, TimeUnit.SECONDS);
-	}
-  */
 
 
 }
