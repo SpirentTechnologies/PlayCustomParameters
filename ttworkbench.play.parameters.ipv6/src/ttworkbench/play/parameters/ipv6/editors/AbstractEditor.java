@@ -19,7 +19,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
-public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessageHandler {
+public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	private boolean enabled = true;
 	private boolean visible = true;
@@ -131,27 +131,6 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T>, IMessage
 	public void setControlChangedListener(Listener theControlChangedListener) {
 		this.controlChangedListener = theControlChangedListener;
 	}
-	
-	
-	
-	protected List<ValidationResult> validate() {
-		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-		if ( configuration != null) {			
-			Set<IParameterValidator> validators = configuration.getValidators( parameter);
-			for (IParameterValidator validator : validators) {
-				if ( !Thread.currentThread().isInterrupted())
-				  validationResults.addAll( validator.validate( parameter));
-			}
-		}
-		return validationResults;
-	}
-	
-	@Override
-	public void report(IParameterValidator theValidator,
-			List<ValidationResult> theValidationResults, IParameter theParameter) {
-		
-	}
-	
 	
 	
 

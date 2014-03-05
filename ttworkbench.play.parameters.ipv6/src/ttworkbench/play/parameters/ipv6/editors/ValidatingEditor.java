@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -20,11 +22,13 @@ import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.editors.components.MessagePanel;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
+import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
-public abstract class ValidatingEditor<T> extends AbstractEditor<T> {
+public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler {
 
 
 	private MessagePanel messagePanel = null;
@@ -82,20 +86,36 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> {
 	}
 	
   
-
-  
-	protected void validateDelayed( final int theDelayInSeconds) {
-			if ( validationTaskFuture != null) 
-				validationTaskFuture.cancel( true);
-			
-			Runnable validationTask = new Runnable() {
-				public void run() {
-					validate();
-				}
-			};
-			validationTaskFuture = validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
+	
+	
+	protected List<ValidationResult> validate() {
+		IConfiguration configuration = getConfiguration();
+		IParameter<?> parameter = getParameter();
+		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+		if ( configuration != null) {			
+			Set<IParameterValidator> validators = configuration.getValidators( parameter);
+			for (IParameterValidator validator : validators) {
+				if ( !Thread.currentThread().isInterrupted())
+				  validationResults.addAll( validator.validate( parameter));
+			}
 		}
-  
+		return validationResults;
+	}
+
+
+
+	protected void validateDelayed( final int theDelayInSeconds) {
+		if ( validationTaskFuture != null) 
+			validationTaskFuture.cancel( true);
+
+		Runnable validationTask = new Runnable() {
+			public void run() {
+				validate();
+			}
+		};
+		validationTaskFuture = validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
+	}
+
 
 
 	
@@ -154,5 +174,6 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> {
 			}
 		});
 	}
+	
 
 }

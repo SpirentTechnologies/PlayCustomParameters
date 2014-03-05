@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -158,6 +160,10 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
 	
+	private static final Color COLOR_RED = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+	private static final Color COLOR_BLACK = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+  
+	
 	private Composite parentControl = null;	
 
 	public IntegerEditor() {
@@ -179,21 +185,39 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
  		
  		return new Listener() {
 
+ 			private String getValueFromEvent(Event theEvent) {
+ 				if ( theEvent.widget instanceof Text) 
+ 					return ( ( Text)theEvent.widget).getText();
+ 				if ( theEvent.widget instanceof Spinner && 
+ 						!theEvent.text.isEmpty())
+ 					return theEvent.text;
+
+ 				return "";
+ 			}
+        
+      private String checkValue( final String theValue) {
+      	return theValue;
+      }
+      
+      private void validateValue( final String theValue) {
+      	getParameter().getValue().setTheNumber( new BigInteger( theValue));
+ 				validateDelayed( theDelayInSeconds);
+      }
+ 	 			
  			@Override
  			public void handleEvent(Event theEvent) {
- 				if ( theEvent.widget instanceof Text)
- 				  getParameter().getValue().setTheNumber( new BigInteger( ( ( Text)theEvent.widget).getText()));
- 				if ( theEvent.widget instanceof Spinner && 
- 						 !theEvent.text.isEmpty())
- 				  getParameter().getValue().setTheNumber( new BigInteger( theEvent.text));
- 				
- 				validateDelayed( theDelayInSeconds);
+ 				String uncheckedValue = getValueFromEvent( theEvent); 
+ 				//if ( checkValue( uncheckedValue))...........
+ 				String checkedValue = checkValue( uncheckedValue);
+ 				validateValue( checkedValue);
  			}
 
  		};
  	}
 
-	
+	private boolean checkValue( String text) {
+		return text.matches( "^[0-9]+$");
+	}
 	
 	private static void setWidthForText( Text theTextControl, int visibleChars) {
 		 GC gc = new GC( theTextControl);
@@ -211,18 +235,32 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
+		final Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
 		text.setText( getParameter().getValue().getTheNumber().toString());
 		text.setLayoutData( theLayoutData);
 		int maxNeededChars = integerType.getMaxValue().toString().length();
 		if ( integerType.getMaxValue() != null)
 		  text.setTextLimit( maxNeededChars);
 		setWidthForText( text, maxNeededChars);
-		text.addListener( SWT.CHANGED, createDelayedValidationListener( 2));
+		text.addListener( SWT.CHANGED, new Listener() {
+			
+			@Override
+			public void handleEvent(Event theEvent) {
+				String value = text.getText();//((Text)theEvent.widget).getText();
+				if ( checkValue( value)) {
+					text.setForeground( COLOR_BLACK);
+					// actualize parameter 
+					getParameter().getValue().setTheNumber( new BigInteger( value));
+					validateDelayed( 2);
+				} else {
+					text.setForeground( COLOR_RED);
+				}
+			}
+		});
 	}
 	
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		Spinner spinner = new Spinner ( theComposite, SWT.BORDER);
+		final Spinner spinner = new Spinner ( theComposite, SWT.BORDER);
 		spinner.setMinimum( integerType.getMinValue().intValue());
 		spinner.setMaximum( integerType.getMaxValue().intValue());
 		spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
@@ -230,7 +268,24 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		spinner.setPageIncrement( 100);
 		spinner.setTextLimit( integerType.getMaxValue().toString().length());
 		spinner.setLayoutData( theLayoutData);
-		spinner.addListener( SWT.Verify, createDelayedValidationListener( 2));
+		spinner.addListener( SWT.Verify, new Listener() {
+			
+			@Override
+			public void handleEvent(Event theEvent) {
+				if ( theEvent.text.isEmpty())
+					return;
+				
+				String value = theEvent.text;
+				if ( checkValue( value)) {
+					spinner.setForeground( COLOR_BLACK);
+					// actualize parameter
+					getParameter().getValue().setTheNumber( new BigInteger( value));
+					validateDelayed( 2);
+				} else {
+					spinner.setForeground( COLOR_RED);
+				}
+			}
+		});
 		//spinner.setFont...
 	}
 	

@@ -11,6 +11,7 @@ import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
 import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
+import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
 import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
@@ -79,7 +80,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// TODO: replace demo composition 
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter parameter : parameters) {
-			AbstractEditor editor;
+			ValidatingEditor<?> editor;
 			if ( parameter.getType().matches( TYPE_MATCH_INTEGER))
 			  editor = new IntegerEditor();	
 			else 
@@ -203,7 +204,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			}
 			
 			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_FIB_NUMBER")) {
-				AbstractEditor editorFibNumber = new IntegerEditor();
+				ValidatingEditor<?> editorFibNumber = new IntegerEditor();
 			  fibValidator.registerForMessages( editorFibNumber);
 			  parameterSelection.add( parameter);
 				theConfigurator.assign( editorFibNumber, parameter, FibWidget); 
