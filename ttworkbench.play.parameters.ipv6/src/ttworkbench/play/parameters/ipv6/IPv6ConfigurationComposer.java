@@ -2,9 +2,12 @@ package ttworkbench.play.parameters.ipv6;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
@@ -180,40 +183,38 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		};
 
 
-
-
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
-		IParameter<IntegerValue> fibParameter;
-		IParameter<IntegerValue> fibSuccParameter;
-
+		final Map<String,IParameter> usedParameters = new HashMap<String,IParameter>( 3); 
+	
 		for (IParameter parameter : parameters) {
 			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_N")) {
 				AbstractEditor editorN = new IntegerEditor();
+				usedParameters.put( "n", parameter);
 				theConfigurator.assign( editorN, parameter, FibWidget); 
 			}
 
 			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_FIB_NUMBER")) {
 				ValidatingEditor<?> editorFibNumber = new IntegerEditor();
 				fibValidator.registerForMessages( editorFibNumber);
-				fibParameter = parameter;
+				usedParameters.put( "fib", parameter);
 				theConfigurator.assign( editorFibNumber, parameter, FibWidget); 
 			}
 
 			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_FIB_SUCC_NUMBER")) {
 				ValidatingEditor<?> editorFibSuccNumber = new IntegerEditor();
 				fibValidator.registerForMessages( editorFibSuccNumber);
-				fibSuccParameter = parameter;
+				usedParameters.put("fibSucc", parameter);
 				theConfigurator.assign( editorFibSuccNumber, parameter, FibWidget); 
 			}
 		}
 
-/*		IParameterValidator fibSuccValidator = new AbstractValidator("Fibonacci Successor Validator", ""){
+		IParameterValidator fibSuccValidator = new AbstractValidator("Fibonacci Successor Validator", ""){
 
 			@Override
 			protected List<ValidationResult> validateParameter( IParameter parameter) {
 				List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-				BigInteger fibSuccValue = fibSuccParameter.getValue().getTheNumber();
-				BigInteger fibValue = fibParameter.getValue().getTheNumber();
+				BigInteger fibSuccValue = ((IntegerValue)usedParameters.get( "fibSucc").getValue()).getTheNumber();
+				BigInteger fibValue = ((IntegerValue)usedParameters.get( "fib").getValue()).getTheNumber();
 				BigInteger fibNextValue = nextFibonacciNumber( fibValue);
 
 				if ( fibSuccValue.compareTo( fibNextValue) == 0) {
@@ -225,9 +226,9 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 				return validationResults;
 			}
 
-		};*/
+		};
 
-		//theConfigurator.assign( fibValidator, parameterSelection, FibWidget);
+		theConfigurator.assign( fibValidator, new ArrayList( usedParameters.values()), FibWidget);
 	}
 
 	@Override

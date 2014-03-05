@@ -1,44 +1,22 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 
-import ttworkbench.play.parameters.ipv6.editors.components.MessagePanel;
-
-import com.testingtech.muttcn.statements.ConstDeclaration;
 import com.testingtech.muttcn.values.IntegerValue;
-import com.testingtech.muttcn.values.impl.IntegerValueImpl;
-import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
@@ -160,12 +138,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
 	
-	private static final Color COLOR_RED = Display.getDefault().getSystemColor(SWT.COLOR_RED);
-	private static final Color COLOR_BLACK = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-  
 	
-	private Composite parentControl = null;	
-
 	public IntegerEditor() {
 		super( TITLE, DESCRIPTION);
 	}
@@ -176,47 +149,41 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		determineIntegerType();
 	}
 
-	private void determineIntegerType() { BigInteger b;
+	private void determineIntegerType() { 
 		String parameterType = getParameter().getType();
 		integerType = IntegerType.valueOfTypeName( parameterType);
 	}
 	
- 	protected Listener createDelayedValidationListener(final int theDelayInSeconds) {
- 		
- 		return new Listener() {
+	private boolean isValueInRange( BigInteger theValue) {
+		if ( theValue == null)
+			return false;
+		
+		BigInteger minValue = integerType.getMinValue();
+		BigInteger maxValue = integerType.getMaxValue();
+		
+		if ( minValue == null && maxValue == null)
+			return true;
 
- 			private String getValueFromEvent(Event theEvent) {
- 				if ( theEvent.widget instanceof Text) 
- 					return ( ( Text)theEvent.widget).getText();
- 				if ( theEvent.widget instanceof Spinner && 
- 						!theEvent.text.isEmpty())
- 					return theEvent.text;
+		if ( minValue != null && maxValue != null)
+			return ( minValue.compareTo( theValue) <= 0) &&
+	    			 ( maxValue.compareTo( theValue) >= 0);
 
- 				return "";
- 			}
-        
-      private String checkValue( final String theValue) {
-      	return theValue;
-      }
-      
-      private void validateValue( final String theValue) {
-      	getParameter().getValue().setTheNumber( new BigInteger( theValue));
- 				validateDelayed( theDelayInSeconds);
-      }
- 	 			
- 			@Override
- 			public void handleEvent(Event theEvent) {
- 				String uncheckedValue = getValueFromEvent( theEvent); 
- 				//if ( checkValue( uncheckedValue))...........
- 				String checkedValue = checkValue( uncheckedValue);
- 				validateValue( checkedValue);
- 			}
+		if ( minValue == null && maxValue != null)
+			return maxValue.compareTo( theValue) >= 0;
 
- 		};
- 	}
+  	if ( minValue != null && maxValue == null)
+		  return minValue.compareTo( theValue) >= 0;
 
-	private boolean checkValue( String text) {
-		return text.matches( "^[0-9]+$");
+		return false;
+	}
+
+	private boolean checkValue( String theValue) {
+		try {
+		  BigInteger valueAsInteger = new BigInteger( theValue);
+		  return isValueInRange( valueAsInteger);
+		} catch ( NumberFormatException e) {
+			return false;
+		}
 	}
 	
 	private static void setWidthForText( Text theTextControl, int visibleChars) {
@@ -242,23 +209,37 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		if ( integerType.getMaxValue() != null)
 		  text.setTextLimit( maxNeededChars);
 		setWidthForText( text, maxNeededChars);
-		text.addListener( SWT.CHANGED, new Listener() {
+		text.addListener( SWT.Verify, new Listener() {
 			
 			@Override
 			public void handleEvent(Event theEvent) {
-				String value = text.getText();//((Text)theEvent.widget).getText();
-				if ( checkValue( value)) {
-					text.setForeground( COLOR_BLACK);
+				Character key = theEvent.character;
+				String insertion = (key == '\b') ? "" : theEvent.text; 
+				int beginIndex = theEvent.start;
+				int endIndex = theEvent.end;
+				String currentText = text.getText();
+				String leftString = currentText.substring( 0, beginIndex);
+				String rightString = currentText.substring( endIndex, currentText.length());
+				String modifiedText = leftString + insertion + rightString;
+				
+				if ( checkValue( modifiedText)) {
 					// actualize parameter 
-					getParameter().getValue().setTheNumber( new BigInteger( value));
+					getParameter().getValue().setTheNumber( new BigInteger( modifiedText));
 					validateDelayed( 2);
+					theEvent.doit = true;
 				} else {
-					text.setForeground( COLOR_RED);
+					// don't apply changes
+					theEvent.doit = false;
+					getMessagePanel().flashMessage( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", modifiedText), ErrorKind.warning);
+					if ( modifiedText.isEmpty())
+					  getMessagePanel().flashMessage( "valid_chars_info", "Requires a number. An empty field refers to no number.", ErrorKind.info);
+				  else	
+					  getMessagePanel().flashMessage( "valid_chars_info", "Only integer values accepted.", ErrorKind.info);
 				}
 			}
 		});
 	}
-	
+
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
 		final Spinner spinner = new Spinner ( theComposite, SWT.BORDER);
 		spinner.setMinimum( integerType.getMinValue().intValue());
@@ -268,31 +249,38 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		spinner.setPageIncrement( 100);
 		spinner.setTextLimit( integerType.getMaxValue().toString().length());
 		spinner.setLayoutData( theLayoutData);
+		
 		spinner.addListener( SWT.Verify, new Listener() {
-			
+
 			@Override
 			public void handleEvent(Event theEvent) {
-				if ( theEvent.text.isEmpty())
-					return;
-				
-				String value = theEvent.text;
-				if ( checkValue( value)) {
-					spinner.setForeground( COLOR_BLACK);
-					// actualize parameter
-					getParameter().getValue().setTheNumber( new BigInteger( value));
-					validateDelayed( 2);
-				} else {
-					spinner.setForeground( COLOR_RED);
+				if ( theEvent.doit == false) {
+					getMessagePanel().flashMessage( "invalid_input_warning", String.format( "Input of char '%c' rejected.", theEvent.character), ErrorKind.warning);
+					if ( theEvent.text.isEmpty())
+						getMessagePanel().flashMessage( "valid_chars_info", "Requires a number. An empty field refers to no number.", ErrorKind.info);
+					else	
+						getMessagePanel().flashMessage( "valid_chars_info", "Only integer values accepted.", ErrorKind.info);
+
 				}
 			}
 		});
-		//spinner.setFont...
+		
+		spinner.addListener( SWT.Modify, new Listener() {
+			
+			@Override
+			public void handleEvent(Event theEvent) {
+				String value = spinner.getText();
+				if ( checkValue( value)) {
+					// actualize parameter
+					getParameter().getValue().setTheNumber( new BigInteger( value));
+					validateDelayed( 2);
+				}
+			}
+		});
 	}
 	
 	@Override
 	protected void createEditRow(Composite theParent, Layout theLayout, Object[] theLayoutData, Object[] theParams) {
-		parentControl = theParent;
-		
 		Composite container = new Composite( theParent, SWT.None);
 		container.setLayout( theLayout);
 		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));

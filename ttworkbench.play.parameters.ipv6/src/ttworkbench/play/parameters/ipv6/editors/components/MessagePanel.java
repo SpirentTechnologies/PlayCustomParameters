@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
@@ -129,6 +130,13 @@ public class MessagePanel extends Composite {
 			}
 		}
 		
+		public synchronized void clearTaggedMessage( final String theTag) {
+			MessageLine messageLine = taggedMessageLines.remove( theTag);
+			if ( messageLine != null) {
+				messageLine.dispose();
+			}
+		}
+		
 		public void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
 			if ( theErrorKind.equals( ErrorKind.success))
 				return;
@@ -183,6 +191,8 @@ public class MessagePanel extends Composite {
 	private static final ScheduledExecutorService messageWorker = Executors.newSingleThreadScheduledExecutor();
 	private boolean flashTaggedSuccessMessages = true;
 	private int flashDurationInSeconds = 2;
+	
+	private Map<String, ScheduledFuture> flashMessageFutures = new HashMap<String, ScheduledFuture>();
 	
 	private Listener changedListener = null;
 			
@@ -248,6 +258,43 @@ public class MessagePanel extends Composite {
 		
 		MessageBlock messageBlock = messages.get( currentSenderId);
 		messageBlock.addUntaggedMessage( theMessage, theErrorKind);
+	} 
+	
+	public void flashMessage( final String theTag, final String theWarning, final ErrorKind theErrorKind) {
+		final String id = this.getClass().getName() + "@" + this.hashCode(); 
+		if ( !messages.containsKey( id))
+			messages.put( id, new MessageBlock());
+		final MessageBlock messageBlock = messages.get( id);
+		
+		final String tag = theTag != null && !theTag.isEmpty() ? theTag : String.valueOf( System.currentTimeMillis());
+
+		if ( flashMessageFutures.containsKey( tag))
+			flashMessageFutures.get( tag).cancel( true);
+		messageBlock.clearTaggedMessage( tag);
+		messageBlock.putTaggedMessage( tag, theWarning, theErrorKind); 	
+		
+		Runnable flashWarningTask = new Runnable() {
+			public void run() {
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						messageBlock.clearTaggedMessage( tag);
+						if ( changedListener != null)
+							synchronized (changedListener) {
+								changedListener.handleEvent( new Event());
+							}
+					}
+				});		
+			}
+		};
+
+		ScheduledFuture flashMessageFuture = messageWorker.schedule( flashWarningTask, Math.round( flashDurationInSeconds * 1.5), TimeUnit.SECONDS);
+		flashMessageFutures.put( tag, flashMessageFuture);
+		
+		if ( changedListener != null)
+			synchronized (changedListener) {
+				changedListener.handleEvent( new Event());
+			}
 	}
 	
 	public void beginUpdateForSender( final Object theSenderId) {
@@ -264,13 +311,18 @@ public class MessagePanel extends Composite {
   public void endUpdate() {
   	MessageBlock messageBlock = messages.get( currentSenderId);
   	messageBlock.endUpdateCycle();
-  	
+  	// TODO remove empty message blocks ? 
 		this.currentSenderId = null;
 		
 		if ( changedListener != null)
 			synchronized (changedListener) {
 				changedListener.handleEvent( new Event());
 			}
+	}
+
+	public void flashMessage(String theWarning, com.testingtech.ttworkbench.metamodel.muttcn.validator.ErrorKind theInfo) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

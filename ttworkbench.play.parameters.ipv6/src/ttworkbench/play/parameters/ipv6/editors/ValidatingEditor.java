@@ -39,6 +39,11 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public ValidatingEditor( String theTitle, String theDescription) {
 		super( theTitle, theDescription);
 	}
+	
+	
+	protected MessagePanel getMessagePanel() {
+		return messagePanel;
+	}
 
 	
 	
@@ -125,7 +130,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
 		messagePanel = new MessagePanel( theParent, SWT.NONE);
-		messagePanel.setFlashDurationInSeconds( 1);
+		messagePanel.setFlashDurationInSeconds( 2);
 		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		messagePanel.setChangedListener( new Listener() {
 			@Override
