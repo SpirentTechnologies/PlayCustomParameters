@@ -156,64 +156,80 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		} while( comparision > 0);
 		return nextFib;
 	}
-	
-	
+
+
 	private static void createAndComposeFibWidget( IConfigurator theConfigurator) {
 		IWidget FibWidget = new FibWidget();
 		theConfigurator.addWidget( FibWidget);
-		
+
 		IParameterValidator fibValidator = new AbstractValidator( "Fibonacci Validator", ""){
-            @Override
-            protected List<ValidationResult> validateParameter( IParameter parameter) {
-            	List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-
-            	BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
-            	if ( isFibonacciNumber( theValue))
-            		validationResults.add( new ValidationResult( String.format( "%s: %s is a fibonacci number.", this.getTitle(), theValue), ErrorKind.success, "tag_is_fib"));
-            	else {
-            		validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a fibonacci number.", this.getTitle(), theValue), ErrorKind.error, "tag_is_fib"));
-            	  validationResults.add( new ValidationResult( String.format( "%s: Next succeeding fibonacci number to %s is %s.", this.getTitle(), theValue, nextFibonacciNumber( theValue)), ErrorKind.info, "tag_fib_hint"));
-            	}
-							return validationResults;
-            }
-
-		};
-		
-		IParameterValidator fibSuccValidator = new AbstractValidator("Fibonacci Successor Validator", ""){
-
 			@Override
 			protected List<ValidationResult> validateParameter( IParameter parameter) {
-	    	List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-	    	
-	    	BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
-	    	// TODO need validateWidget or getParametersOfWidget or something like this ...
+				List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+
+				BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
+				if ( isFibonacciNumber( theValue))
+					validationResults.add( new ValidationResult( String.format( "%s: %s is a fibonacci number.", this.getTitle(), theValue), ErrorKind.success, "tag_is_fib"));
+				else {
+					validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a fibonacci number.", this.getTitle(), theValue), ErrorKind.error, "tag_is_fib"));
+					validationResults.add( new ValidationResult( String.format( "%s: Next succeeding fibonacci number to %s is %s.", this.getTitle(), theValue, nextFibonacciNumber( theValue)), ErrorKind.info, "tag_fib_hint"));
+				}
 				return validationResults;
 			}
-			
+
 		};
 
-		
-		
+
+
+
 		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
-		List<IParameter> parameterSelection = new ArrayList<IParameter>();
+		IParameter<IntegerValue> fibParameter;
+		IParameter<IntegerValue> fibSuccParameter;
+
 		for (IParameter parameter : parameters) {
 			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_N")) {
 				AbstractEditor editorN = new IntegerEditor();
-				parameterSelection.add( parameter);
 				theConfigurator.assign( editorN, parameter, FibWidget); 
 			}
-			
+
 			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_FIB_NUMBER")) {
 				ValidatingEditor<?> editorFibNumber = new IntegerEditor();
-			  fibValidator.registerForMessages( editorFibNumber);
-			  parameterSelection.add( parameter);
+				fibValidator.registerForMessages( editorFibNumber);
+				fibParameter = parameter;
 				theConfigurator.assign( editorFibNumber, parameter, FibWidget); 
 			}
+
+			if ( parameter.getName().equals( "LibDemo_ModuleParameters.PX_FIB_SUCC_NUMBER")) {
+				ValidatingEditor<?> editorFibSuccNumber = new IntegerEditor();
+				fibValidator.registerForMessages( editorFibSuccNumber);
+				fibSuccParameter = parameter;
+				theConfigurator.assign( editorFibSuccNumber, parameter, FibWidget); 
+			}
 		}
-		
-		theConfigurator.assign( fibValidator, parameterSelection, FibWidget);
+
+/*		IParameterValidator fibSuccValidator = new AbstractValidator("Fibonacci Successor Validator", ""){
+
+			@Override
+			protected List<ValidationResult> validateParameter( IParameter parameter) {
+				List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+				BigInteger fibSuccValue = fibSuccParameter.getValue().getTheNumber();
+				BigInteger fibValue = fibParameter.getValue().getTheNumber();
+				BigInteger fibNextValue = nextFibonacciNumber( fibValue);
+
+				if ( fibSuccValue.compareTo( fibNextValue) == 0) {
+					validationResults.add( new ValidationResult(  String.format( "%s: %s is the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.success, "tag_succ_fib"));
+				} else {
+					validationResults.add( new ValidationResult(  String.format( "%s: %s is NOT the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.error, "tag_succ_fib"));
+					validationResults.add( new ValidationResult(  String.format( "%s: %s is successor of %s.", this.getTitle(), fibNextValue, fibValue), ErrorKind.info, "tag_succ_fib_hint"));    	
+				}
+				return validationResults;
+			}
+
+		};*/
+
+		//theConfigurator.assign( fibValidator, parameterSelection, FibWidget);
 	}
-	
+
 	@Override
 	// TODO refactor: rename method to "compose()" ?
 	public void createWidgets(IConfigurator theConfigurator) {
