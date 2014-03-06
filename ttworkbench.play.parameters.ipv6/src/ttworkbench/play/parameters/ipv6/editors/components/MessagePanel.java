@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.editors.components;
 
+import java.awt.Toolkit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -71,10 +72,12 @@ public class MessagePanel extends Composite {
 				case error:
 					foregroundColor = colorWhite;
 					backgroundColor = colorRed;
+					beep();
 					break;
 				case warning:
 					foregroundColor = colorRed;
 					backgroundColor = colorBtnFace;
+					beep();
 					break;
 	      case info:
 	      	foregroundColor = colorBlack;
@@ -89,6 +92,11 @@ public class MessagePanel extends Composite {
 	    label.setBackground( backgroundColor);
 		}
 		
+		private void beep() {
+			if ( MessagePanel.this.isBeepEnabled())
+			  Toolkit.getDefaultToolkit().beep();
+		}
+
 		ErrorKind getErrorKind() {
 			return errorKind;
 		}
@@ -195,13 +203,26 @@ public class MessagePanel extends Composite {
 	private Map<String, ScheduledFuture> flashMessageFutures = new HashMap<String, ScheduledFuture>();
 	
 	private Listener changedListener = null;
-			
+	private boolean beep = false;		
+	
 	public MessagePanel( final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
 		GridLayout layout = new GridLayout(1, true);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		setLayout( layout);
+	}
+	
+	public void enableBeep() {
+		this.beep = true;
+	}
+	
+	public boolean isBeepEnabled() {
+		return beep;
+	}
+	
+	public void disableBeep() {
+		this.beep = false;	
 	}
 	
 	public void setChangedListener(Listener theChangedListener) {

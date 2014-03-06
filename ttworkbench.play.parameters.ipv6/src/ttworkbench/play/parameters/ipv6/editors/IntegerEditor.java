@@ -1,9 +1,13 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
+import java.awt.Toolkit;
 import java.math.BigInteger;
+import java.util.EnumSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
@@ -130,7 +134,9 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 
 
-	
+	private enum CheckResult {
+		IS_INTEGER, IS_IN_RANGE, IS_CHECKED
+	}
 	
 
 	private static final String TITLE = "Integer Editor";
@@ -148,6 +154,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		super.setParameter( theParameter);
 		determineIntegerType();
 	}
+	
 
 	private void determineIntegerType() { 
 		String parameterType = getParameter().getType();
@@ -177,13 +184,31 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		return false;
 	}
 
-	private boolean checkValue( String theValue) {
+	private boolean isValueAnInteger( String theValue) {
 		try {
-		  BigInteger valueAsInteger = new BigInteger( theValue);
-		  return isValueInRange( valueAsInteger);
+		  new BigInteger( theValue);
+		  return true;
 		} catch ( NumberFormatException e) {
 			return false;
 		}
+	}
+	
+	private EnumSet<CheckResult> checkValue( String theValue) {
+		EnumSet<CheckResult> result = EnumSet.noneOf( CheckResult.class);
+		if ( isValueAnInteger( theValue))
+			result.add( CheckResult.IS_INTEGER);
+		else
+			return result;
+		
+		if ( isValueInRange( new BigInteger( theValue))) {
+			result.add( CheckResult.IS_IN_RANGE);
+			result.add( CheckResult.IS_CHECKED);
+		}	
+		return result;
+	}
+
+	private boolean isValidValue( String theValue) {
+		  return isValueAnInteger( theValue) && isValueInRange( new BigInteger( theValue));
 	}
 	
 	private static void setWidthForText( Text theTextControl, int visibleChars) {
@@ -201,6 +226,42 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			 theTextControl.setSize( theTextControl.computeSize( minWidth, SWT.DEFAULT));
 	}
 	
+	private void verifyTextInput( Event theEvent) {
+		String currentText;
+		if ( theEvent.widget instanceof Text)
+			currentText = ((Text) theEvent.widget).getText();
+		else if ( theEvent.widget instanceof Spinner)
+			currentText = ((Spinner) theEvent.widget).getText();
+		else return;
+
+		Character key = theEvent.character;
+		String insertion = (key == '\b') ? "" : theEvent.text; 
+		int beginIndex = theEvent.start;
+		int endIndex = theEvent.end;
+		String leftString = currentText.substring( 0, beginIndex);
+		String rightString = currentText.substring( endIndex, currentText.length());
+		String modifiedText = leftString + insertion + rightString;
+	  
+		if ( modifiedText.isEmpty())
+	  	modifiedText = "0";
+		
+		EnumSet<CheckResult> checkResults = checkValue( modifiedText);
+		if ( checkResults.contains( CheckResult.IS_CHECKED)) {
+			// actualize parameter 
+			getParameter().getValue().setTheNumber( new BigInteger( modifiedText));
+			validateDelayed( 2);
+			theEvent.doit = true;
+		} else {
+			// don't apply changes
+			theEvent.doit = false;
+			getMessagePanel().flashMessage( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", modifiedText), ErrorKind.warning);
+			if ( !checkResults.contains( CheckResult.IS_INTEGER))
+			  getMessagePanel().flashMessage( "valid_chars_info", "Only integer values accepted.", ErrorKind.info);
+		  else if ( !checkResults.contains( CheckResult.IS_IN_RANGE))
+				getMessagePanel().flashMessage( "valid_chars_info", String.format( "Only integers in range [%s,%s] accepted.", integerType.getMinValue(), integerType.getMaxValue()), ErrorKind.info);
+		}	
+	}
+	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
 		final Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
 		text.setText( getParameter().getValue().getTheNumber().toString());
@@ -212,30 +273,17 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		text.addListener( SWT.Verify, new Listener() {
 			
 			@Override
-			public void handleEvent(Event theEvent) {
-				Character key = theEvent.character;
-				String insertion = (key == '\b') ? "" : theEvent.text; 
-				int beginIndex = theEvent.start;
-				int endIndex = theEvent.end;
-				String currentText = text.getText();
-				String leftString = currentText.substring( 0, beginIndex);
-				String rightString = currentText.substring( endIndex, currentText.length());
-				String modifiedText = leftString + insertion + rightString;
-				
-				if ( checkValue( modifiedText)) {
-					// actualize parameter 
-					getParameter().getValue().setTheNumber( new BigInteger( modifiedText));
-					validateDelayed( 2);
-					theEvent.doit = true;
-				} else {
-					// don't apply changes
-					theEvent.doit = false;
-					getMessagePanel().flashMessage( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", modifiedText), ErrorKind.warning);
-					if ( modifiedText.isEmpty())
-					  getMessagePanel().flashMessage( "valid_chars_info", "Requires a number. An empty field refers to no number.", ErrorKind.info);
-				  else	
-					  getMessagePanel().flashMessage( "valid_chars_info", "Only integer values accepted.", ErrorKind.info);
-				}
+			public void handleEvent( Event theEvent) {
+				verifyTextInput( theEvent);
+			}
+		});
+		
+		text.addListener( SWT.FocusOut, new Listener() {
+			
+			@Override
+			public void handleEvent(Event theArg0) {
+				if ( text.getText().isEmpty())
+				  text.setText( "0");
 			}
 		});
 	}
@@ -254,29 +302,10 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 
 			@Override
 			public void handleEvent(Event theEvent) {
-				if ( theEvent.doit == false) {
-					getMessagePanel().flashMessage( "invalid_input_warning", String.format( "Input of char '%c' rejected.", theEvent.character), ErrorKind.warning);
-					if ( theEvent.text.isEmpty())
-						getMessagePanel().flashMessage( "valid_chars_info", "Requires a number. An empty field refers to no number.", ErrorKind.info);
-					else	
-						getMessagePanel().flashMessage( "valid_chars_info", "Only integer values accepted.", ErrorKind.info);
-
-				}
+				verifyTextInput( theEvent);
 			}
 		});
-		
-		spinner.addListener( SWT.Modify, new Listener() {
-			
-			@Override
-			public void handleEvent(Event theEvent) {
-				String value = spinner.getText();
-				if ( checkValue( value)) {
-					// actualize parameter
-					getParameter().getValue().setTheNumber( new BigInteger( value));
-					validateDelayed( 2);
-				}
-			}
-		});
+	
 	}
 	
 	@Override

@@ -132,6 +132,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		messagePanel = new MessagePanel( theParent, SWT.NONE);
 		messagePanel.setFlashDurationInSeconds( 2);
 		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
+		messagePanel.enableBeep();
 		messagePanel.setChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
