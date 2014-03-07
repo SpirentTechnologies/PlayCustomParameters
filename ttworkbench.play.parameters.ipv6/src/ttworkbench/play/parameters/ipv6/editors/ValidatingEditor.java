@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.editors.components.IMessagePanel;
 import ttworkbench.play.parameters.ipv6.editors.components.MessagePanel;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
@@ -41,7 +42,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	}
 	
 	
-	protected MessagePanel getMessagePanel() {
+	public IMessagePanel getMessagePanel() {
 		return messagePanel;
 	}
 

@@ -3,6 +3,7 @@ package ttworkbench.play.parameters.ipv6;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
 import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
+import ttworkbench.play.parameters.ipv6.editors.components.IMessagePanel;
 import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
 import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
@@ -329,7 +331,47 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 			};
 
+			IParameterValidator fibTotalErrorsValidator = new AbstractValidator("Error Counter", ""){
 
+				
+				
+				@Override
+				protected List<ValidationResult> validateParameter( IParameter parameter) {
+
+					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+					
+					Set<IParameterEditor> editors_PX_N = getConfigurator().getEditors( parameter_PX_N);
+					Set<IParameterEditor> editors_PX_FIB_NUMBER = getConfigurator().getEditors( parameter_PX_FIB_NUMBER);
+					Set<IParameterEditor> editors_PX_FIB_SUCC_NUMBER = getConfigurator().getEditors( parameter_PX_FIB_SUCC_NUMBER);
+					
+					int totalErrors = 0;
+					int totalWarnings = 0;
+					IMessagePanel messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessagePanel();
+				  totalErrors += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.error)).size();
+				  totalWarnings += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.warning)).size();
+				  IMessagePanel messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessagePanel();
+				  totalErrors += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
+				  totalWarnings += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
+				  IMessagePanel messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessagePanel();
+				  totalErrors += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
+				  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
+				  
+					if ( totalErrors > 0) {
+						validationResults.add( new ValidationResult(  String.format( "%s: %s errors.", this.getTitle(), totalErrors), ErrorKind.error, "tag_total_errors"));
+					} else {
+						validationResults.add( new ValidationResult(  String.format( "%s: No more errors.", this.getTitle()), ErrorKind.success, "tag_total_errors"));
+					}
+					
+					if ( totalWarnings > 0) {
+						validationResults.add( new ValidationResult(  String.format( "%s: %s warnings.", this.getTitle(), totalErrors), ErrorKind.warning, "tag_total_warnings"));
+					} else {
+						validationResults.add( new ValidationResult(  String.format( "%s: No more warnings.", this.getTitle()), ErrorKind.success, "tag_total_warnings"));
+					}
+					
+					return validationResults;
+				}
+
+			};
 
 			
 

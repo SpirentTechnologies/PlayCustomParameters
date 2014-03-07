@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6.editors.components;
 
 import java.awt.Toolkit;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MessagePanel extends Composite {
+public class MessagePanel extends Composite implements IMessagePanel {
 	
 	
 	private class MessageLine extends Composite {
@@ -99,6 +101,10 @@ public class MessagePanel extends Composite {
 
 		ErrorKind getErrorKind() {
 			return errorKind;
+		}
+		
+		String getMessage() {
+			return message;
 		}
 		
 	}
@@ -184,6 +190,16 @@ public class MessagePanel extends Composite {
 			
 		public void endUpdateCycle() {
 			clearRetainedTags();
+		}
+
+		public List<String> getMessages( EnumSet<ErrorKind> theMessageKinds) {
+			List<String> result = new ArrayList<String>();
+			Collection<MessageLine> messageLines = taggedMessageLines.values();
+			for (MessageLine messageLine : messageLines) {
+				if ( theMessageKinds.contains( messageLine.getErrorKind()))
+				  result.add( messageLine.getMessage());
+			}
+			return result;
 		}		
 		
 	}
@@ -241,7 +257,7 @@ public class MessagePanel extends Composite {
 		this.flashDurationInSeconds = theFlashDurationInSeconds;
 	}
 	
-
+	@Override
 	public void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
 		if ( currentSenderId == null)
 			return;
@@ -273,6 +289,7 @@ public class MessagePanel extends Composite {
 		}
 	}
 
+	@Override
 	public void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
 		if ( currentSenderId == null)
 			return;
@@ -281,6 +298,7 @@ public class MessagePanel extends Composite {
 		messageBlock.addUntaggedMessage( theMessage, theErrorKind);
 	} 
 	
+	@Override
 	public void flashMessage( final String theTag, final String theWarning, final ErrorKind theErrorKind) {
 		final String id = this.getClass().getName() + "@" + this.hashCode(); 
 		if ( !messages.containsKey( id))
@@ -318,6 +336,7 @@ public class MessagePanel extends Composite {
 			}
 	}
 	
+	@Override
 	public void beginUpdateForSender( final Object theSenderId) {
 		this.currentSenderId = theSenderId;
 		
@@ -329,6 +348,7 @@ public class MessagePanel extends Composite {
 		messageBlock.beginUpdateCycle();
 	}
 
+	@Override
   public void endUpdate() {
   	MessageBlock messageBlock = messages.get( currentSenderId);
   	messageBlock.endUpdateCycle();
@@ -340,11 +360,17 @@ public class MessagePanel extends Composite {
 				changedListener.handleEvent( new Event());
 			}
 	}
-
-	public void flashMessage(String theWarning, com.testingtech.ttworkbench.metamodel.muttcn.validator.ErrorKind theInfo) {
-		// TODO Auto-generated method stub
-		
+	
+	@Override
+	public List<String> getMessages( EnumSet<ErrorKind> theMessageKinds) {
+		List<String> result = new ArrayList<String>();
+		Collection<MessageBlock> messageBlocks = messages.values();
+		for (MessageBlock messageBlock : messageBlocks) {
+			result.addAll( messageBlock.getMessages( theMessageKinds));
+		}
+		return result;
 	}
+
 	
 	
 
