@@ -143,11 +143,18 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	private static final String DESCRIPTION = "";
 	
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
+	private boolean useOnlyTextField;
 	
 	
 	public IntegerEditor() {
 		super( TITLE, DESCRIPTION);
 	}
+	
+	public IntegerEditor( final boolean optionUseOnlyTextField) {
+		super( TITLE, DESCRIPTION);
+		this.useOnlyTextField = optionUseOnlyTextField;
+	}
+
 	
 	@Override
 	public void setParameter(IParameter<IntegerValue> theParameter) {
@@ -309,25 +316,22 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	@Override
-	protected void createEditRow(Composite theParent, Layout theLayout, Object[] theLayoutData, Object[] theParams) {
-		Composite container = new Composite( theParent, SWT.None);
-		container.setLayout( theLayout);
-		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
-		
-		CLabel label = new CLabel( container, SWT.LEFT);
+	protected void createEditRow(Composite theContainer, Object[] theLayoutData, Object[] theParams) {
+		CLabel label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
 		label.setLayoutData( theLayoutData[0]);
 		
-		if ( integerType.getMinValue() == null ||
+		if ( useOnlyTextField ||
+				 integerType.getMinValue() == null ||
 				 integerType.getMaxValue() == null ||
 				 integerType.getMinValue().compareTo( new BigInteger( String.valueOf( Integer.MIN_VALUE))) < 0 ||
 				 integerType.getMaxValue().compareTo( new BigInteger( String.valueOf( Integer.MAX_VALUE))) > 0) {
-			createTextInputWidget( container, theLayoutData[0]);
+			createTextInputWidget( theContainer, theLayoutData[0]);
 		} else {
-			createSpinnerInputWidget( container, theLayoutData[0]);
+			createSpinnerInputWidget( theContainer, theLayoutData[0]);
 		}
 			
-    label = new CLabel( container, SWT.LEFT);
+    label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getDescription());
 		label.setLayoutData( theLayoutData[2]);
 	}

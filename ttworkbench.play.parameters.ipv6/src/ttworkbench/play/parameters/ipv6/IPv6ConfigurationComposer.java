@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import ttworkbench.play.parameters.ipv6.components.IMessagePanel;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
 import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
-import ttworkbench.play.parameters.ipv6.editors.components.IMessagePanel;
 import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
 import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
@@ -331,7 +331,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 			};
 
-			IParameterValidator fibTotalErrorsValidator = new AbstractValidator("Error Counter", ""){
+			IParameterValidator fibWidgetLayerValidator = new AbstractValidator("Error Counter", ""){
 
 				
 				
@@ -390,6 +390,9 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			fibValidator_PX_FIB_SUCC_NUMBER.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
 			fibSeqValidator.registerForMessages( editor_PX_FIB_NUMBER);
 			fibSuccValidator.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
+			
+		  // register widgets to corresponding validators
+		//	fibWidgetLayerValidator.registerForMessages( fibWidget);
 
 			// assign validators to the parameters they have to check
 			getConfigurator().assign( fibValidator_PX_FIB_NUMBER, fibWidget, parameter_PX_FIB_NUMBER);

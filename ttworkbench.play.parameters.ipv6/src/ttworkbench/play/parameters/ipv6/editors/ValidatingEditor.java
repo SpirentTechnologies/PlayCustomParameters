@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.editors.components.IMessagePanel;
-import ttworkbench.play.parameters.ipv6.editors.components.MessagePanel;
+import ttworkbench.play.parameters.ipv6.components.IMessagePanel;
+import ttworkbench.play.parameters.ipv6.components.MessagePanel;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
@@ -72,8 +72,8 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		int i = 0;
 		for (int j = 0; j < theParams.length; j++) {
 			if ( theParams[j] instanceof GridData || 
-					theParams[j] instanceof RowData ||	  
-					theParams[j] instanceof FormData) {
+				 	 theParams[j] instanceof RowData ||	  
+					 theParams[j] instanceof FormData) {
 				layoutData[i] = theParams[j];
 				theParams[j] = null; // mark param as handled
 				i++;
@@ -93,7 +93,10 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
   
 	
-	
+	/**
+	 * Validates the current parameter value in the main thread.
+	 * @return
+	 */
 	protected List<ValidationResult> validate() {
 		IConfiguration configuration = getConfiguration();
 		IParameter<?> parameter = getParameter();
@@ -109,7 +112,11 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	}
 
 
-
+  /**
+   * Validates the current parameter value delayed in another thread.
+   * TODO remove parameter theDelayInSeconds -> put into behavior class
+   * @param theDelayInSeconds 
+   */
 	protected void validateDelayed( final int theDelayInSeconds) {
 		if ( validationTaskFuture != null) 
 			validationTaskFuture.cancel( true);
@@ -126,7 +133,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 
 	
 	
-	protected abstract void createEditRow(Composite theParent, Layout theLayout, Object[] theLayoutData, Object[] theParams);
+	protected abstract void createEditRow(Composite theContainer, Object[] theLayoutData, Object[] theParams);
 	
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
@@ -151,10 +158,15 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		
 		Composite container = new Composite( theParent, SWT.None);
 		container.setLayout( new GridLayout( 1, true));
+	  // TODO check layout data. Is compatible? to Flowlayout or Filllayout 
 		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		
 		createMessageRow( container);
-		createEditRow( container, editLayout, editLayoutData, theParams);
+		
+		Composite editRowContainer = new Composite( container, SWT.None);
+		editRowContainer.setLayout( editLayout);
+		editRowContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+		createEditRow( editRowContainer, editLayoutData, theParams);
 		
 		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		container.layout();

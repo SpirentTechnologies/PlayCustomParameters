@@ -66,10 +66,5 @@ public class DefaultWidget extends AbstractWidget {
 
 	
 
-	@Deprecated
-	@Override
-	protected Set<IParameter> filterRelevantParameters(Set<IParameter> theParameters) {
-		return theParameters;
-	}
 
 }

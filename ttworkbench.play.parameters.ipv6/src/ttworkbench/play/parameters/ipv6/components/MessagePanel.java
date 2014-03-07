@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.editors.components;
+package ttworkbench.play.parameters.ipv6.components;
 
 import java.awt.Toolkit;
 import java.util.Collection;

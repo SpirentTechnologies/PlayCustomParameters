@@ -5,12 +5,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+
+import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
+import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
@@ -56,6 +66,21 @@ public abstract class AbstractWidget implements IWidget {
 	public boolean isVisible() {
 		return visible;
 	}
+	
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public Image getImage() {
+		return image;
+	}
 
 	
 	@Override
@@ -95,25 +120,9 @@ public abstract class AbstractWidget implements IWidget {
 		return valueProvider;
 	}
 	
+	@Override
 	public abstract Control createControl(Composite theParent);
 
-	@Override
-	public String getTitle() {
-		return title;
-	}
 
-	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	@Override
-	public Image getImage() {
-		return image;
-	}
-	
-	@Deprecated
-	protected abstract Set<IParameter> filterRelevantParameters( Set<IParameter> theParameters);
-	
 
 }
