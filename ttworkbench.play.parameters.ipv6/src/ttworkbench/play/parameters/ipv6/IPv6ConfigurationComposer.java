@@ -244,7 +244,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 				nextFib = getFibonacciNumber( n);
 				comparision = theValue.compareTo( nextFib);
 				n = n.add(  new BigInteger( "1"));
-			} while( comparision > 0);
+			} while( comparision >= 0);
 			return nextFib;
 		}
 
@@ -286,18 +286,22 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 			};		
 
-			IParameterValidator fibSeqValidator_PX_N = new AbstractValidator( "Fibonacci Sequence Validator", ""){
+			IParameterValidator fibSeqValidator = new AbstractValidator( "Fibonacci Sequence Validator", ""){
 				@Override
 				protected List<ValidationResult> validateParameter( IParameter parameter) {
 					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 
-					BigInteger inputSeqenceNumber =( (IntegerValue) parameter.getValue()).getTheNumber();
+					BigInteger inputSeqenceNumber = parameter_PX_N.getValue().getTheNumber();
 					BigInteger inputFibValue = parameter_PX_FIB_NUMBER.getValue().getTheNumber();
 					BigInteger fibValue = getFibonacciNumber( inputSeqenceNumber);
 
           if ( inputFibValue.compareTo( fibValue) != 0) {
-          	validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a the fibonacci number of %s.", this.getTitle(), inputFibValue, fibValue), ErrorKind.warning, "tag_is_not_fib_of_n"));		
+          	validationResults.add( new ValidationResult( String.format( "%s: %s is NOT the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.error, "tag_is_not_fib_of_n"));		
+            validationResults.add( new ValidationResult(  String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), fibValue, inputSeqenceNumber), ErrorKind.info, "tag_is_fib_of_hint")); 
+          } else {
+          	validationResults.add( new ValidationResult( String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.success, "tag_is_not_fib_of_n"));		
           }
+          	
           return validationResults;
 				}
 
@@ -310,8 +314,8 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 
 					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-					/*					BigInteger fibSuccValue = ((IntegerValue)usedParameters.get( "fibSucc").getValue()).getTheNumber();
-					BigInteger fibValue = ((IntegerValue)usedParameters.get( "fib").getValue()).getTheNumber();
+					BigInteger fibSuccValue = parameter_PX_FIB_SUCC_NUMBER.getValue().getTheNumber();
+					BigInteger fibValue = parameter_PX_FIB_NUMBER.getValue().getTheNumber();
 					BigInteger fibNextValue = nextFibonacciNumber( fibValue);
 
 					if ( fibSuccValue.compareTo( fibNextValue) == 0) {
@@ -319,7 +323,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 					} else {
 						validationResults.add( new ValidationResult(  String.format( "%s: %s is NOT the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.error, "tag_succ_fib"));
 						validationResults.add( new ValidationResult(  String.format( "%s: %s is successor of %s.", this.getTitle(), fibNextValue, fibValue), ErrorKind.info, "tag_succ_fib_hint"));    	
-					}*/
+					}
 					return validationResults;
 				}
 
@@ -342,14 +346,14 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			// register editors to corresponding validators
 			fibValidator_PX_FIB_NUMBER.registerForMessages( editor_PX_FIB_NUMBER);
 			fibValidator_PX_FIB_SUCC_NUMBER.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
-			fibSeqValidator_PX_N.registerForMessages( editor_PX_FIB_NUMBER);
+			fibSeqValidator.registerForMessages( editor_PX_FIB_NUMBER);
+			fibSuccValidator.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
 
 			// assign validators to the parameters they have to check
 			getConfigurator().assign( fibValidator_PX_FIB_NUMBER, fibWidget, parameter_PX_FIB_NUMBER);
 			getConfigurator().assign( fibValidator_PX_FIB_SUCC_NUMBER, fibWidget, parameter_PX_FIB_SUCC_NUMBER);
-			getConfigurator().assign( fibSeqValidator_PX_N, fibWidget, parameter_PX_N);
-
-
+			getConfigurator().assign( fibSeqValidator, fibWidget, parameter_PX_N, parameter_PX_FIB_NUMBER);
+			getConfigurator().assign( fibSuccValidator, fibWidget, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);
 
 
 
