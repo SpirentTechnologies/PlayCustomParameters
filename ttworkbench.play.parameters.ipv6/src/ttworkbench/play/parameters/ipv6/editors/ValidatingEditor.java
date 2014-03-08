@@ -27,6 +27,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler {
@@ -34,8 +35,9 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 
 	private MessagePanel messagePanel = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
+	private static final ScheduledExecutorService validationMessageWorker = Executors.newSingleThreadScheduledExecutor();
 	private ScheduledFuture<?> validationTaskFuture;
-	
+	private ScheduledFuture<?> validationMessageTaskFuture;	
 	
 	public ValidatingEditor( String theTitle, String theDescription) {
 		super( theTitle, theDescription);
@@ -120,10 +122,39 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	protected void validateDelayed( final int theDelayInSeconds) {
 		if ( validationTaskFuture != null) 
 			validationTaskFuture.cancel( true);
+		if ( validationMessageTaskFuture != null) 
+			validationMessageTaskFuture.cancel( true);
+		
 
-		Runnable validationTask = new Runnable() {
+		Runnable validationMessageTask = new Runnable() {
+			@Override
 			public void run() {
-				validate();
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						getMessagePanel().putTaggedMessage( "run_validator", "Validation process in progress.", ErrorKind.info);
+					}
+				});
+			}
+		};
+		validationMessageTaskFuture = validationMessageWorker.schedule( validationMessageTask, theDelayInSeconds +1, TimeUnit.SECONDS);	
+		
+		Runnable validationTask = new Runnable() {
+			@Override
+			public void run() {
+				
+				for (int i = 0; i < 800000; i++) {
+					System.out.println( "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+				}
+				
+				validate();	
+				
+				validationMessageTaskFuture.cancel( false);
+				
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						getMessagePanel().putTaggedMessage( "run_validator", "Validation finished.", ErrorKind.success);
+					}
+				});
 			}
 		};
 		validationTaskFuture = validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);

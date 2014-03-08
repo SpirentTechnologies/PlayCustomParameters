@@ -211,43 +211,41 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		final IParameter<IntegerValue> parameter_PX_N = getParametersMap().getParameterById( "PX_N");
 		final IParameter<IntegerValue> parameter_PX_FIB_NUMBER = getParametersMap().getParameterById( "PX_FIB_NUMBER");
 		final IParameter<IntegerValue> parameter_PX_FIB_SUCC_NUMBER = getParametersMap().getParameterById( "PX_FIB_SUCC_NUMBER");
-		
+		final BigInteger[] fibonacciSequence = new BigInteger[256];
 
 		public FibWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 			super( theConfigurator, theParametersMap);
-
+			calcFibonacciSequence();
+		}
+		
+		private void calcFibonacciSequence() {
+			fibonacciSequence[0] = new BigInteger( "0");
+			fibonacciSequence[1] = new BigInteger( "1");
+			for ( int i = 2; i < 256; i++) {
+				fibonacciSequence[i] = fibonacciSequence[i-2].add( fibonacciSequence[i-1]);
+			}
 		}
 
 		private BigInteger getFibonacciNumber( BigInteger theValue) {
-			if ( theValue.compareTo( new BigInteger( "0")) <= 0)
+			if ( theValue.intValue() > 255)
 				return new BigInteger( "0");
-			if ( theValue.compareTo( new BigInteger( "1")) <= 0)
-				return new BigInteger( "1");
-			return getFibonacciNumber( theValue.subtract( new BigInteger( "1"))).add( getFibonacciNumber( theValue.subtract( new BigInteger( "2")))); 
+			return fibonacciSequence[ theValue.intValue()];
 		}
 
 		private boolean isFibonacciNumber( BigInteger theValue) {
-			int comparision;
-			BigInteger n = new BigInteger( "0");
-			do { 
-				comparision = theValue.compareTo( getFibonacciNumber( n));
-				if ( comparision == 0)
+			for (int i = 0; i < fibonacciSequence.length; i++) {
+				if ( fibonacciSequence[i].compareTo( theValue) == 0)
 					return true;
-				n = n.add(  new BigInteger( "1"));
-			} while( comparision > 0);
+			} 
 			return false;
 		}
 
 		private BigInteger nextFibonacciNumber( BigInteger theValue) {
-			int comparision;
-			BigInteger n = new BigInteger( "0");
-			BigInteger nextFib;
-			do { 
-				nextFib = getFibonacciNumber( n);
-				comparision = theValue.compareTo( nextFib);
-				n = n.add(  new BigInteger( "1"));
-			} while( comparision >= 0);
-			return nextFib;
+			for (int i = 0; i < fibonacciSequence.length -1; i++) {
+				if ( fibonacciSequence[i].compareTo( theValue) > 0)
+					return fibonacciSequence[i];
+			} 
+			return new BigInteger( "0");
 		}
 
 		@Override

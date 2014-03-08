@@ -13,6 +13,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -220,6 +223,7 @@ public class MessagePanel extends Composite implements IMessagePanel {
 	
 	private Listener changedListener = null;
 	private boolean beep = false;		
+	private Lock updateLock = new ReentrantLock();
 	
 	public MessagePanel( final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
@@ -227,6 +231,7 @@ public class MessagePanel extends Composite implements IMessagePanel {
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		setLayout( layout);
+		messages.put( getThisId(), new MessageBlock());
 	}
 	
 	public void enableBeep() {
@@ -259,14 +264,13 @@ public class MessagePanel extends Composite implements IMessagePanel {
 	
 	@Override
 	public void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
-		if ( currentSenderId == null)
-			return;
-		
+		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
+
 		if ( !flashTaggedSuccessMessages && 
 				 theErrorKind.equals( ErrorKind.success))
 			return; 
 		
-		final MessageBlock messageBlock = messages.get( currentSenderId);
+		final MessageBlock messageBlock = messages.get( id);
 		messageBlock.putTaggedMessage( theTag, theMessage, theErrorKind);
 		
 		if ( flashTaggedSuccessMessages && 
@@ -277,32 +281,31 @@ public class MessagePanel extends Composite implements IMessagePanel {
 						@Override
 						public void run() {
 							messageBlock.clearTaggedSuccessMessage( theTag);
-							if ( changedListener != null)
-								synchronized (changedListener) {
-									changedListener.handleEvent( new Event());
-								}
+							System.out.println( "efrrsddfggdsfgdfgdfg");
+							doOnChange();
 						}
 					});		
 				}
 			};
 			messageWorker.schedule( removeMessageTask, flashDurationInSeconds, TimeUnit.SECONDS);
 		}
+		
+    tryOnChange();
 	}
 
 	@Override
 	public void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
-		if ( currentSenderId == null)
-			return;
-		
-		MessageBlock messageBlock = messages.get( currentSenderId);
+		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
+
+		MessageBlock messageBlock = messages.get( id);
 		messageBlock.addUntaggedMessage( theMessage, theErrorKind);
+	
+    tryOnChange();
 	} 
 	
 	@Override
 	public void flashMessage( final String theTag, final String theWarning, final ErrorKind theErrorKind) {
-		final String id = this.getClass().getName() + "@" + this.hashCode(); 
-		if ( !messages.containsKey( id))
-			messages.put( id, new MessageBlock());
+		final String id = getThisId();
 		final MessageBlock messageBlock = messages.get( id);
 		
 		final String tag = theTag != null && !theTag.isEmpty() ? theTag : String.valueOf( System.currentTimeMillis());
@@ -318,10 +321,7 @@ public class MessagePanel extends Composite implements IMessagePanel {
 					@Override
 					public void run() {
 						messageBlock.clearTaggedMessage( tag);
-						if ( changedListener != null)
-							synchronized (changedListener) {
-								changedListener.handleEvent( new Event());
-							}
+						doOnChange();
 					}
 				});		
 			}
@@ -330,14 +330,13 @@ public class MessagePanel extends Composite implements IMessagePanel {
 		ScheduledFuture flashMessageFuture = messageWorker.schedule( flashWarningTask, Math.round( flashDurationInSeconds * 1.5), TimeUnit.SECONDS);
 		flashMessageFutures.put( tag, flashMessageFuture);
 		
-		if ( changedListener != null)
-			synchronized (changedListener) {
-				changedListener.handleEvent( new Event());
-			}
+		doOnChange();
 	}
 	
 	@Override
 	public void beginUpdateForSender( final Object theSenderId) {
+		updateLock.lock();
+		
 		this.currentSenderId = theSenderId;
 		
 		// create a message block if no one exist yet
@@ -350,16 +349,18 @@ public class MessagePanel extends Composite implements IMessagePanel {
 
 	@Override
   public void endUpdate() {
-  	MessageBlock messageBlock = messages.get( currentSenderId);
-  	messageBlock.endUpdateCycle();
-  	// TODO remove empty message blocks ? 
-		this.currentSenderId = null;
-		
-		if ( changedListener != null)
-			synchronized (changedListener) {
-				changedListener.handleEvent( new Event());
-			}
+		try {
+			MessageBlock messageBlock = messages.get( currentSenderId);
+			messageBlock.endUpdateCycle();
+			// TODO remove empty message blocks ? 
+			this.currentSenderId = null;
+
+			doOnChange();
+		} finally {
+			updateLock.unlock();
+		}
 	}
+	
 	
 	@Override
 	public List<String> getMessages( EnumSet<ErrorKind> theMessageKinds) {
@@ -369,6 +370,30 @@ public class MessagePanel extends Composite implements IMessagePanel {
 			result.addAll( messageBlock.getMessages( theMessageKinds));
 		}
 		return result;
+	}
+	
+	
+	private void doOnChange() {
+		if ( changedListener != null)
+			synchronized (changedListener) {
+				changedListener.handleEvent( new Event());
+			}
+	}
+	
+	private void tryOnChange() {
+		if ( this.currentSenderId == null)
+			doOnChange();
+		else
+			try {
+				updateLock.tryLock();
+				doOnChange();
+			} finally {
+				updateLock.unlock();
+			}
+	}
+	
+	private String getThisId() {
+		return this.getClass().getName() + "@" + this.hashCode(); 
 	}
 
 	
