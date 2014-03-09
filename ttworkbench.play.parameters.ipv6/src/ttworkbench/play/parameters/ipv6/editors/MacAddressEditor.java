@@ -25,7 +25,7 @@ import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class MacAddressEditor extends AbstractEditor {
+public class MacAddressEditor extends AbstractEditor<Object> {
 
 	
 	private static final String TITLE = "MAC Address Editor";
@@ -51,41 +51,45 @@ public class MacAddressEditor extends AbstractEditor {
 		Composite container = new Composite( theParent, SWT.None);
 		container.setLayout( layout);
 		
-        CLabel label = new CLabel( container, SWT.LEFT);
+		
+    CLabel label = new CLabel( container, SWT.NONE);
 		label.setText( this.getParameter().getName());
 		label.setLayoutData( gridData);
-
-		Composite macAddrContainer = new Composite( container, SWT.None); 
-		{
-			// determine the width to display 2 characters
-			GC graphicalContext = new GC( new StyledText( macAddrContainer, SWT.NONE));
-			FontMetrics fontMetrics = graphicalContext.getFontMetrics();
-			int macAddrContainerWidth = 16 * fontMetrics.getAverageCharWidth();
-			int macAddrContainerHeight = fontMetrics.getHeight();
-
-			RowLayout macAddrLayout = new RowLayout();
-			macAddrLayout.wrap = false;
-			macAddrLayout.spacing = 2;
-			macAddrLayout.marginHeight = 0;
-			macAddrLayout.marginWidth = 0;
-			macAddrLayout.marginTop = 0;
-			macAddrLayout.marginBottom = 1;
-			macAddrLayout.marginLeft = 2;
-			macAddrLayout.marginRight = 2;
-			macAddrContainer.setLayout( macAddrLayout);
-			macAddrContainer.setSize( macAddrContainerWidth, macAddrContainerHeight);
-
-			Color colorBlack = Display.getCurrent().getSystemColor( SWT.COLOR_BLACK);
-			macAddrContainer.setBackground( colorBlack);
-		}
-		StyledText[] macChunks = new StyledText[6];
-		for (StyledText text : macChunks) {
-		    text = new StyledText( macAddrContainer, SWT.CENTER);
-			text.setTextLimit( 2);
-		}
+		Text macText = new Text( container, SWT.LEFT);
+		macText.setLayoutData( gridData);
 		
-		label.setText( this.getParameter().getValue().toString());
-		label.setLayoutData( gridData);
+//		CLabel label1 = new CLabel( container, SWT.LEFT);
+//		label1.setText( this.getParameter().getName());
+//		label1.setLayoutData( gridData);
+//
+//		Composite macAddrContainer = new Composite( container, SWT.None); 
+//		{
+//			// determine the width to display 2 characters
+//			GC graphicalContext = new GC( new StyledText( macAddrContainer, SWT.NONE));
+//			FontMetrics fontMetrics = graphicalContext.getFontMetrics();
+//			int macAddrContainerWidth = 16 * fontMetrics.getAverageCharWidth();
+//			int macAddrContainerHeight = fontMetrics.getHeight();
+//
+//			RowLayout macAddrLayout = new RowLayout();
+//			macAddrLayout.wrap = false;
+//			macAddrLayout.spacing = 2;
+//			macAddrLayout.marginHeight = 0;
+//			macAddrLayout.marginWidth = 0;
+//			macAddrLayout.marginTop = 0;
+//			macAddrLayout.marginBottom = 1;
+//			macAddrLayout.marginLeft = 2;
+//			macAddrLayout.marginRight = 2;
+//			macAddrContainer.setLayout( macAddrLayout);
+//			macAddrContainer.setSize( macAddrContainerWidth, macAddrContainerHeight);
+//
+//			Color colorBlack = Display.getCurrent().getSystemColor( SWT.COLOR_BLACK);
+//			macAddrContainer.setBackground( colorBlack);
+//		}
+//		StyledText[] macChunks = new StyledText[6];
+//		for (StyledText text : macChunks) {
+//		    text = new StyledText( macAddrContainer, SWT.CENTER);
+//			text.setTextLimit( 2);
+//		}	
 		
 		return container;
 	}
