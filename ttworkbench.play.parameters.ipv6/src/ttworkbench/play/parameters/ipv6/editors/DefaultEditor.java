@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
@@ -23,7 +23,7 @@ public class DefaultEditor extends AbstractEditor<Object> {
 	}
 
 	@Override
-	public Composite createControl(Composite theTheParent, Object... theParams) {
+	public Composite createControl(Composite theTheParent) {
 		IParameter<Object> par = getParameter();
 		
 		Composite composite = new Group(theTheParent, SWT.NONE);
@@ -48,8 +48,8 @@ public class DefaultEditor extends AbstractEditor<Object> {
 	}
 
 	@Override
-	public IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
-		return new DefaultEditorLookAndBehaviour();
+	protected IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
+		return new IntegerEditorLookAndBehaviour();
 	}
 
 

@@ -45,18 +45,13 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	public ValidatingEditor( String theTitle, String theDescription) {
 		super( theTitle, theDescription);
+		setLookAndBehaviour( getDefaultLookAndBehaviour());
 	}
 	
 	public IValidatingEditorLookAndBehaviour getLookAndBehaviour() {
 		return this.lookAndBehaviour;
 	}
-	
-	@Override
-	@Deprecated
-	protected void setLookAndBehaviour(IEditorLookAndBehaviour theLookAndBehaviour) {
-		throw new UnsupportedOperationException();
-	}
-	
+		
 	protected void setLookAndBehaviour( IValidatingEditorLookAndBehaviour theLookAndBehaviour) {
 		this.lookAndBehaviour = theLookAndBehaviour;
 		super.setLookAndBehaviour( theLookAndBehaviour.getEditorLookAndBehaviour());
@@ -69,50 +64,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		return messagePanel;
 	}
 	
-	/*
-	protected Layout extractLayoutFromParams( final Layout theDefaultLayout, final Object ...theParams) {
-		Layout layout = theDefaultLayout; 
-		for (int i = 0; i < theParams.length; i++) {
-			if ( theParams[i] instanceof Layout) {
-		    layout = (Layout) theParams[i];
-		    theParams[i] = null; // remove handled param
-		    break;
-			}
-		}
-		return layout;
-	}
 
-	protected Object[] extractLayoutDataFromParams( final Object theDefaultLayoutData, final int theCountOfCells, final Object[] theParams) {
-		if ( theCountOfCells < 1) {
-			Object[] defaultResult = {theDefaultLayoutData};
-			return defaultResult;
-		}
-		
-		Object[] layoutData = new Object[theCountOfCells];
-		layoutData[0] = theDefaultLayoutData;
-		
-		int i = 0;
-		for (int j = 0; j < theParams.length; j++) {
-			if ( theParams[j] instanceof GridData || 
-				 	 theParams[j] instanceof RowData ||	  
-					 theParams[j] instanceof FormData) {
-				layoutData[i] = theParams[j];
-				theParams[j] = null; // mark param as handled
-				i++;
-				if ( i >= theCountOfCells)
-					break;
-			}
-		} 
-		
-		if ( i < theCountOfCells) {
-			for ( int j = i; j < layoutData.length; j++) {
-				layoutData[j] = layoutData[0];
-			}
-		}
-		
-		return layoutData;
-	}
-	*/
   
 	
 	/**
@@ -180,7 +132,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 
 	
 	
-	protected abstract void createEditRow(Composite theContainer, IEditorLookAndBehaviour theIEditorLookAndBehaviour);
+	protected abstract void createEditRow(Composite theContainer);
 	
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
@@ -197,7 +149,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	
 	@Override
-	public final Composite createControl(Composite theParent, Object... theParams) {
+	public final Composite createControl(Composite theParent) {
 	
 	  Composite container = new Composite( theParent, SWT.None);
 		container.setLayout( new GridLayout( 1, true));
@@ -209,7 +161,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		Composite editRowContainer = new Composite( container, SWT.None);
 		editRowContainer.setLayout( getLookAndBehaviour().getEditorLookAndBehaviour().getLayout());
 		editRowContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
-		createEditRow( editRowContainer, getLookAndBehaviour().getEditorLookAndBehaviour());
+		createEditRow( editRowContainer);
 		
 		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		container.layout();

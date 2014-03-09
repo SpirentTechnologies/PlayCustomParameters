@@ -16,8 +16,9 @@ public class EditorTest {
 		shell.setLayout(new ColumnLayout());
 		shell.setText( "Editor Test");
 
-		new IPv6Editor().createControl( shell, SWT.NONE);
-		new MacAddressEditor().createControl( shell, SWT.NONE);
+		// please assign a parameter first before calling createControl
+		//new IPv6Editor().createControl( shell);
+		//new MacAddressEditor().createControl( shell);
 
 		shell.open();
 

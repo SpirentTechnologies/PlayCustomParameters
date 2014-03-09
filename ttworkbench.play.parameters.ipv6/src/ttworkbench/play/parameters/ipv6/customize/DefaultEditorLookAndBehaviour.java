@@ -11,15 +11,15 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 
 	@Override
 	public Layout getLayout() {
-		RowLayout rowLayout = new RowLayout( SWT.HORIZONTAL);
-		return rowLayout;
+		GridLayout gridLayout = new GridLayout( 3, false);
+		return gridLayout;
 	}
 
 	@Override
 	public Object[] getLayoutDataOfControls() {
-		RowData[] layoutData = new RowData[1];
-		layoutData[0] = new RowData();
-		return layoutData;
+		GridData[] gridData = new GridData[1];
+		gridData[0] = new GridData( SWT.FILL, SWT.FILL, true, false);
+		return gridData;
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 
 	@Override
 	public IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour() {
-		return null;
+		return new DefaultMessagePanelLookAndBehaviour();
 	}
 
 }

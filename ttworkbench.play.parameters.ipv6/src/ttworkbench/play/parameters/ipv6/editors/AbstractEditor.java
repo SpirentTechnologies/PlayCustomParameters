@@ -36,7 +36,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 		super();
 		this.title = theTitle;
 		this.description = theDescription;
-		this.lookAndBehaviour = getDefaultLookAndBehaviour();
+		setLookAndBehaviour( getDefaultLookAndBehaviour());
 	}
 	
 	protected Set<T> getValues() {
@@ -138,7 +138,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 		return lookAndBehaviour;
 	}
 	
-	public abstract IEditorLookAndBehaviour getDefaultLookAndBehaviour();
+	protected abstract IEditorLookAndBehaviour getDefaultLookAndBehaviour();
 	
 	
 

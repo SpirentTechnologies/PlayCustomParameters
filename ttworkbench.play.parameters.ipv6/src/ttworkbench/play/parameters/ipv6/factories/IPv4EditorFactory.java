@@ -120,13 +120,6 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 			}
 
 			@Override
-			public Composite createControl(Composite theTheParent,
-					Object... theParams) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
 			public void setConfiguration(IConfiguration theTheConfiguration) {
 				// TODO Auto-generated method stub
 				
@@ -136,6 +129,12 @@ public class IPv4EditorFactory implements IParameterEditorFactory {
 			public void updateConfig() {
 				// TODO Auto-generated method stub
 				
+			}
+
+			@Override
+			public Composite createControl(Composite theParent) {
+				// TODO Auto-generated method stub
+				return null;
 			}
 			
 		};

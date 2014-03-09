@@ -80,7 +80,7 @@ public class CustomWidget extends NotifyingWidget {
 		if ( editorsContainer != null) {	
 			Set<IParameterEditor> editors = getEditors();
 			for ( IParameterEditor editor : editors) {
-				Control editorControl = editor.createControl( editorsContainer, lookAndBehaviour.getEditorLookAndBehaviour()/*gridData, gridLayout*/);
+				Control editorControl = editor.createControl( editorsContainer);
 				editorControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 				
 				// react on dynamically insertion/deletion of controls when messages occur

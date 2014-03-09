@@ -4,7 +4,7 @@ public class DefaultWidgetLookAndBehaviour implements IWidgetLookAndBehaviour {
 
 	@Override
 	public IValidatingEditorLookAndBehaviour getEditorLookAndBehaviour() {
-		return new DefaultEditorLookAndBehaviour();
+		return new IntegerEditorLookAndBehaviour();
 	}
 
 }

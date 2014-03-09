@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 
@@ -320,8 +320,8 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	@Override
-	protected void createEditRow(Composite theContainer, IEditorLookAndBehaviour theEditorLookAndBehaviour) {
-		Object[] layoutData = theEditorLookAndBehaviour.getLayoutDataOfControls();
+	protected void createEditRow(Composite theContainer) {
+		Object[] layoutData = this.getLookAndBehaviour().getLayoutDataOfControls();
 		CLabel label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
 		label.setLayoutData( layoutData[0]);
@@ -343,7 +343,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 
 	@Override
 	public IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour() {
-		return new DefaultEditorLookAndBehaviour();
+		return new IntegerEditorLookAndBehaviour();
 	}
 
 

@@ -19,8 +19,9 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -36,17 +37,11 @@ public class MacAddressEditor extends AbstractEditor<Object> {
 	}
 
 	@Override
-	public Composite createControl(Composite theParent, Object... theParams) {
+	public Composite createControl(Composite theParent) {
 		
 		
-		GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, false);
-		Layout layout = new GridLayout( 3, false);
-		for (Object object : theParams) {
-		  if ( object instanceof GridData)
-			gridData = (GridData) object;
-		  if ( object instanceof Layout)
-		    layout = (Layout) object;
-		}
+		Object layoutData = getLookAndBehaviour().getLayoutDataOfControls()[0]; 
+		Layout layout = getLookAndBehaviour().getLayout(); 
 		
 		Composite container = new Composite( theParent, SWT.None);
 		container.setLayout( layout);
@@ -54,9 +49,9 @@ public class MacAddressEditor extends AbstractEditor<Object> {
 		
     CLabel label = new CLabel( container, SWT.NONE);
 		label.setText( this.getParameter().getName());
-		label.setLayoutData( gridData);
+		label.setLayoutData( layoutData);
 		Text macText = new Text( container, SWT.LEFT);
-		macText.setLayoutData( gridData);
+		macText.setLayoutData( layoutData);
 		
 //		CLabel label1 = new CLabel( container, SWT.LEFT);
 //		label1.setText( this.getParameter().getName());
@@ -97,7 +92,7 @@ public class MacAddressEditor extends AbstractEditor<Object> {
 
 
 	@Override
-	public IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
+	protected IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
 		return new DefaultEditorLookAndBehaviour();
 	}
 
