@@ -24,6 +24,7 @@ import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
 import ttworkbench.play.parameters.ipv6.widgets.DefaultWidget;
 import ttworkbench.play.parameters.ipv6.widgets.FibWidget;
 import ttworkbench.play.parameters.ipv6.widgets.IPv6Widget;
+import ttworkbench.play.parameters.ipv6.widgets.MacWidget;
 
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
@@ -253,6 +254,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		@Override
 		public void compose() {
 			IWidget fibWidget = new FibWidget();
+						
 			getConfigurator().addWidget( fibWidget);
 
 			IParameterValidator fibValidator_PX_FIB_NUMBER = new AbstractValidator( "Fibonacci Validator (Succ)", ""){
@@ -400,9 +402,31 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			getConfigurator().assign( fibSeqValidator, fibWidget, parameter_PX_N, parameter_PX_FIB_NUMBER);
 			getConfigurator().assign( fibSuccValidator, fibWidget, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);
 
-
-
 		}
+	}
+	
+	private class MacWidgetComposer extends WidgetComposer{
+		
+			// get relevant parameters
+			final IParameter<String> parameter_MacAddress = getParametersMap().getParameterById( "PX_MAC_LAYER");
+			
+			public MacWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
+				super( theConfigurator, theParametersMap);
+				// TODO Auto-generated constructor stub
+		}
+	
+			@Override
+			public void compose(){
+				//declare a Mac Address Widget
+				IWidget macWidget = new MacWidget();
+				//add the Mac widget to the frame work
+				getConfigurator().addWidget( macWidget);
+				
+				MacAddressEditor editor_MacAddress = new MacAddressEditor();
+//				
+				getConfigurator().assign( editor_MacAddress, macWidget, parameter_MacAddress);
+			}
+		  
 	}
 
 
@@ -418,6 +442,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// first added widget will be set automatically as default widget.
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
+		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
 
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {
