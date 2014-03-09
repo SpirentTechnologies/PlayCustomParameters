@@ -30,6 +30,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultMessagePanelLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IMessagePanelLookAndBehaviour;
+
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
@@ -47,7 +50,6 @@ public class MessagePanel extends Composite implements IMessagePanel {
 			super( MessagePanel.this, SWT.NONE);
 			this.setLayout( new FillLayout());
 			setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-			
 			label = new Label( this, SWT.NONE);
 			FontData[] fontData = label.getFont().getFontData();
 			fontData[0].setHeight( fontData[0].getHeight() -2);
@@ -98,7 +100,7 @@ public class MessagePanel extends Composite implements IMessagePanel {
 		}
 		
 		private void beep() {
-			if ( MessagePanel.this.isBeepEnabled())
+			if ( MessagePanel.this.lookAndBehaviour.isBeepEnabled())
 			  Toolkit.getDefaultToolkit().beep();
 		}
 
@@ -211,18 +213,16 @@ public class MessagePanel extends Composite implements IMessagePanel {
 	
 	
 	
-
+	private IMessagePanelLookAndBehaviour lookAndBehaviour = new DefaultMessagePanelLookAndBehaviour();
+	
 	private final Map<Object, MessageBlock> messages = new HashMap<Object, MessageBlock>();	 
 	private Object currentSenderId;
 	
 	private static final ScheduledExecutorService messageWorker = Executors.newSingleThreadScheduledExecutor();
-	private boolean flashTaggedSuccessMessages = true;
-	private int flashDurationInSeconds = 2;
+	
 	
 	private Map<String, ScheduledFuture> flashMessageFutures = new HashMap<String, ScheduledFuture>();
 	
-	private Listener changedListener = null;
-	private boolean beep = false;		
 	private Lock updateLock = new ReentrantLock();
 	
 	public MessagePanel( final Composite theParent, final int theStyle) {
@@ -234,46 +234,28 @@ public class MessagePanel extends Composite implements IMessagePanel {
 		messages.put( getThisId(), new MessageBlock());
 	}
 	
-	public void enableBeep() {
-		this.beep = true;
+	@Override
+	public void setLookAndBehaviour(IMessagePanelLookAndBehaviour theLookAndBehaviour) {
+		this.lookAndBehaviour = theLookAndBehaviour;
 	}
 	
-	public boolean isBeepEnabled() {
-		return beep;
-	}
-	
-	public void disableBeep() {
-		this.beep = false;	
-	}
-	
-	public void setChangedListener(Listener theChangedListener) {
-		changedListener = theChangedListener;
-	}
-	
-	public void flashTaggedSuccessMessages() {
-		flashTaggedSuccessMessages = true;
-	}
-	
-	public void hideAllSuccessMessages() {
-		flashTaggedSuccessMessages = false;
-	}
-	
-	public void setFlashDurationInSeconds(int theFlashDurationInSeconds) {
-		this.flashDurationInSeconds = theFlashDurationInSeconds;
+	@Override
+	public IMessagePanelLookAndBehaviour getLookAndBehaviour() {
+		return lookAndBehaviour;
 	}
 	
 	@Override
 	public void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
-		if ( !flashTaggedSuccessMessages && 
+		if ( !lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				 theErrorKind.equals( ErrorKind.success))
 			return; 
 		
 		final MessageBlock messageBlock = messages.get( id);
 		messageBlock.putTaggedMessage( theTag, theMessage, theErrorKind);
 		
-		if ( flashTaggedSuccessMessages && 
+		if ( lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				 theErrorKind.equals( ErrorKind.success)) {
 			Runnable removeMessageTask = new Runnable() {
 				public void run() {
@@ -281,13 +263,12 @@ public class MessagePanel extends Composite implements IMessagePanel {
 						@Override
 						public void run() {
 							messageBlock.clearTaggedSuccessMessage( theTag);
-							System.out.println( "efrrsddfggdsfgdfgdfg");
 							doOnChange();
 						}
 					});		
 				}
 			};
-			messageWorker.schedule( removeMessageTask, flashDurationInSeconds, TimeUnit.SECONDS);
+			messageWorker.schedule( removeMessageTask, lookAndBehaviour.getFlashDurationOfSuccessMessages(), TimeUnit.SECONDS);
 		}
 		
     tryOnChange();
@@ -327,7 +308,7 @@ public class MessagePanel extends Composite implements IMessagePanel {
 			}
 		};
 
-		ScheduledFuture flashMessageFuture = messageWorker.schedule( flashWarningTask, Math.round( flashDurationInSeconds * 1.5), TimeUnit.SECONDS);
+		ScheduledFuture flashMessageFuture = messageWorker.schedule( flashWarningTask, lookAndBehaviour.getFlashDuration(), TimeUnit.SECONDS);
 		flashMessageFutures.put( tag, flashMessageFuture);
 		
 		doOnChange();
@@ -374,10 +355,7 @@ public class MessagePanel extends Composite implements IMessagePanel {
 	
 	
 	private void doOnChange() {
-		if ( changedListener != null)
-			synchronized (changedListener) {
-				changedListener.handleEvent( new Event());
-			}
+		lookAndBehaviour.doOnChange();	
 	}
 	
 	private void tryOnChange() {

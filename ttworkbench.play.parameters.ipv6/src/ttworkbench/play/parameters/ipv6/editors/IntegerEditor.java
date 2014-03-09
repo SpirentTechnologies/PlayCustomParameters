@@ -18,6 +18,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
+
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
@@ -316,25 +320,33 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	@Override
-	protected void createEditRow(Composite theContainer, Object[] theLayoutData, Object[] theParams) {
+	protected void createEditRow(Composite theContainer, IEditorLookAndBehaviour theEditorLookAndBehaviour) {
+		Object[] layoutData = theEditorLookAndBehaviour.getLayoutDataOfControls();
 		CLabel label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
-		label.setLayoutData( theLayoutData[0]);
+		label.setLayoutData( layoutData[0]);
 		
 		if ( useOnlyTextField ||
 				 integerType.getMinValue() == null ||
 				 integerType.getMaxValue() == null ||
 				 integerType.getMinValue().compareTo( new BigInteger( String.valueOf( Integer.MIN_VALUE))) < 0 ||
 				 integerType.getMaxValue().compareTo( new BigInteger( String.valueOf( Integer.MAX_VALUE))) > 0) {
-			createTextInputWidget( theContainer, theLayoutData[0]);
+			createTextInputWidget( theContainer, layoutData[0]);
 		} else {
-			createSpinnerInputWidget( theContainer, theLayoutData[0]);
+			createSpinnerInputWidget( theContainer, layoutData[0]);
 		}
 			
     label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getDescription());
-		label.setLayoutData( theLayoutData[2]);
+		label.setLayoutData( layoutData[2]);
 	}
+
+	@Override
+	public IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour() {
+		return new DefaultEditorLookAndBehaviour();
+	}
+
+
 
 
 

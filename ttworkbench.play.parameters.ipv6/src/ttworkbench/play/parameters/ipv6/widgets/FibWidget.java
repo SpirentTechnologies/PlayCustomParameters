@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -31,6 +32,7 @@ public class FibWidget extends CustomWidget {
 	
 	public FibWidget() {
 		super( TITLE, DESCRIPTION, IMAGE);
+		//setLookAndBehaviour( new DefaultWidgetLookAndBehaviour());
 	}
 //		
 //	@Override
@@ -99,6 +101,9 @@ public class FibWidget extends CustomWidget {
 //		return scrolledComposite;
 //	}
 //
+
+
+
 
 
 }

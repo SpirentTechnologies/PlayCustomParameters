@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyledText;
@@ -17,7 +19,11 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class MacAddressEditor extends AbstractEditor {
 
@@ -82,6 +88,13 @@ public class MacAddressEditor extends AbstractEditor {
 		label.setLayoutData( gridData);
 		
 		return container;
+	}
+
+
+
+	@Override
+	public IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
+		return new DefaultEditorLookAndBehaviour();
 	}
 
 }

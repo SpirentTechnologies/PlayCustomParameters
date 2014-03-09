@@ -14,6 +14,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 
 public class IPv6Editor extends AbstractEditor<String> {
@@ -70,6 +73,11 @@ public class IPv6Editor extends AbstractEditor<String> {
 		container.layout();
 		
 		return container;
+	}
+
+	@Override
+	public IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
+		return new DefaultEditorLookAndBehaviour();
 	}
 
 }

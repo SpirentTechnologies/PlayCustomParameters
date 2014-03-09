@@ -22,6 +22,9 @@ import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.components.IMessagePanel;
 import ttworkbench.play.parameters.ipv6.components.MessagePanel;
+import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
@@ -38,18 +41,35 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	private static final ScheduledExecutorService validationMessageWorker = Executors.newSingleThreadScheduledExecutor();
 	private ScheduledFuture<?> validationTaskFuture;
 	private ScheduledFuture<?> validationMessageTaskFuture;	
+	private IValidatingEditorLookAndBehaviour lookAndBehaviour;
 	
 	public ValidatingEditor( String theTitle, String theDescription) {
 		super( theTitle, theDescription);
 	}
 	
+	public IValidatingEditorLookAndBehaviour getLookAndBehaviour() {
+		return this.lookAndBehaviour;
+	}
+	
+	@Override
+	@Deprecated
+	protected void setLookAndBehaviour(IEditorLookAndBehaviour theLookAndBehaviour) {
+		throw new UnsupportedOperationException();
+	}
+	
+	protected void setLookAndBehaviour( IValidatingEditorLookAndBehaviour theLookAndBehaviour) {
+		this.lookAndBehaviour = theLookAndBehaviour;
+		super.setLookAndBehaviour( theLookAndBehaviour.getEditorLookAndBehaviour());
+	}
+	
+	public abstract IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour();
+	
 	
 	public IMessagePanel getMessagePanel() {
 		return messagePanel;
 	}
-
 	
-	
+	/*
 	protected Layout extractLayoutFromParams( final Layout theDefaultLayout, final Object ...theParams) {
 		Layout layout = theDefaultLayout; 
 		for (int i = 0; i < theParams.length; i++) {
@@ -92,7 +112,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		
 		return layoutData;
 	}
-	
+	*/
   
 	
 	/**
@@ -142,10 +162,6 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			@Override
 			public void run() {
 				
-				for (int i = 0; i < 800000; i++) {
-					System.out.println( "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-				}
-				
 				validate();	
 				
 				validationMessageTaskFuture.cancel( false);
@@ -164,15 +180,14 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 
 	
 	
-	protected abstract void createEditRow(Composite theContainer, Object[] theLayoutData, Object[] theParams);
+	protected abstract void createEditRow(Composite theContainer, IEditorLookAndBehaviour theIEditorLookAndBehaviour);
 	
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
 		messagePanel = new MessagePanel( theParent, SWT.NONE);
-		messagePanel.setFlashDurationInSeconds( 2);
+		messagePanel.setLookAndBehaviour( getLookAndBehaviour().getMessaagePanelLookAndBehaviour());
 		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
-		messagePanel.enableBeep();
-		messagePanel.setChangedListener( new Listener() {
+		messagePanel.getLookAndBehaviour().setChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
 				updateControl();
@@ -184,10 +199,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	@Override
 	public final Composite createControl(Composite theParent, Object... theParams) {
 	
-	  Layout editLayout = extractLayoutFromParams( new RowLayout( SWT.HORIZONTAL), theParams);
-	  Object[] editLayoutData = extractLayoutDataFromParams( new RowData(), 3, theParams);
-		
-		Composite container = new Composite( theParent, SWT.None);
+	  Composite container = new Composite( theParent, SWT.None);
 		container.setLayout( new GridLayout( 1, true));
 	  // TODO check layout data. Is compatible? to Flowlayout or Filllayout 
 		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
@@ -195,9 +207,9 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		createMessageRow( container);
 		
 		Composite editRowContainer = new Composite( container, SWT.None);
-		editRowContainer.setLayout( editLayout);
+		editRowContainer.setLayout( getLookAndBehaviour().getEditorLookAndBehaviour().getLayout());
 		editRowContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
-		createEditRow( editRowContainer, editLayoutData, theParams);
+		createEditRow( editRowContainer, getLookAndBehaviour().getEditorLookAndBehaviour());
 		
 		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		container.layout();

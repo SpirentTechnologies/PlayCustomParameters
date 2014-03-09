@@ -11,8 +11,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -25,7 +27,9 @@ public class CustomWidget extends NotifyingWidget {
 
 	private Composite editorsContainer;
 	private ScrolledComposite scrolledComposite;
+	private IWidgetLookAndBehaviour lookAndBehaviour;
 	
+
 	
 	
 	@Override
@@ -52,6 +56,7 @@ public class CustomWidget extends NotifyingWidget {
 	}	
 
 
+	@Override
 	public void update() {
 		// TODO better add editors incremental
 		deleteParameterEditors();
@@ -68,13 +73,14 @@ public class CustomWidget extends NotifyingWidget {
 	}
 
 	protected void createParameterEditors() {
-		//GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
-		//GridLayout gridLayout = new GridLayout( 1, false);
-		//gridLayout.makeColumnsEqualWidth = false;
+		GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
+		GridLayout gridLayout = new GridLayout( 1, false);
+		gridLayout.makeColumnsEqualWidth = false;
+		gridData.minimumWidth = 300;
 		if ( editorsContainer != null) {	
 			Set<IParameterEditor> editors = getEditors();
 			for ( IParameterEditor editor : editors) {
-				Control editorControl = editor.createControl( editorsContainer/*, gridData, gridLayout*/);
+				Control editorControl = editor.createControl( editorsContainer, lookAndBehaviour.getEditorLookAndBehaviour()/*gridData, gridLayout*/);
 				editorControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 				
 				// react on dynamically insertion/deletion of controls when messages occur
