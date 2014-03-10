@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public interface IMessagePanelLookAndBehaviour extends ILookAndBehaviour {
+public interface IMessageViewLookAndBehaviour extends ILookAndBehaviour {
 
 	void enableBeep();
 

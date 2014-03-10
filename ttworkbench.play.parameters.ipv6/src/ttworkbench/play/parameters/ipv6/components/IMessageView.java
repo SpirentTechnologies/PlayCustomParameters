@@ -3,7 +3,9 @@ package ttworkbench.play.parameters.ipv6.components;
 import java.util.EnumSet;
 import java.util.List;
 
-import ttworkbench.play.parameters.ipv6.customize.IMessagePanelLookAndBehaviour;
+import org.eclipse.swt.widgets.Composite;
+
+import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
@@ -38,9 +40,10 @@ public interface IMessageView {
 	 */
 	List<String> getMessages(EnumSet<ErrorKind> theMessageKinds);
 	
-	IMessagePanelLookAndBehaviour getLookAndBehaviour();
+	IMessageViewLookAndBehaviour getLookAndBehaviour();
 	
-	void setLookAndBehaviour( IMessagePanelLookAndBehaviour theLookAndBehaviour);
+	void setLookAndBehaviour( IMessageViewLookAndBehaviour theLookAndBehaviour);
 	
+	void wrapControl( Composite theWrappedComposite);
 
 }

@@ -35,8 +35,8 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 	}
 
 	@Override
-	public IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour() {
-		return new DefaultMessagePanelLookAndBehaviour();
+	public IMessageViewLookAndBehaviour getMessaagePanelLookAndBehaviour() {
+		return new DefaultMessageViewLookAndBehaviour();
 	}
 
 	@Override

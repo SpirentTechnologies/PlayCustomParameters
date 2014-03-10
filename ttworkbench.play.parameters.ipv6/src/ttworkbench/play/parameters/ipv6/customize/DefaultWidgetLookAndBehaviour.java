@@ -16,7 +16,7 @@ public class DefaultWidgetLookAndBehaviour implements IWidgetLookAndBehaviour {
 	}
 
 	@Override
-	public IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour() {
+	public IMessageViewLookAndBehaviour getMessaagePanelLookAndBehaviour() {
 		return getEditorLookAndBehaviour().getMessaagePanelLookAndBehaviour();
 	}
 

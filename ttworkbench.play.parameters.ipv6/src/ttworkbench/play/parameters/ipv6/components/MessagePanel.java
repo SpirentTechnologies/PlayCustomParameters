@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.customize.DefaultMessagePanelLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.IMessagePanelLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
@@ -194,7 +194,7 @@ public class MessagePanel extends Composite implements IMessageView {
 	
 	
 	
-	private IMessagePanelLookAndBehaviour lookAndBehaviour = new DefaultMessagePanelLookAndBehaviour();
+	private IMessageViewLookAndBehaviour lookAndBehaviour = new DefaultMessageViewLookAndBehaviour();
 	
 	private final Map<Object, MessageBlock> messages = new HashMap<Object, MessageBlock>();	 
 	private Object currentSenderId;
@@ -206,22 +206,39 @@ public class MessagePanel extends Composite implements IMessageView {
 	
 	private Lock updateLock = new ReentrantLock();
 	
+	private Composite container;
+	private Composite wrappedComposite;
+	
 	public MessagePanel( final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
+		createPanel( theParent);
+		// precreate default  block
+		messages.put( getThisId(), new MessageBlock());
+	}
+	
+	private void createPanel(Composite theParent) {
+	  container = new Composite( theParent, SWT.None);
+		container.setLayout( new GridLayout( 1, true));
+		// TODO check layout data. Is compatible? to Flowlayout or Filllayout 
+		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+		
+		// create message panel
 		GridLayout layout = new GridLayout(1, true);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		setLayout( layout);
-		messages.put( getThisId(), new MessageBlock());
+		
+		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		container.layout();
 	}
-	
+
 	@Override
-	public void setLookAndBehaviour(IMessagePanelLookAndBehaviour theLookAndBehaviour) {
+	public void setLookAndBehaviour(IMessageViewLookAndBehaviour theLookAndBehaviour) {
 		this.lookAndBehaviour = theLookAndBehaviour;
 	}
 	
 	@Override
-	public IMessagePanelLookAndBehaviour getLookAndBehaviour() {
+	public IMessageViewLookAndBehaviour getLookAndBehaviour() {
 		return lookAndBehaviour;
 	}
 	
@@ -353,6 +370,17 @@ public class MessagePanel extends Composite implements IMessageView {
 	
 	private String getThisId() {
 		return this.getClass().getName() + "@" + this.hashCode(); 
+	}
+
+	@Override
+	public void wrapControl(Composite theWrappedComposite) {
+		if ( wrappedComposite != null)
+			wrappedComposite.dispose();
+		this.wrappedComposite = theWrappedComposite;
+		wrappedComposite.setParent( this);
+		
+    container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		container.layout();
 	}
 
 	

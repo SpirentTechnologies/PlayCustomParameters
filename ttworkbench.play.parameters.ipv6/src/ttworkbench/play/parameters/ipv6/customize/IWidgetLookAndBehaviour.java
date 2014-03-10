@@ -6,7 +6,7 @@ public interface IWidgetLookAndBehaviour extends ILookAndBehaviour {
 
 	IValidatingEditorLookAndBehaviour getEditorLookAndBehaviour();
 
-	IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour();
+	IMessageViewLookAndBehaviour getMessaagePanelLookAndBehaviour();
 
 	
 	

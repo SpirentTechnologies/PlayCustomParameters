@@ -347,13 +347,13 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 					
 					int totalErrors = 0;
 					int totalWarnings = 0;
-					IMessageView messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessagePanel();
+					IMessageView messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessageView messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessagePanel();
+				  IMessageView messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessageView messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessagePanel();
+				  IMessageView messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
 				  
