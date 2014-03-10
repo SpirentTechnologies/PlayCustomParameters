@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ipv6
-Bundle-SymbolicName: ttworkbench.play.parameters.ipv6;singleton:=true
+Bundle-Name: %bundle-name
+Bundle-SymbolicName: ttworkbench.play.parameters.ipv6_old;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: ttworkbench.play.parameters.ipv6.Activator
 Require-Bundle: org.eclipse.ui,
@@ -18,3 +18,5 @@ Require-Bundle: org.eclipse.ui,
  com.testingtech.ttworkbench.ttthree.core;bundle-version="1.0.28"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: parameters.ipv6.jar
+Bundle-Vendor: %bundle-vendor
