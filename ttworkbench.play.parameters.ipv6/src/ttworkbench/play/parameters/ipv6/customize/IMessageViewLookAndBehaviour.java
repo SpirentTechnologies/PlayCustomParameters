@@ -1,14 +1,12 @@
 package ttworkbench.play.parameters.ipv6.customize;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public interface IMessagePanelLookAndBehaviour extends ILookAndBehaviour {
+public interface IMessageViewLookAndBehaviour extends ILookAndBehaviour {
 
 	void enableBeep();
 

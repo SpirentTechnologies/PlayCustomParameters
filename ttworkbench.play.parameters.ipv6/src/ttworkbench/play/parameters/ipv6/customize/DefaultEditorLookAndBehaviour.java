@@ -1,5 +1,8 @@
 package ttworkbench.play.parameters.ipv6.customize;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -11,7 +14,7 @@ import org.eclipse.swt.widgets.Listener;
 
 public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBehaviour {
 
-	private Listener controlChangedListener;
+	private Set<Listener> controlChangedListeners = new HashSet<Listener>();
 
 	@Override
 	public Layout getLayout() {
@@ -32,19 +35,20 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 	}
 
 	@Override
-	public IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour() {
-		return new DefaultMessagePanelLookAndBehaviour();
+	public IMessageViewLookAndBehaviour getMessaagePanelLookAndBehaviour() {
+		return new DefaultMessageViewLookAndBehaviour();
 	}
 
 	@Override
 	public void setControlChangedListener(Listener theControlChangedListener) {
-		this.controlChangedListener = theControlChangedListener;
+		this.controlChangedListeners.add( theControlChangedListener);
 	}
 
 	@Override
 	public void doOnChange() {
-		if ( controlChangedListener != null)
-	  	controlChangedListener.handleEvent( new Event());
+		for (Listener controlChangedListener : controlChangedListeners) {
+			controlChangedListener.handleEvent( new Event());
+		}
 	}
 
 }

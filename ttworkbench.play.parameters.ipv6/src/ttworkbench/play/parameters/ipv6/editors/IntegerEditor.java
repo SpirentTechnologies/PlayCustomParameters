@@ -265,11 +265,11 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		} else {
 			// don't apply changes
 			theEvent.doit = false;
-			getMessagePanel().flashMessage( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", modifiedText), ErrorKind.warning);
+			getMessageView().flashMessage( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", modifiedText), ErrorKind.warning);
 			if ( !checkResults.contains( CheckResult.IS_INTEGER))
-			  getMessagePanel().flashMessage( "valid_chars_info", "Only integer values accepted.", ErrorKind.info);
+				getMessageView().flashMessage( "valid_chars_info", "Only integer values accepted.", ErrorKind.info);
 		  else if ( !checkResults.contains( CheckResult.IS_IN_RANGE))
-				getMessagePanel().flashMessage( "valid_chars_info", String.format( "Only integers in range [%s,%s] accepted.", integerType.getMinValue(), integerType.getMaxValue()), ErrorKind.info);
+		  	getMessageView().flashMessage( "valid_chars_info", String.format( "Only integers in range [%s,%s] accepted.", integerType.getMinValue(), integerType.getMaxValue()), ErrorKind.info);
 		}	
 	}
 	

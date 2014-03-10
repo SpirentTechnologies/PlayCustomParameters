@@ -4,6 +4,6 @@ public interface IValidatingEditorLookAndBehaviour extends IEditorLookAndBehavio
 	
 	IEditorLookAndBehaviour getEditorLookAndBehaviour();
 	
-	IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour();
+	IMessageViewLookAndBehaviour getMessaagePanelLookAndBehaviour();
 
 }

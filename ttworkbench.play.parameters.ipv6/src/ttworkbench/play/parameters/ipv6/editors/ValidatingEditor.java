@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.components.IMessagePanel;
+import ttworkbench.play.parameters.ipv6.components.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
@@ -60,7 +60,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public abstract IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour();
 	
 	
-	public IMessagePanel getMessagePanel() {
+	public IMessageView getMessageView() {
 		return messagePanel;
 	}
 	
@@ -103,7 +103,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			public void run() {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						getMessagePanel().putTaggedMessage( "run_validator", "Validation process in progress.", ErrorKind.info);
+						getMessageView().putTaggedMessage( "run_validator", "Validation process in progress.", ErrorKind.info);
 					}
 				});
 			}
@@ -120,7 +120,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						getMessagePanel().putTaggedMessage( "run_validator", "Validation finished.", ErrorKind.success);
+						getMessageView().putTaggedMessage( "run_validator", "Validation finished.", ErrorKind.success);
 					}
 				});
 			}
@@ -157,11 +157,12 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		
 		createMessageRow( container);
-		
+
 		Composite editRowContainer = new Composite( container, SWT.None);
 		editRowContainer.setLayout( getLookAndBehaviour().getEditorLookAndBehaviour().getLayout());
 		editRowContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		createEditRow( editRowContainer);
+		getMessageView().wrapControl( editRowContainer);
 		
 		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		container.layout();
@@ -175,16 +176,17 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
+				IMessageView messageView = getMessageView();
 				String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
-				messagePanel.beginUpdateForSender( senderId);
+				messageView.beginUpdateForSender( senderId);
 				for (ValidationResult validationResult : theValidationResults) {
 					if ( validationResult.isTagged()) {
-						messagePanel.putTaggedMessage( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
+						messageView.putTaggedMessage( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
 					} else {
-					  messagePanel.addUntaggedMessage( validationResult.getErrorMessage(), validationResult.getErrorKind());					
+						messageView.addUntaggedMessage( validationResult.getErrorMessage(), validationResult.getErrorKind());					
 					}
 				}
-				messagePanel.endUpdate();
+				messageView.endUpdate();
 			}
 		});
 	}

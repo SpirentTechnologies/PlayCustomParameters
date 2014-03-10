@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import ttworkbench.play.parameters.ipv6.components.IMessagePanel;
+import ttworkbench.play.parameters.ipv6.components.IMessageView;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
@@ -25,6 +25,7 @@ import ttworkbench.play.parameters.ipv6.widgets.DefaultWidget;
 import ttworkbench.play.parameters.ipv6.widgets.FibWidget;
 import ttworkbench.play.parameters.ipv6.widgets.IPv6Widget;
 import ttworkbench.play.parameters.ipv6.widgets.MacWidget;
+import ttworkbench.play.parameters.ipv6.widgets.NotifyingWidget;
 
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
@@ -251,7 +252,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 		@Override
 		public void compose() {
-			IWidget fibWidget = new FibWidget();
+			NotifyingWidget fibWidget = new FibWidget();
 						
 			getConfigurator().addWidget( fibWidget);
 
@@ -346,13 +347,13 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 					
 					int totalErrors = 0;
 					int totalWarnings = 0;
-					IMessagePanel messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessagePanel();
+					IMessageView messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessagePanel messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessagePanel();
+				  IMessageView messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessagePanel messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessagePanel();
+				  IMessageView messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
 				  
@@ -387,6 +388,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 			// register editors to corresponding validators
 			fibValidator_PX_FIB_NUMBER.registerForMessages( editor_PX_FIB_NUMBER);
+			fibValidator_PX_FIB_NUMBER.registerForMessages( fibWidget);
 			fibValidator_PX_FIB_SUCC_NUMBER.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
 			fibSeqValidator.registerForMessages( editor_PX_FIB_NUMBER);
 			fibSuccValidator.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
@@ -399,7 +401,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			getConfigurator().assign( fibValidator_PX_FIB_SUCC_NUMBER, fibWidget, parameter_PX_FIB_SUCC_NUMBER);
 			getConfigurator().assign( fibSeqValidator, fibWidget, parameter_PX_N, parameter_PX_FIB_NUMBER);
 			getConfigurator().assign( fibSuccValidator, fibWidget, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);
-
+			
 		}
 	}
 	

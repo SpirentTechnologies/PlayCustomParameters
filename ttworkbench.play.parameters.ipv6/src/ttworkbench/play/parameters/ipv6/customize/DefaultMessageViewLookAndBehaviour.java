@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class DefaultMessagePanelLookAndBehaviour implements IMessagePanelLookAndBehaviour {
+public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBehaviour {
 	
 	private static final Display CURRENT_DISPLAY = Display.getCurrent();
 	private static final Color COLOR_RED = CURRENT_DISPLAY.getSystemColor(SWT.COLOR_RED);
