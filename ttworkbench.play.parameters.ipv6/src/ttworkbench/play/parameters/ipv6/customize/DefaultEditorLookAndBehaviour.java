@@ -5,9 +5,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 
 public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBehaviour {
+
+	private Listener controlChangedListener;
 
 	@Override
 	public Layout getLayout() {
@@ -30,6 +34,17 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 	@Override
 	public IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour() {
 		return new DefaultMessagePanelLookAndBehaviour();
+	}
+
+	@Override
+	public void setControlChangedListener(Listener theControlChangedListener) {
+		this.controlChangedListener = theControlChangedListener;
+	}
+
+	@Override
+	public void doOnChange() {
+		if ( controlChangedListener != null)
+	  	controlChangedListener.handleEvent( new Event());
 	}
 
 }

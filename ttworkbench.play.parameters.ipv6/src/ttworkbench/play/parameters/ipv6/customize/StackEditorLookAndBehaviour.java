@@ -4,8 +4,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 
-public class StackEditorLookAndBehaviour implements IEditorLookAndBehaviour {
+public class StackEditorLookAndBehaviour extends DefaultEditorLookAndBehaviour {
 
 	@Override
 	public Layout getLayout() {

@@ -9,6 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.widgets.tableviewer.ParameterEditorColumnType;
 import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerAdvancedControl;
 
@@ -23,5 +25,10 @@ public class MacWidget extends CustomWidget{
 	public MacWidget() {
 		super( TITLE, DESCRIPTION, IMAGE);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	protected IWidgetLookAndBehaviour getDefaultLookAndBehaviour() {
+		return new DefaultWidgetLookAndBehaviour();
 	}
 }

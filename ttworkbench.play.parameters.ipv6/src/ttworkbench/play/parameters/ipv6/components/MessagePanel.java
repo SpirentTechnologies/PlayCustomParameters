@@ -52,8 +52,8 @@ public class MessagePanel extends Composite implements IMessagePanel {
 			setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 			label = new Label( this, SWT.NONE);
 			FontData[] fontData = label.getFont().getFontData();
-			fontData[0].setHeight( fontData[0].getHeight() -2);
-			label.setFont( new Font( Display.getCurrent(), fontData[0]));
+			fontData[0].setHeight( fontData[0].getHeight() -1);
+			label.setFont( lookAndBehaviour.getMessageFont( theErrorKind));//new Font( Display.getCurrent(), fontData[0]));
 			
 			setMessage( theMessage, theErrorKind);
 		}
@@ -62,41 +62,22 @@ public class MessagePanel extends Composite implements IMessagePanel {
 	    // set content
 			this.message = theMessage;
 	    label.setText( message);
+
 	    
 	    // set look
-	    Color foregroundColor;
-	    Color backgroundColor;
-	    Display display = Display.getCurrent();
-	    Color colorRed = display.getSystemColor(SWT.COLOR_RED);
-	    Color colorYellow = display.getSystemColor(SWT.COLOR_YELLOW);
-	    Color colorGreen = display.getSystemColor(SWT.COLOR_GREEN);
-	    Color colorWhite = display.getSystemColor(SWT.COLOR_WHITE);
-	    Color colorBlack = display.getSystemColor(SWT.COLOR_BLACK);
-	    Color colorBtnFace = display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-	     
 	    this.errorKind = theErrorKind;
-	    switch ( errorKind) {
-				case error:
-					foregroundColor = colorWhite;
-					backgroundColor = colorRed;
-					beep();
-					break;
-				case warning:
-					foregroundColor = colorRed;
-					backgroundColor = colorBtnFace;
-					beep();
-					break;
-	      case info:
-	      	foregroundColor = colorBlack;
-					backgroundColor = colorYellow;	
-					break;
-				default:
-	      	foregroundColor = colorBlack;
-					backgroundColor = colorGreen;					
-					break;
-			}
+	    Color foregroundColor = lookAndBehaviour.getMessageForeground( errorKind);
+	    Color backgroundColor = lookAndBehaviour.getMessageBackground( errorKind);
 	    label.setForeground( foregroundColor);
 	    label.setBackground( backgroundColor);
+	    
+	    // set behaviour
+	    switch ( errorKind) {
+				case error:
+				case warning:
+					beep();
+					break;
+			}
 		}
 		
 		private void beep() {

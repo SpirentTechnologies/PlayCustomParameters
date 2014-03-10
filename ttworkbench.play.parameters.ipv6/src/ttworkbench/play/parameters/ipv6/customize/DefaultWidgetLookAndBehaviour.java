@@ -7,4 +7,9 @@ public class DefaultWidgetLookAndBehaviour implements IWidgetLookAndBehaviour {
 		return new IntegerEditorLookAndBehaviour();
 	}
 
+	@Override
+	public IMessagePanelLookAndBehaviour getMessaagePanelLookAndBehaviour() {
+		return getEditorLookAndBehaviour().getMessaagePanelLookAndBehaviour();
+	}
+
 }

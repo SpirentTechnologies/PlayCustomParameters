@@ -27,7 +27,6 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	private IConfiguration configuration;
 	private Set<T> values = new TreeSet<T>();
 	
-	private Listener controlChangedListener = null;
 	private IEditorLookAndBehaviour lookAndBehaviour;
 	
 	
@@ -122,12 +121,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	}
 	
 	public void updateControl() {
-		if ( controlChangedListener != null)
-	  	controlChangedListener.handleEvent( new Event());
-	}
-	
-	public void setControlChangedListener(Listener theControlChangedListener) {
-		this.controlChangedListener = theControlChangedListener;
+		lookAndBehaviour.doOnChange();
 	}
 	
 	protected void setLookAndBehaviour(IEditorLookAndBehaviour theLookAndBehaviour) {
