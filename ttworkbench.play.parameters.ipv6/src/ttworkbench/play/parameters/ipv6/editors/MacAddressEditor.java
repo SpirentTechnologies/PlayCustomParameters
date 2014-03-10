@@ -6,6 +6,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -15,43 +17,35 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
+import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MacAddressEditor extends AbstractEditor<Object> {
+public class MacAddressEditor extends ValidatingEditor<Object> {
 
 	
 	private static final String TITLE = "MAC Address Editor";
 	private static final String DESCRIPTION = "";
 	
+	public static final String MAC_PATTERN = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
+	private static final int MAC_LENGTH = 17;
+	
 	public MacAddressEditor() {
 		  super( TITLE, DESCRIPTION);
 	}
 
-	@Override
-	public Composite createControl(Composite theParent) {
-		
-		
-		Object layoutData = getLookAndBehaviour().getLayoutDataOfControls()[0]; 
-		Layout layout = getLookAndBehaviour().getLayout(); 
-		
-		Composite container = new Composite( theParent, SWT.None);
-		container.setLayout( layout);
-		
-		
-    CLabel label = new CLabel( container, SWT.NONE);
-		label.setText( this.getParameter().getName());
-		label.setLayoutData( layoutData);
-		Text macText = new Text( container, SWT.LEFT);
-		macText.setLayoutData( layoutData);
+
 		
 //		CLabel label1 = new CLabel( container, SWT.LEFT);
 //		label1.setText( this.getParameter().getName());
@@ -62,7 +56,7 @@ public class MacAddressEditor extends AbstractEditor<Object> {
 //			// determine the width to display 2 characters
 //			GC graphicalContext = new GC( new StyledText( macAddrContainer, SWT.NONE));
 //			FontMetrics fontMetrics = graphicalContext.getFontMetrics();
-//			int macAddrContainerWidth = 16 * fontMetrics.getAverageCharWidth();
+//			int macAddrCntainerWidth = 16 * fontMetrics.getAverageCharWidth();
 //			int macAddrContainerHeight = fontMetrics.getHeight();
 //
 //			RowLayout macAddrLayout = new RowLayout();
@@ -86,14 +80,87 @@ public class MacAddressEditor extends AbstractEditor<Object> {
 //			text.setTextLimit( 2);
 //		}	
 		
-		return container;
+
+	@Override
+	public IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour() {
+		return new DefaultEditorLookAndBehaviour();
 	}
 
 
 
 	@Override
-	protected IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
-		return new DefaultEditorLookAndBehaviour();
+	protected void createEditRow(Composite theContainer) {
+		// TODO Auto-generated method stub
+		Object[] layoutData = this.getLookAndBehaviour().getLayoutDataOfControls();
+		CLabel label = new CLabel(theContainer, SWT.LEFT);
+		label.setText( this.getParameter().getName()+"_ADDRESS");
+		label.setLayoutData( layoutData[0]);
+		
+		createTextInputWidget( theContainer, layoutData[0]);
+		
+	}
+	
+	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
+		final Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
+		final String macFormat = "00:00:00:00:00:00";
+		text.setLayoutData( theLayoutData);
+		text.setText(macFormat);
+		text.setTextLimit( MAC_LENGTH);
+		setWidthForText( text, MAC_LENGTH);
+		text.addVerifyListener(new VerifyListener(){
+
+			@Override
+			public void verifyText(VerifyEvent theEvent) {
+				// TODO Auto-generated method stub
+				String insertionPattern = "[a-fA-F0-9:-]*";
+				String currentText = ((Text)theEvent.widget).getText();
+				Character key = theEvent.character;
+				String insertion = (key == '\b') ? "" : theEvent.text; 
+				int beginIndex = theEvent.start;
+				int endIndex = theEvent.end;
+				String leftString = currentText.substring( 0, beginIndex);
+				String rightString = currentText.substring( endIndex, currentText.length());
+				String modifiedText = leftString + insertion + rightString;
+				
+				if ( modifiedText.isEmpty())
+					modifiedText = "00:00:00:00:00:00";
+				
+				if(modifiedText.matches( insertionPattern)){
+					getParameter().getValue().toString();
+					validateDelayed(2);
+					theEvent.doit = true;
+				}
+				else{
+					theEvent.doit = false;
+					getMessagePanel().flashMessage( "Invalid Entry", "This is not a valid character", ErrorKind.warning);
+				}
+			}
+			
+		});
+		
+		text.addListener( SWT.FocusOut, new Listener() {
+			
+			@Override
+			public void handleEvent(Event theArg0) {
+				if ( text.getText().isEmpty())
+				  text.setText( "0");
+			}
+		});
+	}
+	
+	private static void setWidthForText( Text theTextControl, int visibleChars) {
+		 GC gc = new GC( theTextControl);
+		 int charWidth = gc.getFontMetrics().getAverageCharWidth();
+		 gc.dispose();
+
+		 int minWidth = visibleChars * charWidth;
+		 Object layout = theTextControl.getLayoutData();
+		 if ( layout instanceof GridData)
+			 ((GridData) layout).minimumWidth = minWidth;
+		 if ( layout instanceof RowData)
+			 ((RowData) layout).width = minWidth;		
+		 else
+			 theTextControl.setSize( theTextControl.computeSize( minWidth, SWT.DEFAULT));
 	}
 
 }
