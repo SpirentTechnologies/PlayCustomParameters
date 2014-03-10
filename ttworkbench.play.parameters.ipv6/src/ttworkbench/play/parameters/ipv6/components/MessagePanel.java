@@ -36,7 +36,7 @@ import ttworkbench.play.parameters.ipv6.customize.IMessagePanelLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MessagePanel extends Composite implements IMessagePanel {
+public class MessagePanel extends Composite implements IMessageView {
 	
 	
 	private class MessageLine extends Composite {

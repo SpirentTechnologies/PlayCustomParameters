@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.components.IMessagePanel;
+import ttworkbench.play.parameters.ipv6.components.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
@@ -60,7 +60,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public abstract IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour();
 	
 	
-	public IMessagePanel getMessagePanel() {
+	public IMessageView getMessagePanel() {
 		return messagePanel;
 	}
 	

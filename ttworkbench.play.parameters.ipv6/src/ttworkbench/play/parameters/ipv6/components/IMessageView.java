@@ -7,7 +7,7 @@ import ttworkbench.play.parameters.ipv6.customize.IMessagePanelLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public interface IMessagePanel {
+public interface IMessageView {
 
 	/**
 	 * Finishes an update cycle. 
