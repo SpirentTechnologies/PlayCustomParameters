@@ -28,6 +28,7 @@ import ttworkbench.play.parameters.ipv6.widgets.MacWidget;
 import ttworkbench.play.parameters.ipv6.widgets.NotifyingWidget;
 
 import com.testingtech.muttcn.values.IntegerValue;
+import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -430,7 +431,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 					protected List<ValidationResult> validateParameter( IParameter parameter) {
 						List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 
-						String theValue = parameter.getValue().toString(); 
+						String theValue = ((StringValue)parameter.getValue()).getTheContent();
 						System.out.println("this is my parameter value:  "+theValue);
 						if ( isMacAddress( theValue))
 							validationResults.add( new ValidationResult("This entry has a valid MAC Address format.", ErrorKind.success, "tag_is_mac"));

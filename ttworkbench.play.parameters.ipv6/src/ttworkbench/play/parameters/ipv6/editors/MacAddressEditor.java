@@ -28,11 +28,12 @@ import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
 
+import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MacAddressEditor extends ValidatingEditor<Object> {
+public class MacAddressEditor extends ValidatingEditor<StringValue> {
 
 	
 	private static final String TITLE = "MAC Address Editor";
@@ -126,13 +127,13 @@ public class MacAddressEditor extends ValidatingEditor<Object> {
 					modifiedText = "00:00:00:00:00:00";
 				
 				if(modifiedText.matches( insertionPattern)){
-					getParameter().getValue().toString();
+				getParameter().getValue().setTheContent( modifiedText);
 					validateDelayed(2);
 					theEvent.doit = true;
 				}
 				else{
 					theEvent.doit = false;
-					getMessagePanel().flashMessage( "Invalid Entry", "This is not a valid character", ErrorKind.warning);
+					getMessageView().flashMessage( "Invalid Entry", "This is not a valid character", ErrorKind.warning);
 				}
 			}
 			
