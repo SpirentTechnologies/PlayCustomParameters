@@ -27,14 +27,16 @@ import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
-public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler {
+public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
 
 	private MessageDisplay messageDisplay = null;
@@ -190,6 +192,12 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				messageView.endUpdate();
 			}
 		});
+	}
+	
+	@Override
+	public void trigger(IParameterValidator theValidator, List<ValidationAction> theValidationActions,
+			IParameter theParameter) {
+		// TODO Auto-generated method stub
 	}
 	
 

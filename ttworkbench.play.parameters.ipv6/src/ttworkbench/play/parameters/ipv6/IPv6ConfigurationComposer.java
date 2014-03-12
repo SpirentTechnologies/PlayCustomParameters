@@ -393,6 +393,8 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			fibValidator_PX_FIB_SUCC_NUMBER.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
 			fibSeqValidator.registerForMessages( editor_PX_FIB_NUMBER);
 			fibSuccValidator.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
+			fibSuccValidator.registerForActions( editor_PX_FIB_SUCC_NUMBER);
+			
 			
 		  // register widgets to corresponding validators
 		//	fibWidgetLayerValidator.registerForMessages( fibWidget);

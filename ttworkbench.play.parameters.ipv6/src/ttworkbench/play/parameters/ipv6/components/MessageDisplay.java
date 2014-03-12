@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -295,17 +296,25 @@ public class MessageDisplay extends Composite implements IMessageView {
 	public void flashMessage( final String theTag, final String theWarning, final ErrorKind theErrorKind) {
 		final String id = getThisId();
 		final MessageBlock messageBlock = messages.get( id);
-		
+		/*
 		Shell tipShell;
-		tipShell = new Shell( getDisplay(), SWT.TOOL | SWT.ON_TOP );
-		
-	/*	
+		tipShell = new Shell( getShell(), SWT.TOOL);
+    tipShell.setLocation( toDisplay( getLocation()));
+    tipShell.setSize( getSize());
+    tipShell.setLayout( new RowLayout());
+    tipShell.setText( "asdasrsa");
+    tipShell.open();//tipShell.setVisible( true);
+    Text text = new Text( tipShell, SWT.BORDER);
+		text.setText( "Hello World");
+		text.setVisible( true);
+		tipShell.layout();
+	*/
 		//final ToolTip toolTip = new ToolTip( new Shell( messageContainer.getDisplay()), SWT.BALLOON | SWT.ICON_INFORMATION);
-		final ToolTip toolTip = new ToolTip( tipShell, SWT.ICON_ERROR);
-		toolTip.setMessage("Here is a message for the user. When the message is too long it wraps. I should say something cool but nothing comes to my mind.");
-    toolTip.setLocation(  getLocation());
-    toolTip.setVisible( true);
-   */
+		//final ToolTip toolTip = new ToolTip( messageContainer.getShell(), SWT.BALLOON  | SWT.ICON_ERROR);
+		//toolTip.setMessage("Here is a message for the user. When the message is too long it wraps. I should say something cool but nothing comes to my mind.");
+    //toolTip.setLocation( messageContainer.getLocation());
+    //toolTip.setVisible( true);
+   
     
 
  // super.getShell().
