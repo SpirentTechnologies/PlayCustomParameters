@@ -28,6 +28,7 @@ import ttworkbench.play.parameters.ipv6.widgets.MacWidget;
 import ttworkbench.play.parameters.ipv6.widgets.NotifyingWidget;
 
 import com.testingtech.muttcn.values.IntegerValue;
+import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -422,11 +423,47 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 				//add the Mac widget to the frame work
 				getConfigurator().addWidget( macWidget);
 				
-				MacAddressEditor editor_MacAddress = new MacAddressEditor();
-//				
+				ValidatingEditor<?> editor_MacAddress = new MacAddressEditor();
+				
+				//The MAC validator
+				IParameterValidator macValidator = new AbstractValidator( "MAC Address Validator", ""){
+					@Override
+					protected List<ValidationResult> validateParameter( IParameter parameter) {
+						List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+
+						String theValue = ((StringValue)parameter.getValue()).getTheContent();
+						System.out.println("this is my parameter value:  "+theValue);
+						if ( isMacAddress( theValue))
+							validationResults.add( new ValidationResult("This entry has a valid MAC Address format.", ErrorKind.success, "tag_is_mac"));
+						else {
+							validationResults.add( new ValidationResult( "This entry does not have a valid MAC Address format.", ErrorKind.error, "tag_is_mac"));
+						}
+						return validationResults;
+					}
+
+				};
+				
+				// assign each parameter to the corresponding editor in this widget
 				getConfigurator().assign( editor_MacAddress, macWidget, parameter_MacAddress);
+				
+				//Register the mac validator to the editor
+				macValidator.registerForMessages( editor_MacAddress);
+				
+				//assign the validator to the parameter
+				getConfigurator().assign( macValidator, macWidget, parameter_MacAddress);
+				
 			}
 		  
+	}
+	
+	// Chechk if the entered Mac Address has a valid format
+	private boolean isMacAddress(String macEntry){
+		final String MAC_PATTERN = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
+		if (macEntry.matches( MAC_PATTERN)){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 
