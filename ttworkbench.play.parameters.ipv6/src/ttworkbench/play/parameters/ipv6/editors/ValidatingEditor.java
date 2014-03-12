@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.components.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.MessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
@@ -36,7 +37,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler {
 
 
-	private MessagePanel messagePanel = null;
+	private MessageDisplay messageDisplay = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
 	private static final ScheduledExecutorService validationMessageWorker = Executors.newSingleThreadScheduledExecutor();
 	private ScheduledFuture<?> validationTaskFuture;
@@ -61,7 +62,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	
 	public IMessageView getMessageView() {
-		return messagePanel;
+		return messageDisplay;
 	}
 	
 
@@ -136,10 +137,10 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
-		messagePanel = new MessagePanel( theParent, SWT.NONE);
-		messagePanel.setLookAndBehaviour( getLookAndBehaviour().getMessaagePanelLookAndBehaviour());
-		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
-		messagePanel.getLookAndBehaviour().setChangedListener( new Listener() {
+		messageDisplay = new MessageDisplay( theParent, SWT.NONE);
+		messageDisplay.setLookAndBehaviour( getLookAndBehaviour().getMessaagePanelLookAndBehaviour());
+		messageDisplay.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
+		messageDisplay.getLookAndBehaviour().setChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
 				updateControl();

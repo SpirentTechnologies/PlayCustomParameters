@@ -47,7 +47,7 @@ public class MessagePanel extends Composite implements IMessageView {
 		
 		
 		private MessageLine( final String theMessage, final ErrorKind theErrorKind) {
-			super( MessagePanel.this, SWT.NONE);
+			super( MessagePanel.this.messageContainer, SWT.NONE);
 			this.setLayout( new FillLayout());
 			setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 			label = new Label( this, SWT.NONE);
@@ -206,7 +206,7 @@ public class MessagePanel extends Composite implements IMessageView {
 	
 	private Lock updateLock = new ReentrantLock();
 	
-	private Composite container;
+	private Composite messageContainer;
 	private Composite wrappedComposite;
 	
 	public MessagePanel( final Composite theParent, final int theStyle) {
@@ -217,19 +217,21 @@ public class MessagePanel extends Composite implements IMessageView {
 	}
 	
 	private void createPanel(Composite theParent) {
-	  container = new Composite( theParent, SWT.None);
-		container.setLayout( new GridLayout( 1, true));
-		// TODO check layout data. Is compatible? to Flowlayout or Filllayout 
-		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
-		
-		// create message panel
+		 // create panel frame, that wrap messages and editor
 		GridLayout layout = new GridLayout(1, true);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		setLayout( layout);
 		
-		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		container.layout();
+	  // create message container
+		messageContainer = new Composite( this, SWT.None);
+		messageContainer.setLayout( layout);
+		// TODO check layout data. Is compatible? to Flowlayout or Filllayout 
+		messageContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+		
+		
+		this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		this.layout();
 	}
 
 	@Override
@@ -379,8 +381,8 @@ public class MessagePanel extends Composite implements IMessageView {
 		this.wrappedComposite = theWrappedComposite;
 		wrappedComposite.setParent( this);
 		
-    container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		container.layout();
+    this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		this.layout();
 	}
 
 	
