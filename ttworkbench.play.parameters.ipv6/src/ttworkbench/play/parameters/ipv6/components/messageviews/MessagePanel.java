@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.components;
+package ttworkbench.play.parameters.ipv6.components.messageviews;
 
 import java.awt.Toolkit;
 import java.util.Collection;

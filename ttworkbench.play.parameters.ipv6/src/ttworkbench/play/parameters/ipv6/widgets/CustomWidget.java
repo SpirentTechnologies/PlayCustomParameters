@@ -16,8 +16,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.components.IMessageView;
-import ttworkbench.play.parameters.ipv6.components.MessagePanel;
+
+import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messageviews.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
@@ -60,7 +61,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 
 		mainContainer = new Composite( theParent, SWT.None);
 		mainContainer.setLayout( new GridLayout( 1, true));
-		mainContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
+		//mainContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		
 	  // display message panel above the scrollbox with the editors 
 		createMessagePanel( mainContainer); 

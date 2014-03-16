@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import ttworkbench.play.parameters.ipv6.components.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;

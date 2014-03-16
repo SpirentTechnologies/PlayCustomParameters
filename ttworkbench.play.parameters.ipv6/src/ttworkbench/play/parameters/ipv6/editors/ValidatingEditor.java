@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.components.IMessageView;
-import ttworkbench.play.parameters.ipv6.components.MessageDisplay;
-import ttworkbench.play.parameters.ipv6.components.MessagePanel;
+import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messageviews.MessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messageviews.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
@@ -140,8 +140,8 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
 		messageDisplay = new MessageDisplay( theParent, SWT.NONE);
-		messageDisplay.setLookAndBehaviour( getLookAndBehaviour().getMessaagePanelLookAndBehaviour());
 		messageDisplay.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
+		messageDisplay.setLookAndBehaviour( getLookAndBehaviour().getMessaagePanelLookAndBehaviour());
 		messageDisplay.getLookAndBehaviour().setChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
@@ -163,7 +163,6 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 
 		Composite editRowContainer = new Composite( container, SWT.None);
 		editRowContainer.setLayout( getLookAndBehaviour().getEditorLookAndBehaviour().getLayout());
-		editRowContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		createEditRow( editRowContainer);
 		getMessageView().wrapControl( editRowContainer);
 		

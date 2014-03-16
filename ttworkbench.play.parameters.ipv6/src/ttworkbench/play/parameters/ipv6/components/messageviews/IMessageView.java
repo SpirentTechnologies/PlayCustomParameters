@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.components;
+package ttworkbench.play.parameters.ipv6.components.messageviews;
 
 import java.util.EnumSet;
 import java.util.List;

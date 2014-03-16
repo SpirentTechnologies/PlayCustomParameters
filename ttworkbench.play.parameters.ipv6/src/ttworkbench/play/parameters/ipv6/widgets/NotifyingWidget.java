@@ -5,7 +5,7 @@ import java.util.List;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import ttworkbench.play.parameters.ipv6.components.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
