@@ -8,8 +8,7 @@ import java.util.Vector;
 
 
 import ttworkbench.play.parameters.settings.Data;
-import ttworkbench.play.parameters.settings.Data.Parameter;
-import ttworkbench.play.parameters.settings.Data.RelationParameter;
+import ttworkbench.play.parameters.settings.Data.RelationPartner;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
 import ttworkbench.play.parameters.settings.exceptions.ParameterDefinitionNotFoundException;
 import ttworkbench.play.parameters.settings.exceptions.ValidatorClassNotFoundException;
@@ -33,8 +32,8 @@ public abstract class DataLoaderAbstract {
 
 
 	protected class LazyRelation implements Data.Relation {
-		private class RelParameter {
-			public RelParameter(String id, boolean msg, boolean act) {
+		private class Rel {
+			public Rel(String id, boolean msg, boolean act) {
 				this.id = id;
 				this.msg = msg;
 				this.act = act;
@@ -43,10 +42,21 @@ public abstract class DataLoaderAbstract {
 			private boolean msg;
 			private boolean act;
 		}
+		private class RelParameter extends Rel {
+			public RelParameter(String id, boolean msg, boolean act) {
+				super(id, msg, act);
+			}
+		}
+		private class RelWidget extends Rel {
+			public RelWidget(String name, boolean msg, boolean act) {
+				super(name, msg, act);
+			}
+		}
 
 		private Data.Validator validator;
-		private LinkedList<RelParameter> relParameters = new LinkedList<RelParameter>();
-		private Data.RelationParameter[] parameters = null;
+		private LinkedList<Rel> relParameters = new LinkedList<Rel>();
+		private Data.RelationPartner[] parameters = null;
+		private boolean widgetNotify = false;;
 
 		public LazyRelation(Data.Validator validator) {
 			this.validator = validator;
@@ -55,15 +65,16 @@ public abstract class DataLoaderAbstract {
 			return validator;
 		}
 
-		public Data.RelationParameter[] getParametersRelated() {
+		public Data.RelationPartner[] getRelationPartners() {
 			if(parameters==null) {
 				try {
-					parameters = new Data.RelationParameter[relParameters.size()];
+					parameters = new Data.RelationPartner[relParameters.size()];
 					for(int i=0; i<parameters.length; i++) {
-						final boolean thisRegisteredForMessages = relParameters.get(i).msg;
-						final boolean thisRegisteredForActions = relParameters.get(i).act;
-						final Parameter thisParameter = getParameter(relParameters.get(i).id);
-						parameters[i] = new RelationParameter() {
+						Rel rel = relParameters.get(i);
+						final boolean thisRegisteredForMessages = rel.msg;
+						final boolean thisRegisteredForActions = rel.act;
+						final Data.Parameter thisParameter = getParameter(rel.id);
+						parameters[i] = new RelationPartner() {
 							
 							public boolean isRegisteredForMessages() {
 								return thisRegisteredForMessages;
@@ -73,7 +84,7 @@ public abstract class DataLoaderAbstract {
 								return thisRegisteredForActions;
 							}
 							
-							public Parameter getParameter() {
+							public Data.Parameter getParameter() {
 								return thisParameter;
 							}
 						};
@@ -87,8 +98,17 @@ public abstract class DataLoaderAbstract {
 		public void addRelatedParameter(String parId, boolean parMsg, boolean parAct) {
 			relParameters.add(new RelParameter(parId, parMsg, parAct));
 		}
+		public void addRelatedWidget(String widgetName, boolean parMsg, boolean parAct) {
+			relParameters.add(new RelWidget(widgetName, parMsg, parAct));
+		}
 		public int getNumParametersRelated() {
 			return relParameters.size();
+		}
+		public void setWidgetNotified(boolean validatorNotify) {
+			this.widgetNotify = validatorNotify;
+		}
+		public boolean isWidgetNotified() {
+			return widgetNotify;
 		}
 		
 	}
@@ -111,6 +131,7 @@ public abstract class DataLoaderAbstract {
 	}
 
 	
+
 	protected Data.Validator getValidator(String validatorId) throws ValidatorDefinitionNotFoundException {
 		Data.Validator validator = this.validators.get(validatorId);
 		if(validator==null) {
@@ -178,8 +199,6 @@ public abstract class DataLoaderAbstract {
 			throw exception;
 		}
 	}
-	
-
 	
 
 	protected void setParameters(Map<String, Data.Parameter> parameters) {

@@ -17,6 +17,7 @@ import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationExc
 
 public class DataLoaderXML extends DataLoaderAbstract {
 
+	private static boolean DEFAULT_RELATED_WIDGET_NOTIFY = false;
 	private static boolean DEFAULT_RELATED_PARAMETER_MESSAGE = false;
 	private static boolean DEFAULT_RELATED_PARAMETER_ACTION = false;
 	private static boolean DEFAULT_DESCRIPTION_VISIBLE = true;
@@ -150,6 +151,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 
 		for(HierarchicalConfiguration val : config.configurationsAt("validator")) {
 			String validatorId = val.getString("[@id]");
+			boolean validatorNotify = val.getBoolean("[@notify]", DEFAULT_RELATED_WIDGET_NOTIFY);
 			Map<String, String> attrs_new = getAttributesFromConfig(val);
 			
 			final Data.Validator validatorDefault = getValidator(validatorId);
@@ -180,6 +182,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				relation.addRelatedParameter(parId, parMsg, parAct);
 			}
 			if(relation.getNumParametersRelated()>0) {
+				relation.setWidgetNotified(validatorNotify);
 				relations.add(relation);
 			}
 			else {

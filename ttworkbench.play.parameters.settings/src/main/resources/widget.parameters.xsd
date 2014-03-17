@@ -79,6 +79,7 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
                           <xs:element name="attribute" type="tns:Attribute" minOccurs="0" maxOccurs="unbounded" />
                         </xs:sequence>
                         <xs:attribute type="xs:string" name="id" use="optional"/>
+                  		<xs:attribute type="xs:boolean" name="notify" use="optional"/>
                       </xs:complexType>
                     </xs:element>
                     <xs:element name="attribute" type="tns:Attribute" minOccurs="0" maxOccurs="unbounded" />

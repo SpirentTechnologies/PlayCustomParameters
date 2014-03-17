@@ -29,11 +29,12 @@ public interface Data {
 	}
 
 	public interface Relation {
+		boolean isWidgetNotified();
 		Validator getValidator();
-		RelationParameter[] getParametersRelated();
+		RelationPartner[] getRelationPartners();
 	}
 	
-	public interface RelationParameter {
+	public interface RelationPartner {
 		Parameter getParameter();
 		boolean isRegisteredForMessages();
 		boolean isRegisteredForActions();

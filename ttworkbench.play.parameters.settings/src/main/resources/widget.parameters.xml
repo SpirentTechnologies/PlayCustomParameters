@@ -46,7 +46,7 @@
 				<relation parameterId="123" action="true" />
 				<relation parameterId="456" message="false" />
 			</validator>
-			<validator id="vYYY">
+			<validator id="vYYY" notify="true">
 				<relation parameterId="789" action="true" message="true" />
 				
 				<attribute name="attr1">value1</attribute>

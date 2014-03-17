@@ -3,7 +3,7 @@ package ttworkbench.play.parameters.settings;
 
 import ttworkbench.play.parameters.settings.Data.Parameter;
 import ttworkbench.play.parameters.settings.Data.Relation;
-import ttworkbench.play.parameters.settings.Data.RelationParameter;
+import ttworkbench.play.parameters.settings.Data.RelationPartner;
 import ttworkbench.play.parameters.settings.Data.Validator;
 import ttworkbench.play.parameters.settings.Data.Widget;
 import ttworkbench.play.parameters.settings.loader.DataLoader;
@@ -35,12 +35,13 @@ public class DataLoaderTest {
 					for(Relation relation : parameter.getRelations()) {
 						System.out.println("     - Validator-Class: "+relation.getValidator().getType());
 						System.out.println("       Validator-Attributes: "+relation.getValidator().getAttributes());
+						System.out.println("       Notify Widget: "+relation.isWidgetNotified());
 						
-						System.out.println("       Related Parameters: "+relation.getParametersRelated().length);
-						for(RelationParameter relationParameter : relation.getParametersRelated()) {
-							System.out.println("        - "+relationParameter.getParameter().getId());
-							System.out.println("          Registered for Messages: "+relationParameter.isRegisteredForMessages());
-							System.out.println("          Registered for Actions: "+relationParameter.isRegisteredForActions());	
+						System.out.println("       Related Parameters: "+relation.getRelationPartners().length);
+						for(RelationPartner relationPartner : relation.getRelationPartners()) {
+							System.out.println("        - Widget: "+ relationPartner.getParameter().getId());
+							System.out.println("          Registered for Messages: "+relationPartner.isRegisteredForMessages());
+							System.out.println("          Registered for Actions: "+relationPartner.isRegisteredForActions());	
 						}
 					}
 
