@@ -2,40 +2,27 @@ package ttworkbench.play.parameters.ipv6;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.IPWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.MacWidgetComposer;
-import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
-import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
-import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
-import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
-import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
-import ttworkbench.play.parameters.ipv6.widgets.IPv6Widget;
 import ttworkbench.play.parameters.settings.Data;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
 import ttworkbench.play.parameters.settings.loader.DataLoader;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
-import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class IPv6ConfigurationComposer implements IConfigurationComposer {
-	
-	
+
 	@Override
 	// TODO refactor: rename method to "compose()" ?
-	
 	public void createWidgets(IConfigurator theConfigurator) {
 		ParameterMap parametersMap = new ParameterMap( theConfigurator);
-		if ( parametersMap.isEmpty())
+		if (parametersMap.isEmpty())
 			return;
 
 		// first added widget will be set automatically as default widget.
@@ -45,9 +32,10 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
-		// widgetComposers.add( new IPv6WidgetComposer( theConfigurator, parametersMap));
+		// widgetComposers.add( new IPv6WidgetComposer( theConfigurator,
+		// parametersMap));
+		widgetComposers.add( new IPWidgetComposer( theConfigurator, parametersMap));
 
-		
 		// custom widget configuration
 		try {
 			for (Data.Widget widget : DataLoader.getInstance().getWidgets()) {
@@ -57,9 +45,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			// TODO handle if needed
 			e.printStackTrace();
 		}
-		
-		
-		
+
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {
 			widgetComposer.compose();
