@@ -1,28 +1,26 @@
 package ttworkbench.play.parameters.ipv6.test.editors;
 
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import ttworkbench.play.parameters.ipv6.editors.IPv4Editor;
-
 /*
  * Problems: Only paste of numbers, without dot-separation
  */
-public class EditorTest {
+public class EditorTest implements VerifyListener, ModifyListener {
+
+	StyledText text;
 
 	public static void main(String[] args) {
 		Display display = new Display();
 		final Shell shell = new Shell( display);
 		shell.setLayout( new GridLayout());
 		shell.setText( "Editor Test");
-
-		new IPv4Editor( "IPv4", "IPv4-Address").createControl( shell);
-		// new MacAddressEditor().createControl( shell);
-
-		// please assign a parameter first before calling createControl
-		// new IPv6Editor().createControl( shell);
-		// new MacAddressEditor().createControl( shell);
 
 		shell.open();
 
@@ -38,5 +36,17 @@ public class EditorTest {
 
 		// disposes all associated windows and their components
 		display.dispose();
+	}
+
+	@Override
+	public void modifyText(ModifyEvent theArg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void verifyText(VerifyEvent theArg0) {
+		// TODO Auto-generated method stub
+
 	}
 }

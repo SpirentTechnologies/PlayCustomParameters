@@ -22,14 +22,17 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class IPv4Editor extends ValidatingEditor<StringValue> implements VerifyListener, ModifyListener {
 
+	private static final String TITLE = "IPv4 Editor";
+	private static final String DESCRIPTION = "";
+
 	final IVerifier verifier = new IPv4Verifier();
 	final Display display = Display.getCurrent();
 
 	private StyledText text;
 	private boolean ignore;
 
-	public IPv4Editor( String theTitle, String theDescription) {
-		super( theTitle, theDescription);
+	public IPv4Editor() {
+		super( TITLE, DESCRIPTION);
 	}
 
 	@Override
