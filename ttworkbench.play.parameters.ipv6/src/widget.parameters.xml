@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="https://github.com/TestingTechnologies/PlayCustomParameters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/TestingTechnologies/PlayCustomParameters widget.parameters.01.xsd ">
+
+	<widgets>
+		<widget name="Custom Widget 1">
+			<description>text</description>
+			<image path="path" />
+			<editor parameterId="PX_123" />
+			<editor parameterId="456" />
+		</widget>
+		
+	</widgets>
+	
+	
+	<parameters>
+		
+		<parameter id="123">
+			<defaultValue>9283248230958dasd</defaultValue>
+			<description visible="false">Beschreibung</description>
+		</parameter>
+		
+		<parameter id="456">
+			<validator id="v456" />
+		</parameter>
+		
+		<parameter id="789">
+			<validator id="v789" />
+			<validator id="vXXX">
+				<relation parameterId="123" />
+			</validator>
+		</parameter>
+		
+		<parameter id="000">
+			<validator id="v000" />
+			<validator id="vXXX">
+				<relation parameterId="123" />
+				<relation parameterId="456" />
+			</validator>
+			<validator id="vYYY">
+				<relation parameterId="789" />
+				
+				<attribute name="attr1">value1</attribute>
+			</validator>
+		</parameter>
+		
+	</parameters>
+	
+	<validators>
+		<validator id="v456">
+			<classpath>edu.nothing.here.Validator456</classpath>
+			<attribute name="attr1">value1</attribute>
+		</validator>
+		<validator id="v789">
+			<classpath>edu.nothing.here.Validator789</classpath>
+		</validator>
+		<validator id="vXXX">
+			<classpath>edu.nothing.here.ValidatorXXX</classpath>
+		</validator>
+		<validator id="vYYY">
+			<classpath>edu.nothing.here.ValidatorYYY</classpath>
+		</validator>
+	</validators>
+</settings>
