@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.test.editors;
 
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -13,10 +14,11 @@ public class EditorTest {
 	public static void main(String[] args) {
 		Display display = new Display();
 		final Shell shell = new Shell( display);
-		// shell.setLayout( new ColumnLayout());
+		shell.setLayout( new GridLayout());
 		shell.setText( "Editor Test");
 
-		new IPv4Editor( "Test", "Test").createControl( shell);
+		new IPv4Editor( "IPv4", "IPv4-Address").createControl( shell);
+		// new MacAddressEditor().createControl( shell);
 
 		// please assign a parameter first before calling createControl
 		// new IPv6Editor().createControl( shell);
