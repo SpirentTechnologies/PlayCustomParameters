@@ -8,12 +8,13 @@
 			<editor parameterId="PX_123" />
 			<editor parameterId="456" />
 		</widget>
-		
 		<widget name="Custom Widget 2">
 			<editor parameterId="789" />
 			<editor parameterId="000" />
 			<editor parameterId="123" />
 			<editor parameterId="PX_NAME1" />
+			
+			<attribute name="test">111</attribute>
 		</widget>
 	</widgets>
 	
@@ -23,6 +24,9 @@
 		<parameter id="123">
 			<defaultValue>9283248230958dasd</defaultValue>
 			<description visible="false">Beschreibung</description>
+			
+			<attribute name="dont">dead</attribute>
+			<attribute name="open">inside</attribute>
 		</parameter>
 		
 		<parameter id="456">
@@ -32,18 +36,18 @@
 		<parameter id="789">
 			<validator id="v789" />
 			<validator id="vXXX">
-				<relation parameterId="123" />
+				<relation parameterId="123" message="true" />
 			</validator>
 		</parameter>
 		
 		<parameter id="000">
 			<validator id="v000" />
 			<validator id="vXXX">
-				<relation parameterId="123" />
-				<relation parameterId="456" />
+				<relation parameterId="123" action="true" />
+				<relation parameterId="456" message="false" />
 			</validator>
 			<validator id="vYYY">
-				<relation parameterId="789" />
+				<relation parameterId="789" action="true" message="true" />
 				
 				<attribute name="attr1">value1</attribute>
 			</validator>

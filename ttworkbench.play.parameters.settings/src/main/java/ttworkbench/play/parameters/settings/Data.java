@@ -7,7 +7,7 @@ public interface Data {
 	Widget[] getWidgets();
 	
 	
-	public interface Widget {
+	public interface Widget extends WithAttributes {
 		String getName();
 		String getDescription();
 		Image getImage();
@@ -18,24 +18,32 @@ public interface Data {
 		String getPath();
 	}
 	
-	public interface Parameter {
+	public interface Parameter extends WithAttributes {
 		String getId();
 		Object getDefaultValue();
 		String getDescription();
 		boolean isDescriptionVisible();
-		
+
 		Validator[] getValidators();
 		Relation[] getRelations();
 	}
-	
+
 	public interface Relation {
 		Validator getValidator();
-		Parameter getParameterRelated();
+		RelationParameter[] getParametersRelated();
 	}
 	
-	public interface Validator {
+	public interface RelationParameter {
+		Parameter getParameter();
+		boolean isRegisteredForMessages();
+		boolean isRegisteredForActions();
+	}
+	
+	public interface Validator extends WithAttributes {
 		Class<?> getType();
+	}
+	
+	public interface WithAttributes {
 		Map<String, String> getAttributes();
 	}
-	
 }

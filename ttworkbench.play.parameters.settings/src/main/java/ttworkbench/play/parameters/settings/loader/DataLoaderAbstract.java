@@ -1,11 +1,15 @@
 package ttworkbench.play.parameters.settings.loader;
 
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 
 
 import ttworkbench.play.parameters.settings.Data;
+import ttworkbench.play.parameters.settings.Data.Parameter;
+import ttworkbench.play.parameters.settings.Data.RelationParameter;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
 import ttworkbench.play.parameters.settings.exceptions.ParameterDefinitionNotFoundException;
 import ttworkbench.play.parameters.settings.exceptions.ValidatorClassNotFoundException;
@@ -29,28 +33,62 @@ public abstract class DataLoaderAbstract {
 
 
 	protected class LazyRelation implements Data.Relation {
+		private class RelParameter {
+			public RelParameter(String id, boolean msg, boolean act) {
+				this.id = id;
+				this.msg = msg;
+				this.act = act;
+			}
+			private String id;
+			private boolean msg;
+			private boolean act;
+		}
 
 		private Data.Validator validator;
-		private String parameterId;
-		private Data.Parameter parameter;
+		private LinkedList<RelParameter> relParameters = new LinkedList<RelParameter>();
+		private Data.RelationParameter[] parameters = null;
 
-		public LazyRelation(Data.Validator validator, String parameterId) {
+		public LazyRelation(Data.Validator validator) {
 			this.validator = validator;
-			this.parameterId = parameterId;
 		}
 		public Data.Validator getValidator() {
 			return validator;
 		}
 
-		public Data.Parameter getParameterRelated() {
-			if(parameter==null) {
+		public Data.RelationParameter[] getParametersRelated() {
+			if(parameters==null) {
 				try {
-					parameter = getParameter(parameterId);
+					parameters = new Data.RelationParameter[relParameters.size()];
+					for(int i=0; i<parameters.length; i++) {
+						final boolean thisRegisteredForMessages = relParameters.get(i).msg;
+						final boolean thisRegisteredForActions = relParameters.get(i).act;
+						final Parameter thisParameter = getParameter(relParameters.get(i).id);
+						parameters[i] = new RelationParameter() {
+							
+							public boolean isRegisteredForMessages() {
+								return thisRegisteredForMessages;
+							}
+							
+							public boolean isRegisteredForActions() {
+								return thisRegisteredForActions;
+							}
+							
+							public Parameter getParameter() {
+								return thisParameter;
+							}
+						};
+					}
 				} catch (ParameterDefinitionNotFoundException e) {
 					errors.add(e);
 				}
 			}
-			return parameter;
+			return parameters;
+		}
+		public void addRelatedParameter(String parId, boolean parMsg, boolean parAct) {
+			relParameters.add(new RelParameter(parId, parMsg, parAct));
+		}
+		public int getNumParametersRelated() {
+			return relParameters.size();
 		}
 		
 	}
@@ -115,6 +153,10 @@ public abstract class DataLoaderAbstract {
 					
 					public Object getDefaultValue() {
 						return null;
+					}
+
+					public Map<String, String> getAttributes() {
+						return new HashMap<String, String>();
 					}
 				};
 			}

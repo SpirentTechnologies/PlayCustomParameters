@@ -3,6 +3,7 @@ package ttworkbench.play.parameters.settings;
 
 import ttworkbench.play.parameters.settings.Data.Parameter;
 import ttworkbench.play.parameters.settings.Data.Relation;
+import ttworkbench.play.parameters.settings.Data.RelationParameter;
 import ttworkbench.play.parameters.settings.Data.Validator;
 import ttworkbench.play.parameters.settings.Data.Widget;
 import ttworkbench.play.parameters.settings.loader.DataLoader;
@@ -20,19 +21,27 @@ public class DataLoaderTest {
 				System.out.println("Widget: "+widget.getName());
 				System.out.println(" Description: "+widget.getDescription());
 				System.out.println(" Image-Path: "+widget.getImage().getPath());
+				System.out.println(" Widget-Attributes: "+widget.getAttributes());
 				System.out.println(" Parameters:");
 				
 				for(Parameter parameter : widget.getParameters()) {
 					System.out.println("  + "+parameter.getId());
 					System.out.println("    Description: "+parameter.getDescription());
 					System.out.println("    Description-Visible: "+parameter.isDescriptionVisible());
+					System.out.println("    Parameter-Attributes: "+parameter.getAttributes());
 					System.out.println("    Default: "+parameter.getDefaultValue());
 					
 					System.out.println("    Relations: "+parameter.getRelations().length);
 					for(Relation relation : parameter.getRelations()) {
-						System.out.println("     - Parameter: "+relation.getParameterRelated().getId());
-						System.out.println("       Validator-Class: "+relation.getValidator().getType());
+						System.out.println("     - Validator-Class: "+relation.getValidator().getType());
 						System.out.println("       Validator-Attributes: "+relation.getValidator().getAttributes());
+						
+						System.out.println("       Related Parameters: "+relation.getParametersRelated().length);
+						for(RelationParameter relationParameter : relation.getParametersRelated()) {
+							System.out.println("        - "+relationParameter.getParameter().getId());
+							System.out.println("          Registered for Messages: "+relationParameter.isRegisteredForMessages());
+							System.out.println("          Registered for Actions: "+relationParameter.isRegisteredForActions());	
+						}
 					}
 
 					System.out.println("    Validators: "+parameter.getValidators().length);
