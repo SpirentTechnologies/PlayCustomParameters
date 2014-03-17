@@ -20,7 +20,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 public class MacWidgetComposer extends WidgetComposer{
 	
 	// get relevant parameters
-	final IParameter<String> parameter_MacAddress = getParametersMap().getParameterById( "PX_MAC_LAYER");
+	final IParameter<String> parameter_MacAddress = getParametersMap().getParameterById( "PC_MAC_UCA_HS01");
 	
 	public MacWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 		super( theConfigurator, theParametersMap);
@@ -68,8 +68,10 @@ public class MacWidgetComposer extends WidgetComposer{
 
 	// Chechk if the entered Mac Address has a valid format
 	private boolean isMacAddress(String macEntry){
-		final String MAC_PATTERN = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
-		if (macEntry.matches( MAC_PATTERN)){
+		final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:-]){5}([0-9a-fA-F]{2})$";
+		final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]){5}([0-9a-fA-F]{2})$";
+		final String MAC_PATTERN3 = "^([0-9a-fA-F]{12})$";
+		if (macEntry.matches( MAC_PATTERN1) || macEntry.matches( MAC_PATTERN2) || macEntry.matches( MAC_PATTERN3)){
 			return true;
 		} else {
 			return false;
