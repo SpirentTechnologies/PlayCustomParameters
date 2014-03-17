@@ -1,477 +1,38 @@
 package ttworkbench.play.parameters.ipv6;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
-import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
-import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
-import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
-import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
+import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.MacWidgetComposer;
 import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
-import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
 import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
-import ttworkbench.play.parameters.ipv6.widgets.DefaultWidget;
-import ttworkbench.play.parameters.ipv6.widgets.FibWidget;
 import ttworkbench.play.parameters.ipv6.widgets.IPv6Widget;
-import ttworkbench.play.parameters.ipv6.widgets.MacWidget;
-import ttworkbench.play.parameters.ipv6.widgets.NotifyingWidget;
+import ttworkbench.play.parameters.settings.Data;
+import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
+import ttworkbench.play.parameters.settings.loader.DataLoader;
 
-import com.testingtech.muttcn.values.IntegerValue;
-import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class IPv6ConfigurationComposer implements IConfigurationComposer {
-
-	private static final String TYPE_MATCH_INTEGER = "^(UInt\\d{0,2}|Int\\d{0,2})$";
 	
 	
-	private static void createAndComposeIPv6Widget( IConfigurator theConfigurator) {
-		IWidget IPv6Widget = new IPv6Widget();
-		theConfigurator.addWidget( IPv6Widget);
-		
-		IParameterValidator njetValidator = new AbstractValidator( "No Validator", ""){
-            @Override
-			protected List<ValidationResult> validateParameter( IParameter parameter) {
-					List<ValidationResult> l = new ArrayList<ValidationResult>();
-					l.add( new ValidationResult( "nay-sayer", ErrorKind.error));
-					return l;
-			}
-            
-		};
-		
-		IParameterValidator yeahValidator = new AbstractValidator("Yes Validator", ""){
-
-			@Override
-			protected List<ValidationResult> validateParameter( IParameter parameter) {
-				List<ValidationResult> l = new ArrayList<ValidationResult>();
-				l.add( new ValidationResult( "yea-sayer", ErrorKind.success));
-				l.add( new ValidationResult( "gasbag", ErrorKind.info));
-				return l;
-			}
-			
-		};
-
-		
-		
-		// TODO: replace demo composition 
-		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
-		for (IParameter parameter : parameters) {
-			ValidatingEditor<?> editor;
-			if ( parameter.getType().matches( TYPE_MATCH_INTEGER))
-			  editor = new IntegerEditor();	
-			else 
-				continue;//editor = new IPv6Editor();
-			theConfigurator.assign( editor, IPv6Widget, parameter);
-			njetValidator.registerForMessages( editor);
-			yeahValidator.registerForMessages( editor);
-		}
-		
-		
-		
-				
-		
-		theConfigurator.assign( new IPv6Validator(), IPv6Widget, new ArrayList<IParameter>(parameters));
-		theConfigurator.assign( njetValidator, IPv6Widget, new ArrayList<IParameter>(parameters));	
-		theConfigurator.assign( yeahValidator, IPv6Widget, new ArrayList<IParameter>(parameters));
-		
-		theConfigurator.assign( new IPv6ValueProvider(), IPv6Widget, new ArrayList<IParameter>(parameters));
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
- 
-
-	
-	
-	
-	private class ParameterMap {
-		
-		private Map<String,IParameter> idToParameterMap;
-		
-		public ParameterMap( final IConfigurator theConfigurator) {
-			loadParameters( theConfigurator);
-		}
-		
-		private void loadParameters( IConfigurator theConfigurator) {
-			idToParameterMap = new HashMap<String, IParameter>();
-			Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
-			for (IParameter parameter : parameters) {
-				idToParameterMap.put( parameter.getId(), parameter);
-			}
-		}
-		
-		public IParameter getParameterById( final String theId) {
-			return idToParameterMap.get( theId);
-		}
-		
-		public Collection<IParameter> getAllParameters() {
-			return idToParameterMap.values();
-		}
-
-		public boolean isEmpty() {
-			return idToParameterMap.isEmpty();
-		}
-		
-	}
-	
-	private interface IWidgetComposer {
-		void compose();
-	}
-	
-	private abstract class WidgetComposer implements IWidgetComposer {
-		
-		private final IConfigurator configurator;
-		private final ParameterMap parametersMap;
-		
-		public WidgetComposer( final IConfigurator theConfigurator, final ParameterMap theParametersMap) {
-		  this.configurator = theConfigurator;
-		  this.parametersMap = theParametersMap;				
-		}
-		
-		protected IConfigurator getConfigurator() {
-			return configurator;
-		}
-		
-		protected ParameterMap getParametersMap() {
-			return parametersMap;
-		}
-		
-		public abstract void compose();
-		
-	}
-	
-	private class DefaultWidgetComposer extends WidgetComposer {
-
-		private static final String TYPE_MATCH_INTEGER = "^(UInt\\d{0,2}|Int\\d{0,2})$";
-
-		public DefaultWidgetComposer( IConfigurator theConfigurator, ParameterMap theParameters) {
-			super( theConfigurator, theParameters);
-		}
-
-		@Override
-		public void compose() {
-
-			IWidget defaultWidget = new DefaultWidget();
-			getConfigurator().addWidget( defaultWidget);
-
-			// TODO: replace demo composition 
-			Collection<IParameter> parameters = getParametersMap().getAllParameters();
-			for (IParameter parameter : parameters) {
-				IParameterEditor editor = new DefaultEditor();
-				if(parameter.getType().matches( TYPE_MATCH_INTEGER)) {
-					editor = new IntegerEditor();
-				}
-				getConfigurator().assign( editor, defaultWidget, parameter);
-			}
-		}
-
-	}
-	
-	
-	private class FibWidgetComposer extends WidgetComposer {
-		
-		// get relevant parameters
-		final IParameter<IntegerValue> parameter_PX_N = getParametersMap().getParameterById( "PX_N");
-		final IParameter<IntegerValue> parameter_PX_FIB_NUMBER = getParametersMap().getParameterById( "PX_FIB_NUMBER");
-		final IParameter<IntegerValue> parameter_PX_FIB_SUCC_NUMBER = getParametersMap().getParameterById( "PX_FIB_SUCC_NUMBER");
-		final BigInteger[] fibonacciSequence = new BigInteger[256];
-
-		public FibWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
-			super( theConfigurator, theParametersMap);
-			calcFibonacciSequence();
-		}
-		
-		private void calcFibonacciSequence() {
-			fibonacciSequence[0] = new BigInteger( "0");
-			fibonacciSequence[1] = new BigInteger( "1");
-			for ( int i = 2; i < 256; i++) {
-				fibonacciSequence[i] = fibonacciSequence[i-2].add( fibonacciSequence[i-1]);
-			}
-		}
-
-		private BigInteger getFibonacciNumber( BigInteger theValue) {
-			if ( theValue.intValue() > 255)
-				return new BigInteger( "0");
-			return fibonacciSequence[ theValue.intValue()];
-		}
-
-		private boolean isFibonacciNumber( BigInteger theValue) {
-			for (int i = 0; i < fibonacciSequence.length; i++) {
-				if ( fibonacciSequence[i].compareTo( theValue) == 0)
-					return true;
-			} 
-			return false;
-		}
-
-		private BigInteger nextFibonacciNumber( BigInteger theValue) {
-			for (int i = 0; i < fibonacciSequence.length -1; i++) {
-				if ( fibonacciSequence[i].compareTo( theValue) > 0)
-					return fibonacciSequence[i];
-			} 
-			return new BigInteger( "0");
-		}
-
-		@Override
-		public void compose() {
-			NotifyingWidget fibWidget = new FibWidget();
-						
-			getConfigurator().addWidget( fibWidget);
-
-			IParameterValidator fibValidator_PX_FIB_NUMBER = new AbstractValidator( "Fibonacci Validator (Succ)", ""){
-				@Override
-				protected List<ValidationResult> validateParameter( IParameter parameter) {
-					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-
-					BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
-					if ( isFibonacciNumber( theValue))
-						validationResults.add( new ValidationResult( String.format( "%s: %s is a fibonacci number.", this.getTitle(), theValue), ErrorKind.success, "tag_is_fib"));
-					else {
-						validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a fibonacci number.", this.getTitle(), theValue), ErrorKind.error, "tag_is_fib"));
-						validationResults.add( new ValidationResult( String.format( "%s: Next succeeding fibonacci number to %s is %s.", this.getTitle(), theValue, nextFibonacciNumber( theValue)), ErrorKind.info, "tag_fib_hint"));
-					}
-					return validationResults;
-				}
-
-			};
-			IParameterValidator fibValidator_PX_FIB_SUCC_NUMBER = new AbstractValidator( "Fibonacci Validator", ""){
-				@Override
-				protected List<ValidationResult> validateParameter( IParameter parameter) {
-					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-
-					BigInteger theValue =( (IntegerValue) parameter.getValue()).getTheNumber(); 
-					if ( isFibonacciNumber( theValue))
-						validationResults.add( new ValidationResult( String.format( "%s: %s is a fibonacci number.", this.getTitle(), theValue), ErrorKind.success, "tag_is_fib"));
-					else {
-						validationResults.add( new ValidationResult( String.format( "%s: %s is NOT a fibonacci number.", this.getTitle(), theValue), ErrorKind.error, "tag_is_fib"));
-						validationResults.add( new ValidationResult( String.format( "%s: Next succeeding fibonacci number to %s is %s.", this.getTitle(), theValue, nextFibonacciNumber( theValue)), ErrorKind.info, "tag_fib_hint"));
-					}
-					return validationResults;
-				}
-
-			};		
-
-			IParameterValidator fibSeqValidator = new AbstractValidator( "Fibonacci Sequence Validator", ""){
-				@Override
-				protected List<ValidationResult> validateParameter( IParameter parameter) {
-					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-
-					BigInteger inputSeqenceNumber = parameter_PX_N.getValue().getTheNumber();
-					BigInteger inputFibValue = parameter_PX_FIB_NUMBER.getValue().getTheNumber();
-					BigInteger fibValue = getFibonacciNumber( inputSeqenceNumber);
-
-          if ( inputFibValue.compareTo( fibValue) != 0) {
-          	validationResults.add( new ValidationResult( String.format( "%s: %s is NOT the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.error, "tag_is_not_fib_of_n"));		
-            validationResults.add( new ValidationResult(  String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), fibValue, inputSeqenceNumber), ErrorKind.info, "tag_is_fib_of_hint")); 
-          } else {
-          	validationResults.add( new ValidationResult( String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.success, "tag_is_not_fib_of_n"));		
-          }
-          	
-          return validationResults;
-				}
-
-			};		
-
-			IParameterValidator fibSuccValidator = new AbstractValidator("Fibonacci Successor Validator", ""){
-
-				@Override
-				protected List<ValidationResult> validateParameter( IParameter parameter) {
-
-
-					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-					BigInteger fibSuccValue = parameter_PX_FIB_SUCC_NUMBER.getValue().getTheNumber();
-					BigInteger fibValue = parameter_PX_FIB_NUMBER.getValue().getTheNumber();
-					BigInteger fibNextValue = nextFibonacciNumber( fibValue);
-
-					if ( fibSuccValue.compareTo( fibNextValue) == 0) {
-						validationResults.add( new ValidationResult(  String.format( "%s: %s is the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.success, "tag_succ_fib"));
-					} else {
-						validationResults.add( new ValidationResult(  String.format( "%s: %s is NOT the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.error, "tag_succ_fib"));
-						validationResults.add( new ValidationResult(  String.format( "%s: %s is successor of %s.", this.getTitle(), fibNextValue, fibValue), ErrorKind.info, "tag_succ_fib_hint"));    	
-					}
-					return validationResults;
-				}
-
-			};
-
-			IParameterValidator fibWidgetLayerValidator = new AbstractValidator("Error Counter", ""){
-
-				
-				
-				@Override
-				protected List<ValidationResult> validateParameter( IParameter parameter) {
-
-					List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-					
-					Set<IParameterEditor> editors_PX_N = getConfigurator().getEditors( parameter_PX_N);
-					Set<IParameterEditor> editors_PX_FIB_NUMBER = getConfigurator().getEditors( parameter_PX_FIB_NUMBER);
-					Set<IParameterEditor> editors_PX_FIB_SUCC_NUMBER = getConfigurator().getEditors( parameter_PX_FIB_SUCC_NUMBER);
-					
-					int totalErrors = 0;
-					int totalWarnings = 0;
-					IMessageView messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessageView();
-				  totalErrors += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.error)).size();
-				  totalWarnings += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessageView messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessageView();
-				  totalErrors += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
-				  totalWarnings += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessageView messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessageView();
-				  totalErrors += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
-				  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  
-					if ( totalErrors > 0) {
-						validationResults.add( new ValidationResult(  String.format( "%s: %s errors.", this.getTitle(), totalErrors), ErrorKind.error, "tag_total_errors"));
-					} else {
-						validationResults.add( new ValidationResult(  String.format( "%s: No more errors.", this.getTitle()), ErrorKind.success, "tag_total_errors"));
-					}
-					
-					if ( totalWarnings > 0) {
-						validationResults.add( new ValidationResult(  String.format( "%s: %s warnings.", this.getTitle(), totalErrors), ErrorKind.warning, "tag_total_warnings"));
-					} else {
-						validationResults.add( new ValidationResult(  String.format( "%s: No more warnings.", this.getTitle()), ErrorKind.success, "tag_total_warnings"));
-					}
-					
-					return validationResults;
-				}
-
-			};
-
-			
-
-			// create an editor for each parameter
-			ValidatingEditor<?> editor_PX_N = new IntegerEditor();
-			ValidatingEditor<?> editor_PX_FIB_NUMBER = new IntegerEditor();
-			ValidatingEditor<?> editor_PX_FIB_SUCC_NUMBER = new IntegerEditor();
-
-			// assign each parameter to the corresponding editor in this widget
-			getConfigurator().assign( editor_PX_N, fibWidget, parameter_PX_N);
-			getConfigurator().assign( editor_PX_FIB_NUMBER, fibWidget, parameter_PX_FIB_NUMBER);
-			getConfigurator().assign( editor_PX_FIB_SUCC_NUMBER, fibWidget, parameter_PX_FIB_SUCC_NUMBER);
-
-			// register editors to corresponding validators
-			fibValidator_PX_FIB_NUMBER.registerForMessages( editor_PX_FIB_NUMBER);
-			fibValidator_PX_FIB_NUMBER.registerForMessages( fibWidget);
-			fibValidator_PX_FIB_SUCC_NUMBER.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
-			fibSeqValidator.registerForMessages( editor_PX_FIB_NUMBER);
-			fibSuccValidator.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
-			fibSuccValidator.registerForActions( editor_PX_FIB_SUCC_NUMBER);
-			
-			
-		  // register widgets to corresponding validators
-		//	fibWidgetLayerValidator.registerForMessages( fibWidget);
-
-			// assign validators to the parameters they have to check
-			getConfigurator().assign( fibValidator_PX_FIB_NUMBER, fibWidget, parameter_PX_FIB_NUMBER);
-			getConfigurator().assign( fibValidator_PX_FIB_SUCC_NUMBER, fibWidget, parameter_PX_FIB_SUCC_NUMBER);
-			getConfigurator().assign( fibSeqValidator, fibWidget, parameter_PX_N, parameter_PX_FIB_NUMBER);
-			getConfigurator().assign( fibSuccValidator, fibWidget, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);
-			
-		}
-	}
-	
-	private class MacWidgetComposer extends WidgetComposer{
-		
-			// get relevant parameters
-			final IParameter<String> parameter_MacAddress = getParametersMap().getParameterById( "PX_MAC_LAYER");
-			
-			public MacWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
-				super( theConfigurator, theParametersMap);
-				// TODO Auto-generated constructor stub
-		}
-	
-			@Override
-			public void compose(){
-				//declare a Mac Address Widget
-				IWidget macWidget = new MacWidget();
-				//add the Mac widget to the frame work
-				getConfigurator().addWidget( macWidget);
-				
-				ValidatingEditor<?> editor_MacAddress = new MacAddressEditor();
-				
-				//The MAC validator
-				IParameterValidator macValidator = new AbstractValidator( "MAC Address Validator", ""){
-					@Override
-					protected List<ValidationResult> validateParameter( IParameter parameter) {
-						List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
-
-						String theValue = ((StringValue)parameter.getValue()).getTheContent();
-						System.out.println("this is my parameter value:  "+theValue);
-						if ( isMacAddress( theValue))
-							validationResults.add( new ValidationResult("This entry has a valid MAC Address format.", ErrorKind.success, "tag_is_mac"));
-						else {
-							validationResults.add( new ValidationResult( "This entry does not have a valid MAC Address format.", ErrorKind.error, "tag_is_mac"));
-						}
-						return validationResults;
-					}
-
-				};
-				
-				// assign each parameter to the corresponding editor in this widget
-				getConfigurator().assign( editor_MacAddress, macWidget, parameter_MacAddress);
-				
-				//Register the mac validator to the editor
-				macValidator.registerForMessages( editor_MacAddress);
-				
-				//assign the validator to the parameter
-				getConfigurator().assign( macValidator, macWidget, parameter_MacAddress);
-				
-			}
-		  
-	}
-	
-	// Chechk if the entered Mac Address has a valid format
-	private boolean isMacAddress(String macEntry){
-		final String MAC_PATTERN = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
-		if (macEntry.matches( MAC_PATTERN)){
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-
-
 	@Override
 	// TODO refactor: rename method to "compose()" ?
+	
 	public void createWidgets(IConfigurator theConfigurator) {
 		ParameterMap parametersMap = new ParameterMap( theConfigurator);
 		if ( parametersMap.isEmpty())
@@ -482,16 +43,15 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
-
+		
+		// widgetComposers.add( new IPv6WidgetComposer( theConfigurator, parametersMap));
+				
+		
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {
 			widgetComposer.compose();
 		}
 
-		//createAndComposeIPv6Widget( theConfigurator);
 		theConfigurator.endConfigure();
 	}
-
-
-
 }
