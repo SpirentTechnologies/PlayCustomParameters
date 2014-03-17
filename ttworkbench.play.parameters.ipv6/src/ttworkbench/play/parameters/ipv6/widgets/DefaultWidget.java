@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
-import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
@@ -11,7 +10,6 @@ import org.eclipse.swt.widgets.Control;
 import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerAdvancedControl;
 import ttworkbench.play.parameters.ipv6.widgets.tableviewer.ParameterEditorColumnType;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 public class DefaultWidget extends AbstractWidget {
@@ -51,7 +49,7 @@ public class DefaultWidget extends AbstractWidget {
 		
 			.addParameterEditorHolders("All parameters", getEditors().toArray( new IParameterEditor<?>[0] ))
 			
-			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_NAME, "Parameter Name")
+			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_NAME, "Parameter Id")
 			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_VALUE, "Value")
 			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_DEFAULT, "Default")
 			.addTableColumn(ParameterEditorColumnType.COLUMN_PARAMETER_TYPE, "Type")

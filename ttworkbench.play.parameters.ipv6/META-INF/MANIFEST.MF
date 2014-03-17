@@ -21,4 +21,5 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: parameters.ipv6.jar,
- swing2swt.jar
+ swing2swt.jar,
+ lib/ttworkbench.play.parameters.settings-0.1.jar
