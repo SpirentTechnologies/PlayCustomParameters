@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
-import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
-import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.widgets.FibWidget;

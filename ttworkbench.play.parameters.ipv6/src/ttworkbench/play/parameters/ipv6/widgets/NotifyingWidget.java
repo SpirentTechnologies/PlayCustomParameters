@@ -5,7 +5,8 @@ import java.util.List;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -32,12 +33,10 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 				IMessageView messageView = getMessageView();
 				String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
 				messageView.beginUpdateForSender( senderId);
+				MessageRecord messageRecord;
 				for (ValidationResult validationResult : theValidationResults) {
-					if ( validationResult.isTagged()) {
-						messageView.putTaggedMessage( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
-					} else {
-						messageView.addUntaggedMessage( validationResult.getErrorMessage(), validationResult.getErrorKind());					
-					}
+					messageRecord = new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
+					messageView.showMessage( messageRecord);
 				}
 				messageView.endUpdate();
 			}
