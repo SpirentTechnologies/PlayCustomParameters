@@ -1,0 +1,56 @@
+package ttworkbench.play.parameters.ipv6.validators;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
+import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
+import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
+
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+
+public class FibValidator_ERRORS extends FibValidator {
+
+	public FibValidator_ERRORS() {
+		super("Error Counter");
+	}
+	
+	@Override
+	protected List<ValidationResult> validateParameter( IParameter parameter) {
+
+		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+		
+		IParameterEditor<?> editor_PX_N = getEditor( ParameterKey.PX_N);
+		IParameterEditor<?> editor_PX_FIB_NUMBER = getEditor( ParameterKey.PX_FIB_NUMBER);
+		IParameterEditor<?> editor_PX_FIB_SUCC_NUMBER = getEditor( ParameterKey.PX_FIB_SUCC_NUMBER);
+		
+		int totalErrors = 0;
+		int totalWarnings = 0;
+		IMessageView messagePanel_PX_N = ((ValidatingEditor<?>) editor_PX_N).getMessageView();
+	  totalErrors += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.error)).size();
+	  totalWarnings += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.warning)).size();
+	  IMessageView messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editor_PX_FIB_NUMBER).getMessageView();
+	  totalErrors += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
+	  totalWarnings += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
+	  IMessageView messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editor_PX_FIB_SUCC_NUMBER).getMessageView();
+	  totalErrors += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
+	  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
+	  
+		if ( totalErrors > 0) {
+			validationResults.add( new ValidationResult(  String.format( "%s: %s errors.", this.getTitle(), totalErrors), ErrorKind.error, "tag_total_errors"));
+		} else {
+			validationResults.add( new ValidationResult(  String.format( "%s: No more errors.", this.getTitle()), ErrorKind.success, "tag_total_errors"));
+		}
+		
+		if ( totalWarnings > 0) {
+			validationResults.add( new ValidationResult(  String.format( "%s: %s warnings.", this.getTitle(), totalErrors), ErrorKind.warning, "tag_total_warnings"));
+		} else {
+			validationResults.add( new ValidationResult(  String.format( "%s: No more warnings.", this.getTitle()), ErrorKind.success, "tag_total_warnings"));
+		}
+		
+		return validationResults;
+	}
+}

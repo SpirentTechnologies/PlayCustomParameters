@@ -7,7 +7,6 @@ import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
-import ttworkbench.play.parameters.ipv6.composer.MacWidgetComposer;
 import ttworkbench.play.parameters.settings.Data;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
 import ttworkbench.play.parameters.settings.loader.DataLoader;
@@ -32,7 +31,6 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// default preset widgets
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
-		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
 		// widgetComposers.add( new IPv6WidgetComposer( theConfigurator, parametersMap));
 
 		

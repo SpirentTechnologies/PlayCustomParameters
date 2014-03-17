@@ -17,6 +17,9 @@ import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationExc
 
 public class DataLoaderXML extends DataLoaderAbstract {
 
+	private static boolean DEFAULT_RELATED_WIDGET_NOTIFY = false;
+	private static boolean DEFAULT_RELATED_PARAMETER_MESSAGE = false;
+	private static boolean DEFAULT_RELATED_PARAMETER_ACTION = false;
 	private static boolean DEFAULT_DESCRIPTION_VISIBLE = true;
 	
 	private String file;
@@ -84,6 +87,10 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				public Map<String, String> getAttributes() {
 					return attributes;
 				}
+
+				public boolean isWidgetNotified() {
+					return false;
+				}
 			});
 		}
 		return result;
@@ -108,6 +115,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 			final Data.Validator[] thisValidators = validators.toArray(new Data.Validator[0]);
 			final String thisDescription = val.getString("description");
 			final String thisDefaultValue = val.getString("defaultValue");
+			final Map<String, String> thisAttributes = getAttributesFromConfig(val);
 			
 			result.put(thisId, new Data.Parameter() {
 				
@@ -134,6 +142,10 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				public Object getDefaultValue() {
 					return thisDefaultValue;
 				}
+
+				public Map<String, String> getAttributes() {
+					return thisAttributes;
+				}
 			});
 		}
 		return result;
@@ -143,6 +155,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 
 		for(HierarchicalConfiguration val : config.configurationsAt("validator")) {
 			String validatorId = val.getString("[@id]");
+			final boolean validatorNotify = val.getBoolean("[@notify]", DEFAULT_RELATED_WIDGET_NOTIFY);
 			Map<String, String> attrs_new = getAttributesFromConfig(val);
 			
 			final Data.Validator validatorDefault = getValidator(validatorId);
@@ -162,18 +175,25 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				public Map<String, String> getAttributes() {
 					return attrs;
 				}
+
+				public boolean isWidgetNotified() {
+					return validatorNotify;
+				}
 			};
 			
 			
-			int referencedEditors = 0;
+			LazyRelation relation = new LazyRelation(validator);
 			for(HierarchicalConfiguration editor : val.configurationsAt("relation")) {
-				referencedEditors++;
 				String parId = editor.getString("[@parameterId]");
-				Data.Relation relation = new LazyRelation(validator, parId);
+				boolean parMsg = editor.getBoolean("[@message]", DEFAULT_RELATED_PARAMETER_MESSAGE);
+				boolean parAct = editor.getBoolean("[@action]", DEFAULT_RELATED_PARAMETER_ACTION);
+				relation.addRelatedParameter(parId, parMsg, parAct);
+			}
+			if(relation.getNumParametersRelated()>0) {
+				relation.setWidgetNotified(validatorNotify);
 				relations.add(relation);
 			}
-			
-			if(referencedEditors==0) {
+			else {
 				validators.add(validator);
 			}
 		}
@@ -188,9 +208,9 @@ public class DataLoaderXML extends DataLoaderAbstract {
 		LinkedList<Data.Widget> result = new LinkedList<Data.Widget>();
 
 		for(HierarchicalConfiguration val : config.configurationsAt("widgets.widget")) {
-			final String name = val.getString("[@name]");
-			final String description = val.getString("description");
-			final String imagePath = val.getString("image[@path]");
+			final String thisName = val.getString("[@name]");
+			final String thisDescription = val.getString("description");
+			final String thisImagePath = val.getString("image[@path]");
 
 			final List<Data.Parameter> paras = new LinkedList<Data.Parameter>();
 			for(Object parameterId : val.getList("editor[@parameterId]")) {
@@ -200,28 +220,33 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				}
 			}
 			
-			final Data.Parameter[] parameters = paras.toArray(new Data.Parameter[0]);
+			final Data.Parameter[] thisParameters = paras.toArray(new Data.Parameter[0]);
+			final Map<String, String> thisAttributes = getAttributesFromConfig(val);
 			
 			result.add(new Data.Widget() {
 
 				public String getName() {
-					return name;
+					return thisName;
 				}
 
 				public String getDescription() {
-					return description;
+					return thisDescription;
 				}
 
 				public Data.Image getImage() {
 					return new Data.Image() {
 						public String getPath() {
-							return imagePath;
+							return thisImagePath;
 						};
 					};
 				}
 
 				public Data.Parameter[] getParameters() {
-					return parameters;
+					return thisParameters;
+				}
+
+				public Map<String, String> getAttributes() {
+					return thisAttributes;
 				}
 				
 			});
