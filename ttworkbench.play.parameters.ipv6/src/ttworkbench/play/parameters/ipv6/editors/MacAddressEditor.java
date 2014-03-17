@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
@@ -133,7 +134,7 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 				}
 				else{
 					theEvent.doit = false;
-					getMessageView().flashMessage( "Invalid Entry", "This is not a valid character", ErrorKind.warning);
+					getMessageView().flashMessage( new MessageRecord( "Invalid Entry", "This is not a valid character", ErrorKind.warning));
 				}
 			}
 			

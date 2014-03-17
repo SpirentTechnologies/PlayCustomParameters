@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
-import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.validators.AbstractValidator;
 import ttworkbench.play.parameters.ipv6.validators.IPv6Validator;
 import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;

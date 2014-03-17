@@ -1,10 +1,12 @@
-package ttworkbench.play.parameters.ipv6.components.messageviews;
+package ttworkbench.play.parameters.ipv6.components.messaging.views;
 
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
@@ -26,13 +28,13 @@ public interface IMessageView {
 	/**
 	 * Flashes a message for a short term. Methods {@link #beginUpdateForSender()} and {@link #endUpdate()} didn't affect {@link #flashMessage()}.
 	 */
-	void flashMessage(String theTag, String theWarning, ErrorKind theErrorKind);
+	void flashMessage( MessageRecord theMessageRecord);
+	void flashMessages( Collection<MessageRecord> theMessageRecords);
+	
+	void showMessage( MessageRecord theMessageRecord);
+	void showMessages( Collection<MessageRecord> theMessageRecords);
 
-	void addUntaggedMessage(String theMessage, ErrorKind theErrorKind);
-
-	void putTaggedMessage(String theTag, String theMessage, ErrorKind theErrorKind);
-
-	/**
+		/**
 	 * Fetches all messages on this panel of specified error kind.
 	 * 
 	 * @param theMessageKinds Set of error kinds considered in the result.
