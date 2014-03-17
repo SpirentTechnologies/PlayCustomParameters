@@ -19,6 +19,8 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 	@Override
 	public Layout getLayout() {
 		GridLayout gridLayout = new GridLayout( 3, false);
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;	
 		return gridLayout;
 	}
 

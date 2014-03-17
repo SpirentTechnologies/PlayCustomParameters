@@ -155,7 +155,10 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public final Composite createControl(Composite theParent) {
 	
 	  Composite container = new Composite( theParent, SWT.None);
-		container.setLayout( new GridLayout( 1, true));
+	  GridLayout containerLayout = new GridLayout( 1, true);
+	  containerLayout.marginHeight = 0;
+	  containerLayout.marginWidth = 0;
+	  container.setLayout( containerLayout);
 	  // TODO check layout data. Is compatible? to Flowlayout or Filllayout 
 		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		
