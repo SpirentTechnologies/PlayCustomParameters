@@ -101,7 +101,6 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		if ( validationMessageTaskFuture != null) 
 			validationMessageTaskFuture.cancel( true);
 		
-
 		Runnable validationMessageTask = new Runnable() {
 			@Override
 			public void run() {
