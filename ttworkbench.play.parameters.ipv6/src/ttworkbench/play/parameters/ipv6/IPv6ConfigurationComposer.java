@@ -38,14 +38,27 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		if ( parametersMap.isEmpty())
 			return;
 
-		List<IWidgetComposer> widgetComposers = new ArrayList<IWidgetComposer>();
 		// first added widget will be set automatically as default widget.
+		List<IWidgetComposer> widgetComposers = new ArrayList<IWidgetComposer>();
+
+		// default preset widgets
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
-		
 		// widgetComposers.add( new IPv6WidgetComposer( theConfigurator, parametersMap));
-				
+
+		
+		// custom widget configuration
+		try {
+			for (Data.Widget widget : DataLoader.getInstance().getWidgets()) {
+				widgetComposers.add( new CustomWidgetComposer( theConfigurator, parametersMap, widget));
+			}
+		} catch (ParameterConfigurationException e) {
+			// TODO handle if needed
+			e.printStackTrace();
+		}
+		
+		
 		
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {

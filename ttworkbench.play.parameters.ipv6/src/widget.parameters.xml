@@ -5,8 +5,18 @@
 		<widget name="Custom Widget 1">
 			<description>text</description>
 			<image path="path" />
-			<editor parameterId="PX_123" />
-			<editor parameterId="456" />
+			
+			<editor parameterId="PX_UDP_PORT_HS02" />
+			<editor parameterId="PX_IUT_ROLE" />
+			<editor parameterId="PX_N" />
+			<editor parameterId="PX_CONFIGURATION_ID" />
+			<editor parameterId="PX_FIB_NUMBER" />
+			<editor parameterId="PX_BIG_NUMBER" />
+			<editor parameterId="PX_IPv4_ADDR_IUT" />
+			<editor parameterId="PX_NET_DEVICE_ID_1" />
+			<editor parameterId="PX_MAC_LAYER" />
+			<editor parameterId="PX_FIB_SUCC_NUMBER" />
+			<editor parameterId="PX_TEST_CAMPAIGN" />
 		</widget>
 		
 	</widgets>
