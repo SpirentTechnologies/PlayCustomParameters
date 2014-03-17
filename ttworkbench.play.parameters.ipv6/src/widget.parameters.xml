@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<settings xmlns="https://github.com/TestingTechnologies/PlayCustomParameters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/TestingTechnologies/PlayCustomParameters widget.parameters.01.xsd ">
+<settings xmlns="https://github.com/TestingTechnologies/PlayCustomParameters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/TestingTechnologies/PlayCustomParameters widget.parameters.02.xsd ">
 
 	<widgets>
 		<widget name="Custom Widget 1">
@@ -20,10 +20,20 @@
 		</widget>
 		
 		
-		<widget name="MAC Widget">
+		<widget name="Custom MAC Widget">
 			<description>MAC addresses editor</description>
 			<editor parameterId="PX_MAC_LAYER" />
 		</widget>
+		
+		
+		<!--
+		<widget name="Custom Fibonacci">
+			<description>Fibonacci editor</description>
+			<editor parameterId="PX_N" />
+			<editor parameterId="PX_FIB_NUMBER" />
+			<editor parameterId="PX_FIB_SUCC_NUMBER" />
+		</widget>
+		-->
 		
 	</widgets>
 	
@@ -34,51 +44,60 @@
 			<validator id="vMAC" />
 		</parameter>
 		
-		
-		<!-- remove -->
-		<parameter id="123">
-			<defaultValue>9283248230958dasd</defaultValue>
-			<description visible="false">Beschreibung</description>
+		<!--
+		<parameter id="PX_N">
+			<description visible="true">Beschreibung</description>
+			<validator id="fibSeqValidator">
+				<relation parameterId="PX_N" />
+				<relation parameterId="PX_FIB_NUMBER" />
+			</validator>	
 		</parameter>
 		
-		<parameter id="456">
-			<validator id="v456" />
-		</parameter>
-		
-		<parameter id="789">
-			<validator id="v789" />
-			<validator id="vXXX">
-				<relation parameterId="123" />
+		<parameter id="PX_FIB_NUMBER">
+			<description visible="true">Beschreibung</description>
+			<validator id="fibValidator_PX_FIB_NUMBER" notify="true" />
+			<validator id="fibSeqValidator">
+				<relation parameterId="PX_N" />
+				<relation parameterId="PX_FIB_NUMBER" message="true" />
+			</validator>
+			<validator id="fibSuccValidator">
+				<relation parameterId="PX_N" />
+				<relation parameterId="PX_FIB_NUMBER" />
+				<relation parameterId="PX_FIB_SUCC_NUMBER" message="true" action="true" />
 			</validator>
 		</parameter>
 		
-		<parameter id="000">
-			<validator id="v000" />
-			<validator id="vXXX">
-				<relation parameterId="123" />
-				<relation parameterId="456" />
-			</validator>
-			<validator id="vYYY">
-				<relation parameterId="789" />
-				
-				<attribute name="attr1">value1</attribute>
+		<parameter id="PX_FIB_SUCC_NUMBER">
+			<description visible="true">Beschreibung</description>
+			<validator id="fibValidator_PX_FIB_NUMBER" notify="true" />
+			<validator id="fibSuccValidator">
+				<relation parameterId="PX_N" />
+				<relation parameterId="PX_FIB_NUMBER" />
+				<relation parameterId="PX_FIB_SUCC_NUMBER" message="true" action="true" />
 			</validator>
 		</parameter>
-		<!-- /remove -->
-		
+		-->
 	</parameters>
 	
 	<validators>
+	
 		<validator id="vMAC">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.MacAddressValidator</classpath>
 			<attribute name="attr1">value1</attribute>
 		</validator>
-		
-		<!-- remove -->
-		<validator id="v000">
-			<classpath>edu.nothing.here.Validator456</classpath>
-			<attribute name="attr1">value1</attribute>
+	<!--	
+		<validator id="fibValidator_PX_FIB_NUMBER">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_NUMBER</classpath>
 		</validator>
-		<!-- /remove -->
+		<validator id="fibSeqValidator">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_SEQ</classpath>
+		</validator>
+		<validator id="fibSuccValidator">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_SUCC</classpath>
+		</validator>
+		<validator id="fibWidgetLayerValidator">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_ERRORS</classpath>
+		</validator>
+		-->
 	</validators>
 </settings>
