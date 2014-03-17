@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ipv6
+Bundle-Name: %bundle-name
+Bundle-Vendor: %bundle-vendor
 Bundle-SymbolicName: ttworkbench.play.parameters.ipv6;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: ttworkbench.play.parameters.ipv6.Activator
@@ -19,5 +20,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms;bundle-version="3.5.101"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: .,
+Bundle-ClassPath: parameters.ipv6.jar,
  swing2swt.jar

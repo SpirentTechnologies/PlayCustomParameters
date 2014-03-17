@@ -8,32 +8,66 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
+
+import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messageviews.MessagePanel;
+import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
-public class CustomWidget extends NotifyingWidget {
+public abstract class CustomWidget extends NotifyingWidget {
+
+	private Composite mainContainer;
+	private Composite editorsContainer;
+	private ScrolledComposite scrolledComposite;
+	private IWidgetLookAndBehaviour lookAndBehaviour;
+	private MessagePanel messagePanel;
+
+	
 	
 	public CustomWidget( String theTitle, String theDescription, Image theImage) {
 		super( theTitle, theDescription, theImage);
+		setLookAndBehaviour( getDefaultLookAndBehaviour());
 	}
-
-	private Composite editorsContainer;
-	private ScrolledComposite scrolledComposite;
 	
 	
+	private void createMessagePanel( Composite theParent) {
+		messagePanel = new MessagePanel( theParent, SWT.NONE);
+		messagePanel.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
+		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
+		messagePanel.getLookAndBehaviour().setChangedListener( new Listener() {
+			@Override
+			public void handleEvent(Event theArg0) {
+				updateControl();
+			}
+		});
+	}
+		
 	
 	@Override
 	public Control createControl(Composite theParent) {
 
 		theParent.setLayout( new FillLayout(SWT.HORIZONTAL));
 
-	  scrolledComposite = new ScrolledComposite( theParent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		mainContainer = new Composite( theParent, SWT.None);
+		mainContainer.setLayout( new GridLayout( 1, true));
+		//mainContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
+		
+	  // display message panel above the scrollbox with the editors 
+		createMessagePanel( mainContainer); 
+		
+		// scrollbox with the editors
+	  scrolledComposite = new ScrolledComposite( mainContainer, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayout( new FillLayout( SWT.HORIZONTAL));
 		scrolledComposite.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		scrolledComposite.setExpandHorizontal(true);
@@ -41,17 +75,18 @@ public class CustomWidget extends NotifyingWidget {
 		
 		editorsContainer = new Composite( scrolledComposite, SWT.None);
 		editorsContainer.setLayout( new GridLayout( 1, true));
-		editorsContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+		editorsContainer.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false, 0, 0));
 		
 		createParameterEditors();
 		
 		scrolledComposite.setContent( editorsContainer);
 		scrolledComposite.setMinSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		
-		return scrolledComposite;
+		return mainContainer;
 	}	
 
 
+	@Override
 	public void update() {
 		// TODO better add editors incremental
 		deleteParameterEditors();
@@ -68,18 +103,19 @@ public class CustomWidget extends NotifyingWidget {
 	}
 
 	protected void createParameterEditors() {
-		//GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
-		//GridLayout gridLayout = new GridLayout( 1, false);
-		//gridLayout.makeColumnsEqualWidth = false;
+		GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
+		GridLayout gridLayout = new GridLayout( 1, false);
+		gridLayout.makeColumnsEqualWidth = false;
+		gridData.minimumWidth = 300;
 		if ( editorsContainer != null) {	
 			Set<IParameterEditor> editors = getEditors();
 			for ( IParameterEditor editor : editors) {
-				Control editorControl = editor.createControl( editorsContainer/*, gridData, gridLayout*/);
+				Control editorControl = editor.createControl( editorsContainer);
 				editorControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 				
 				// react on dynamically insertion/deletion of controls when messages occur
 				if ( editor instanceof AbstractEditor<?>)
-					((AbstractEditor<?>) editor).setControlChangedListener( new Listener() {
+					((AbstractEditor<?>) editor).getLookAndBehaviour().setControlChangedListener( new Listener() {
 						
 						@Override
 						public void handleEvent(Event theArg0) {
@@ -92,5 +128,30 @@ public class CustomWidget extends NotifyingWidget {
 			editorsContainer.layout();
 		}
 	}
+
+
+	@Override
+	protected IMessageView getMessagePanel() {
+		return messagePanel;
+	}
+
+	
+	protected void setLookAndBehaviour(IWidgetLookAndBehaviour theLookAndBehaviour) {
+		this.lookAndBehaviour = theLookAndBehaviour;
+	}
+	
+	public IWidgetLookAndBehaviour getLookAndBehaviour() {
+		return lookAndBehaviour;
+	}
+	
+	public void updateControl() {
+		lookAndBehaviour.doOnChange();
+		if ( mainContainer != null)
+			mainContainer.layout();
+	}
+	
+	protected abstract IWidgetLookAndBehaviour getDefaultLookAndBehaviour();
+	
+
 
 }

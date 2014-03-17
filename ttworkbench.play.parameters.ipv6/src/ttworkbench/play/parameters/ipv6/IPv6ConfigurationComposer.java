@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import ttworkbench.play.parameters.ipv6.components.IMessagePanel;
+import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
 import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
@@ -24,8 +24,11 @@ import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
 import ttworkbench.play.parameters.ipv6.widgets.DefaultWidget;
 import ttworkbench.play.parameters.ipv6.widgets.FibWidget;
 import ttworkbench.play.parameters.ipv6.widgets.IPv6Widget;
+import ttworkbench.play.parameters.ipv6.widgets.MacWidget;
+import ttworkbench.play.parameters.ipv6.widgets.NotifyingWidget;
 
 import com.testingtech.muttcn.values.IntegerValue;
+import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -211,48 +214,47 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		final IParameter<IntegerValue> parameter_PX_N = getParametersMap().getParameterById( "PX_N");
 		final IParameter<IntegerValue> parameter_PX_FIB_NUMBER = getParametersMap().getParameterById( "PX_FIB_NUMBER");
 		final IParameter<IntegerValue> parameter_PX_FIB_SUCC_NUMBER = getParametersMap().getParameterById( "PX_FIB_SUCC_NUMBER");
-		
+		final BigInteger[] fibonacciSequence = new BigInteger[256];
 
 		public FibWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 			super( theConfigurator, theParametersMap);
-
+			calcFibonacciSequence();
+		}
+		
+		private void calcFibonacciSequence() {
+			fibonacciSequence[0] = new BigInteger( "0");
+			fibonacciSequence[1] = new BigInteger( "1");
+			for ( int i = 2; i < 256; i++) {
+				fibonacciSequence[i] = fibonacciSequence[i-2].add( fibonacciSequence[i-1]);
+			}
 		}
 
 		private BigInteger getFibonacciNumber( BigInteger theValue) {
-			if ( theValue.compareTo( new BigInteger( "0")) <= 0)
+			if ( theValue.intValue() > 255)
 				return new BigInteger( "0");
-			if ( theValue.compareTo( new BigInteger( "1")) <= 0)
-				return new BigInteger( "1");
-			return getFibonacciNumber( theValue.subtract( new BigInteger( "1"))).add( getFibonacciNumber( theValue.subtract( new BigInteger( "2")))); 
+			return fibonacciSequence[ theValue.intValue()];
 		}
 
 		private boolean isFibonacciNumber( BigInteger theValue) {
-			int comparision;
-			BigInteger n = new BigInteger( "0");
-			do { 
-				comparision = theValue.compareTo( getFibonacciNumber( n));
-				if ( comparision == 0)
+			for (int i = 0; i < fibonacciSequence.length; i++) {
+				if ( fibonacciSequence[i].compareTo( theValue) == 0)
 					return true;
-				n = n.add(  new BigInteger( "1"));
-			} while( comparision > 0);
+			} 
 			return false;
 		}
 
 		private BigInteger nextFibonacciNumber( BigInteger theValue) {
-			int comparision;
-			BigInteger n = new BigInteger( "0");
-			BigInteger nextFib;
-			do { 
-				nextFib = getFibonacciNumber( n);
-				comparision = theValue.compareTo( nextFib);
-				n = n.add(  new BigInteger( "1"));
-			} while( comparision >= 0);
-			return nextFib;
+			for (int i = 0; i < fibonacciSequence.length -1; i++) {
+				if ( fibonacciSequence[i].compareTo( theValue) > 0)
+					return fibonacciSequence[i];
+			} 
+			return new BigInteger( "0");
 		}
 
 		@Override
 		public void compose() {
-			IWidget fibWidget = new FibWidget();
+			NotifyingWidget fibWidget = new FibWidget();
+						
 			getConfigurator().addWidget( fibWidget);
 
 			IParameterValidator fibValidator_PX_FIB_NUMBER = new AbstractValidator( "Fibonacci Validator (Succ)", ""){
@@ -346,13 +348,13 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 					
 					int totalErrors = 0;
 					int totalWarnings = 0;
-					IMessagePanel messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessagePanel();
+					IMessageView messagePanel_PX_N = ((ValidatingEditor<?>) editors_PX_N.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessagePanel messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessagePanel();
+				  IMessageView messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_NUMBER.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
-				  IMessagePanel messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessagePanel();
+				  IMessageView messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editors_PX_FIB_SUCC_NUMBER.iterator().next()).getMessageView();
 				  totalErrors += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 				  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
 				  
@@ -387,9 +389,12 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 			// register editors to corresponding validators
 			fibValidator_PX_FIB_NUMBER.registerForMessages( editor_PX_FIB_NUMBER);
+			fibValidator_PX_FIB_NUMBER.registerForMessages( fibWidget);
 			fibValidator_PX_FIB_SUCC_NUMBER.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
 			fibSeqValidator.registerForMessages( editor_PX_FIB_NUMBER);
 			fibSuccValidator.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
+			fibSuccValidator.registerForActions( editor_PX_FIB_SUCC_NUMBER);
+			
 			
 		  // register widgets to corresponding validators
 		//	fibWidgetLayerValidator.registerForMessages( fibWidget);
@@ -399,9 +404,67 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			getConfigurator().assign( fibValidator_PX_FIB_SUCC_NUMBER, fibWidget, parameter_PX_FIB_SUCC_NUMBER);
 			getConfigurator().assign( fibSeqValidator, fibWidget, parameter_PX_N, parameter_PX_FIB_NUMBER);
 			getConfigurator().assign( fibSuccValidator, fibWidget, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);
+			
+		}
+	}
+	
+	private class MacWidgetComposer extends WidgetComposer{
+		
+			// get relevant parameters
+			final IParameter<String> parameter_MacAddress = getParametersMap().getParameterById( "PX_MAC_LAYER");
+			
+			public MacWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
+				super( theConfigurator, theParametersMap);
+				// TODO Auto-generated constructor stub
+		}
+	
+			@Override
+			public void compose(){
+				//declare a Mac Address Widget
+				IWidget macWidget = new MacWidget();
+				//add the Mac widget to the frame work
+				getConfigurator().addWidget( macWidget);
+				
+				ValidatingEditor<?> editor_MacAddress = new MacAddressEditor();
+				
+				//The MAC validator
+				IParameterValidator macValidator = new AbstractValidator( "MAC Address Validator", ""){
+					@Override
+					protected List<ValidationResult> validateParameter( IParameter parameter) {
+						List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 
+						String theValue = ((StringValue)parameter.getValue()).getTheContent();
+						System.out.println("this is my parameter value:  "+theValue);
+						if ( isMacAddress( theValue))
+							validationResults.add( new ValidationResult("This entry has a valid MAC Address format.", ErrorKind.success, "tag_is_mac"));
+						else {
+							validationResults.add( new ValidationResult( "This entry does not have a valid MAC Address format.", ErrorKind.error, "tag_is_mac"));
+						}
+						return validationResults;
+					}
 
-
+				};
+				
+				// assign each parameter to the corresponding editor in this widget
+				getConfigurator().assign( editor_MacAddress, macWidget, parameter_MacAddress);
+				
+				//Register the mac validator to the editor
+				macValidator.registerForMessages( editor_MacAddress);
+				
+				//assign the validator to the parameter
+				getConfigurator().assign( macValidator, macWidget, parameter_MacAddress);
+				
+			}
+		  
+	}
+	
+	// Chechk if the entered Mac Address has a valid format
+	private boolean isMacAddress(String macEntry){
+		final String MAC_PATTERN = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
+		if (macEntry.matches( MAC_PATTERN)){
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -418,6 +481,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// first added widget will be set automatically as default widget.
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
+		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
 
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {

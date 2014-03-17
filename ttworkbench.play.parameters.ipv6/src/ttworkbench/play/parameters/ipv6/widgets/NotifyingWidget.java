@@ -1,11 +1,11 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+
+import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -19,11 +19,29 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 	}
 
 	
+	protected abstract IMessageView getMessagePanel();
+	
+	
+	
 
 	@Override
-	public void report(IParameterValidator theValidator, List<ValidationResult> theValidationResults,
+	public void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
 			IParameter theParameter) {
-		// TODO Auto-generated method stub
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				IMessageView messagePanel = getMessagePanel();
+				String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
+				messagePanel.beginUpdateForSender( senderId);
+				for (ValidationResult validationResult : theValidationResults) {
+					if ( validationResult.isTagged()) {
+						messagePanel.putTaggedMessage( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
+					} else {
+					  messagePanel.addUntaggedMessage( validationResult.getErrorMessage(), validationResult.getErrorKind());					
+					}
+				}
+				messagePanel.endUpdate();
+			}
+		});
 		
 	}
 

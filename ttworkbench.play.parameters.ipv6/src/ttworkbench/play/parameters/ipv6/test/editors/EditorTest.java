@@ -1,23 +1,26 @@
 package ttworkbench.play.parameters.ipv6.test.editors;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
 
-import ttworkbench.play.parameters.ipv6.editors.IPv6Editor;
-import ttworkbench.play.parameters.ipv6.editors.MacAddressEditor;
+import ttworkbench.play.parameters.ipv6.editors.IPv4Editor;
 
+/*
+ * Problems: Only paste of numbers, without dot-separation
+ */
 public class EditorTest {
 
 	public static void main(String[] args) {
 		Display display = new Display();
 		final Shell shell = new Shell( display);
-		shell.setLayout(new ColumnLayout());
+		// shell.setLayout( new ColumnLayout());
 		shell.setText( "Editor Test");
 
-		new IPv6Editor().createControl( shell, SWT.NONE);
-		new MacAddressEditor().createControl( shell, SWT.NONE);
+		new IPv4Editor( "Test", "Test").createControl( shell);
+
+		// please assign a parameter first before calling createControl
+		// new IPv6Editor().createControl( shell);
+		// new MacAddressEditor().createControl( shell);
 
 		shell.open();
 

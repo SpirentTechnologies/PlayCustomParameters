@@ -64,7 +64,7 @@ public class IPv6Widget extends AbstractWidget {
 				
 				// react on dynamically insertion/deletion of controls when messages occur
 				if ( editor instanceof AbstractEditor<?>)
-					((AbstractEditor<?>) editor).setControlChangedListener( new Listener() {
+					((AbstractEditor<?>) editor).getLookAndBehaviour().setControlChangedListener( new Listener() {
 						
 						@Override
 						public void handleEvent(Event theArg0) {

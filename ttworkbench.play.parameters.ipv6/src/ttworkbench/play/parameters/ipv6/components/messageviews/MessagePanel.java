@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.components;
+package ttworkbench.play.parameters.ipv6.components.messageviews;
 
 import java.awt.Toolkit;
 import java.util.Collection;
@@ -13,6 +13,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -27,10 +30,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
+
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MessagePanel extends Composite implements IMessagePanel {
+public class MessagePanel extends Composite implements IMessageView {
 	
 	
 	private class MessageLine extends Composite {
@@ -41,14 +47,13 @@ public class MessagePanel extends Composite implements IMessagePanel {
 		
 		
 		private MessageLine( final String theMessage, final ErrorKind theErrorKind) {
-			super( MessagePanel.this, SWT.NONE);
+			super( MessagePanel.this.messageContainer, SWT.NONE);
 			this.setLayout( new FillLayout());
 			setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-			
 			label = new Label( this, SWT.NONE);
 			FontData[] fontData = label.getFont().getFontData();
-			fontData[0].setHeight( fontData[0].getHeight() -2);
-			label.setFont( new Font( Display.getCurrent(), fontData[0]));
+			fontData[0].setHeight( fontData[0].getHeight() -1);
+			label.setFont( lookAndBehaviour.getMessageFont( theErrorKind));//new Font( Display.getCurrent(), fontData[0]));
 			
 			setMessage( theMessage, theErrorKind);
 		}
@@ -57,45 +62,26 @@ public class MessagePanel extends Composite implements IMessagePanel {
 	    // set content
 			this.message = theMessage;
 	    label.setText( message);
+
 	    
 	    // set look
-	    Color foregroundColor;
-	    Color backgroundColor;
-	    Display display = Display.getCurrent();
-	    Color colorRed = display.getSystemColor(SWT.COLOR_RED);
-	    Color colorYellow = display.getSystemColor(SWT.COLOR_YELLOW);
-	    Color colorGreen = display.getSystemColor(SWT.COLOR_GREEN);
-	    Color colorWhite = display.getSystemColor(SWT.COLOR_WHITE);
-	    Color colorBlack = display.getSystemColor(SWT.COLOR_BLACK);
-	    Color colorBtnFace = display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-	     
 	    this.errorKind = theErrorKind;
-	    switch ( errorKind) {
-				case error:
-					foregroundColor = colorWhite;
-					backgroundColor = colorRed;
-					beep();
-					break;
-				case warning:
-					foregroundColor = colorRed;
-					backgroundColor = colorBtnFace;
-					beep();
-					break;
-	      case info:
-	      	foregroundColor = colorBlack;
-					backgroundColor = colorYellow;	
-					break;
-				default:
-	      	foregroundColor = colorBlack;
-					backgroundColor = colorGreen;					
-					break;
-			}
+	    Color foregroundColor = lookAndBehaviour.getMessageForeground( errorKind);
+	    Color backgroundColor = lookAndBehaviour.getMessageBackground( errorKind);
 	    label.setForeground( foregroundColor);
 	    label.setBackground( backgroundColor);
+	    
+	    // set behaviour
+	    switch ( errorKind) {
+				case error:
+				case warning:
+					beep();
+					break;
+			}
 		}
 		
 		private void beep() {
-			if ( MessagePanel.this.isBeepEnabled())
+			if ( MessagePanel.this.lookAndBehaviour.isBeepEnabled())
 			  Toolkit.getDefaultToolkit().beep();
 		}
 
@@ -208,68 +194,68 @@ public class MessagePanel extends Composite implements IMessagePanel {
 	
 	
 	
-
+	private IMessageViewLookAndBehaviour lookAndBehaviour = new DefaultMessageViewLookAndBehaviour();
+	
 	private final Map<Object, MessageBlock> messages = new HashMap<Object, MessageBlock>();	 
 	private Object currentSenderId;
 	
 	private static final ScheduledExecutorService messageWorker = Executors.newSingleThreadScheduledExecutor();
-	private boolean flashTaggedSuccessMessages = true;
-	private int flashDurationInSeconds = 2;
+	
 	
 	private Map<String, ScheduledFuture> flashMessageFutures = new HashMap<String, ScheduledFuture>();
 	
-	private Listener changedListener = null;
-	private boolean beep = false;		
+	private Lock updateLock = new ReentrantLock();
+	
+	private Composite messageContainer;
+	private Composite wrappedComposite;
 	
 	public MessagePanel( final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
+		createPanel( theParent);
+		// precreate default  block
+		messages.put( getThisId(), new MessageBlock());
+	}
+	
+	private void createPanel(Composite theParent) {
+		 // create panel frame, that wrap messages and editor
 		GridLayout layout = new GridLayout(1, true);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		setLayout( layout);
+		
+	  // create message container
+		messageContainer = new Composite( this, SWT.None);
+		messageContainer.setLayout( layout);
+		// TODO check layout data. Is compatible? to Flowlayout or Filllayout 
+		messageContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+		
+		
+		this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		this.layout();
+	}
+
+	@Override
+	public void setLookAndBehaviour(IMessageViewLookAndBehaviour theLookAndBehaviour) {
+		this.lookAndBehaviour = theLookAndBehaviour;
 	}
 	
-	public void enableBeep() {
-		this.beep = true;
-	}
-	
-	public boolean isBeepEnabled() {
-		return beep;
-	}
-	
-	public void disableBeep() {
-		this.beep = false;	
-	}
-	
-	public void setChangedListener(Listener theChangedListener) {
-		changedListener = theChangedListener;
-	}
-	
-	public void flashTaggedSuccessMessages() {
-		flashTaggedSuccessMessages = true;
-	}
-	
-	public void hideAllSuccessMessages() {
-		flashTaggedSuccessMessages = false;
-	}
-	
-	public void setFlashDurationInSeconds(int theFlashDurationInSeconds) {
-		this.flashDurationInSeconds = theFlashDurationInSeconds;
+	@Override
+	public IMessageViewLookAndBehaviour getLookAndBehaviour() {
+		return lookAndBehaviour;
 	}
 	
 	@Override
 	public void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
-		if ( currentSenderId == null)
-			return;
-		
-		if ( !flashTaggedSuccessMessages && 
+		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
+
+		if ( !lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				 theErrorKind.equals( ErrorKind.success))
 			return; 
 		
-		final MessageBlock messageBlock = messages.get( currentSenderId);
+		final MessageBlock messageBlock = messages.get( id);
 		messageBlock.putTaggedMessage( theTag, theMessage, theErrorKind);
 		
-		if ( flashTaggedSuccessMessages && 
+		if ( lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				 theErrorKind.equals( ErrorKind.success)) {
 			Runnable removeMessageTask = new Runnable() {
 				public void run() {
@@ -277,32 +263,30 @@ public class MessagePanel extends Composite implements IMessagePanel {
 						@Override
 						public void run() {
 							messageBlock.clearTaggedSuccessMessage( theTag);
-							if ( changedListener != null)
-								synchronized (changedListener) {
-									changedListener.handleEvent( new Event());
-								}
+							doOnChange();
 						}
 					});		
 				}
 			};
-			messageWorker.schedule( removeMessageTask, flashDurationInSeconds, TimeUnit.SECONDS);
+			messageWorker.schedule( removeMessageTask, lookAndBehaviour.getFlashDurationOfSuccessMessages(), TimeUnit.SECONDS);
 		}
+		
+    tryOnChange();
 	}
 
 	@Override
 	public void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
-		if ( currentSenderId == null)
-			return;
-		
-		MessageBlock messageBlock = messages.get( currentSenderId);
+		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
+
+		MessageBlock messageBlock = messages.get( id);
 		messageBlock.addUntaggedMessage( theMessage, theErrorKind);
+	
+    tryOnChange();
 	} 
 	
 	@Override
 	public void flashMessage( final String theTag, final String theWarning, final ErrorKind theErrorKind) {
-		final String id = this.getClass().getName() + "@" + this.hashCode(); 
-		if ( !messages.containsKey( id))
-			messages.put( id, new MessageBlock());
+		final String id = getThisId();
 		final MessageBlock messageBlock = messages.get( id);
 		
 		final String tag = theTag != null && !theTag.isEmpty() ? theTag : String.valueOf( System.currentTimeMillis());
@@ -318,26 +302,22 @@ public class MessagePanel extends Composite implements IMessagePanel {
 					@Override
 					public void run() {
 						messageBlock.clearTaggedMessage( tag);
-						if ( changedListener != null)
-							synchronized (changedListener) {
-								changedListener.handleEvent( new Event());
-							}
+						doOnChange();
 					}
 				});		
 			}
 		};
 
-		ScheduledFuture flashMessageFuture = messageWorker.schedule( flashWarningTask, Math.round( flashDurationInSeconds * 1.5), TimeUnit.SECONDS);
+		ScheduledFuture flashMessageFuture = messageWorker.schedule( flashWarningTask, lookAndBehaviour.getFlashDuration(), TimeUnit.SECONDS);
 		flashMessageFutures.put( tag, flashMessageFuture);
 		
-		if ( changedListener != null)
-			synchronized (changedListener) {
-				changedListener.handleEvent( new Event());
-			}
+		doOnChange();
 	}
 	
 	@Override
 	public void beginUpdateForSender( final Object theSenderId) {
+		updateLock.lock();
+		
 		this.currentSenderId = theSenderId;
 		
 		// create a message block if no one exist yet
@@ -350,16 +330,18 @@ public class MessagePanel extends Composite implements IMessagePanel {
 
 	@Override
   public void endUpdate() {
-  	MessageBlock messageBlock = messages.get( currentSenderId);
-  	messageBlock.endUpdateCycle();
-  	// TODO remove empty message blocks ? 
-		this.currentSenderId = null;
-		
-		if ( changedListener != null)
-			synchronized (changedListener) {
-				changedListener.handleEvent( new Event());
-			}
+		try {
+			MessageBlock messageBlock = messages.get( currentSenderId);
+			messageBlock.endUpdateCycle();
+			// TODO remove empty message blocks ? 
+			this.currentSenderId = null;
+
+			doOnChange();
+		} finally {
+			updateLock.unlock();
+		}
 	}
+	
 	
 	@Override
 	public List<String> getMessages( EnumSet<ErrorKind> theMessageKinds) {
@@ -369,6 +351,38 @@ public class MessagePanel extends Composite implements IMessagePanel {
 			result.addAll( messageBlock.getMessages( theMessageKinds));
 		}
 		return result;
+	}
+	
+	
+	private void doOnChange() {
+		lookAndBehaviour.doOnChange();	
+	}
+	
+	private void tryOnChange() {
+		if ( this.currentSenderId == null)
+			doOnChange();
+		else
+			try {
+				updateLock.tryLock();
+				doOnChange();
+			} finally {
+				updateLock.unlock();
+			}
+	}
+	
+	private String getThisId() {
+		return this.getClass().getName() + "@" + this.hashCode(); 
+	}
+
+	@Override
+	public void wrapControl(Composite theWrappedComposite) {
+		if ( wrappedComposite != null)
+			wrappedComposite.dispose();
+		this.wrappedComposite = theWrappedComposite;
+		wrappedComposite.setParent( this);
+		
+    this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		this.layout();
 	}
 
 	

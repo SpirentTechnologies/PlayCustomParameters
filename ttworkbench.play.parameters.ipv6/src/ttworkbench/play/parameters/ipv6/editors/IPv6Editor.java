@@ -14,6 +14,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 
+import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 
 public class IPv6Editor extends AbstractEditor<String> {
@@ -26,21 +30,12 @@ public class IPv6Editor extends AbstractEditor<String> {
 	}
 
 	@Override
-	public Composite createControl(Composite theParent, Object... theParams) {
+	public Composite createControl(Composite theParent) {
 		
 		// TODO solve problems with GridLayout: Width of each cell in a row has the width of the smallest cell. 
 		
-		Object layoutData = new GridData( SWT.FILL, SWT.FILL, true, false);
-		Layout layout = new GridLayout( 3, false);
-		
-		for (Object object : theParams) {
-		  if ( object instanceof GridData || 
-			   object instanceof RowData ||	  
-		       object instanceof FormData)
-			  layoutData = object;
-		  if ( object instanceof Layout)
-		    layout = (Layout) object;
-		}
+		Object layoutData = getLookAndBehaviour().getLayoutDataOfControls()[0]; 
+		Layout layout = getLookAndBehaviour().getLayout(); 
 		
 		
 		Composite container = new Composite( theParent, SWT.None);
@@ -70,6 +65,11 @@ public class IPv6Editor extends AbstractEditor<String> {
 		container.layout();
 		
 		return container;
+	}
+
+	@Override
+	protected IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
+		return new DefaultEditorLookAndBehaviour();
 	}
 
 }

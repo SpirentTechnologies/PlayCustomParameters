@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -19,6 +20,7 @@ public abstract class AbstractValidator implements IParameterValidator {
 	private final Set<IAttribute> attributes = new HashSet<IAttribute>();
 	
 	private final Set<IMessageHandler> messageHandlers = new HashSet<IMessageHandler>();
+	private final Set<IActionHandler> actionHandlers = new HashSet<IActionHandler>();
 	
 	public AbstractValidator( final String theTitle, final String theDescription) {
 		this.title = theTitle;
@@ -71,6 +73,11 @@ public abstract class AbstractValidator implements IParameterValidator {
 	@Override
 	public void registerForMessages(IMessageHandler theMessageHandler) {
 		messageHandlers.add( theMessageHandler);
+	}
+	
+	@Override
+	public void registerForActions(IActionHandler theActionHandler) {
+		actionHandlers.add( theActionHandler);
 	}
 
 }

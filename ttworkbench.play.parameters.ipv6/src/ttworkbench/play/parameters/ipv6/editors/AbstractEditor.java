@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -8,16 +7,13 @@ import java.util.TreeSet;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
-import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
-import com.testingtech.ttworkbench.ttman.parameters.api.IMediator;
-import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
@@ -31,7 +27,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	private IConfiguration configuration;
 	private Set<T> values = new TreeSet<T>();
 	
-	private Listener controlChangedListener = null;
+	private IEditorLookAndBehaviour lookAndBehaviour;
 	
 	
 	
@@ -39,6 +35,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 		super();
 		this.title = theTitle;
 		this.description = theDescription;
+		setLookAndBehaviour( getDefaultLookAndBehaviour());
 	}
 	
 	protected Set<T> getValues() {
@@ -124,13 +121,18 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	}
 	
 	public void updateControl() {
-		if ( controlChangedListener != null)
-	  	controlChangedListener.handleEvent( new Event());
+		lookAndBehaviour.doOnChange();
 	}
 	
-	public void setControlChangedListener(Listener theControlChangedListener) {
-		this.controlChangedListener = theControlChangedListener;
+	protected void setLookAndBehaviour(IEditorLookAndBehaviour theLookAndBehaviour) {
+		this.lookAndBehaviour = theLookAndBehaviour;
 	}
+	
+	public IEditorLookAndBehaviour getLookAndBehaviour() {
+		return lookAndBehaviour;
+	}
+	
+	protected abstract IEditorLookAndBehaviour getDefaultLookAndBehaviour();
 	
 	
 
