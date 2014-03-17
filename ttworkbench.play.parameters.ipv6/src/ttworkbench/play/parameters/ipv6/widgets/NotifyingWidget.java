@@ -19,7 +19,7 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 	}
 
 	
-	protected abstract IMessageView getMessagePanel();
+	protected abstract IMessageView getMessageView();
 	
 	
 	
@@ -29,17 +29,17 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 			IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				IMessageView messagePanel = getMessagePanel();
+				IMessageView messageView = getMessageView();
 				String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
-				messagePanel.beginUpdateForSender( senderId);
+				messageView.beginUpdateForSender( senderId);
 				for (ValidationResult validationResult : theValidationResults) {
 					if ( validationResult.isTagged()) {
-						messagePanel.putTaggedMessage( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
+						messageView.putTaggedMessage( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
 					} else {
-					  messagePanel.addUntaggedMessage( validationResult.getErrorMessage(), validationResult.getErrorKind());					
+						messageView.addUntaggedMessage( validationResult.getErrorMessage(), validationResult.getErrorKind());					
 					}
 				}
-				messagePanel.endUpdate();
+				messageView.endUpdate();
 			}
 		});
 		

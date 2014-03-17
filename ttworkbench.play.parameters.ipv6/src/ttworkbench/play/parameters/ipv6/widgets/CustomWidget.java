@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Listener;
 
 
 import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messageviews.MessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messageviews.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
@@ -75,6 +76,9 @@ public abstract class CustomWidget extends NotifyingWidget {
 		
 		editorsContainer = new Composite( scrolledComposite, SWT.None);
 		editorsContainer.setLayout( new GridLayout( 1, true));
+		GridLayout editorsLayout = new GridLayout( 1, true);
+		editorsLayout.marginHeight = 0;
+		editorsContainer.setLayout( editorsLayout);
 		editorsContainer.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false, 0, 0));
 		
 		createParameterEditors();
@@ -103,15 +107,12 @@ public abstract class CustomWidget extends NotifyingWidget {
 	}
 
 	protected void createParameterEditors() {
-		GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, true, true);
-		GridLayout gridLayout = new GridLayout( 1, false);
-		gridLayout.makeColumnsEqualWidth = false;
-		gridData.minimumWidth = 300;
+		GridData editorGridData = new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0);
 		if ( editorsContainer != null) {	
 			Set<IParameterEditor> editors = getEditors();
 			for ( IParameterEditor editor : editors) {
 				Control editorControl = editor.createControl( editorsContainer);
-				editorControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+				editorControl.setLayoutData( editorGridData);
 				
 				// react on dynamically insertion/deletion of controls when messages occur
 				if ( editor instanceof AbstractEditor<?>)
@@ -131,7 +132,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 
 
 	@Override
-	protected IMessageView getMessagePanel() {
+	protected IMessageView getMessageView() {
 		return messagePanel;
 	}
 

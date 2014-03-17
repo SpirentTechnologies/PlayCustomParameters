@@ -6,11 +6,15 @@ import java.util.EnumSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
@@ -149,6 +153,9 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
 	private boolean useOnlyTextField;
 	
+	private Text text;
+	private Spinner spinner;
+	
 	
 	public IntegerEditor() {
 		super( TITLE, DESCRIPTION);
@@ -164,6 +171,13 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	public void setParameter(IParameter<IntegerValue> theParameter) {
 		super.setParameter( theParameter);
 		determineIntegerType();
+	}
+	
+	public void setValue( final BigInteger theValue) {
+		if ( text != null)
+			text.setText( theValue.toString());
+		else if ( spinner != null)
+			spinner.setSelection( theValue.intValue());
 	}
 	
 
@@ -274,7 +288,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		final Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
+		text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
 		text.setText( getParameter().getValue().getTheNumber().toString());
 		text.setLayoutData( theLayoutData);
 		int maxNeededChars = integerType.getMaxValue().toString().length();
@@ -300,7 +314,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		final Spinner spinner = new Spinner ( theComposite, SWT.BORDER);
+		spinner = new Spinner ( theComposite, SWT.BORDER);
 		spinner.setMinimum( integerType.getMinValue().intValue());
 		spinner.setMaximum( integerType.getMaxValue().intValue());
 		spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
@@ -323,8 +337,11 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	protected void createEditRow(Composite theContainer) {
 		Object[] layoutData = this.getLookAndBehaviour().getLayoutDataOfControls();
 		CLabel label = new CLabel( theContainer, SWT.LEFT);
-		label.setText( this.getParameter().getName().replaceFirst( this.getParameter().getModuleName() + ".", "") + ": ");
+		label.setText( this.getParameter().getId());
 		label.setLayoutData( layoutData[0]);
+		
+		String toolTipString = this.getParameter().getName() + ":\n" + this.getParameter().getDescription();
+		label.setToolTipText( toolTipString);
 		
 		if ( useOnlyTextField ||
 				 integerType.getMinValue() == null ||
@@ -336,9 +353,17 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			createSpinnerInputWidget( theContainer, layoutData[0]);
 		}
 			
-    label = new CLabel( theContainer, SWT.LEFT);
-		label.setText( this.getParameter().getDescription());
-		label.setLayoutData( layoutData[2]);
+		Button reset = new Button (theContainer, SWT.PUSH);
+		reset.setText ("Reset");
+		reset.addSelectionListener( new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent theE) {
+				setValue( getParameter().getDefaultValue().getTheNumber());
+				super.widgetSelected( theE);
+			}
+		});
+		//label.setText( this.getParameter().getDescription());
+		//label.setLayoutData( layoutData[2]);
 	}
 
 	@Override
