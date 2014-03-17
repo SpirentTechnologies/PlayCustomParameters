@@ -20,9 +20,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
-import ttworkbench.play.parameters.ipv6.components.messageviews.MessageDisplay;
-import ttworkbench.play.parameters.ipv6.components.messageviews.MessagePanel;
+import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.DefaultMessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
@@ -39,7 +40,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
 
-	private MessageDisplay messageDisplay = null;
+	private DefaultMessageDisplay messageDisplay = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
 	private static final ScheduledExecutorService validationMessageWorker = Executors.newSingleThreadScheduledExecutor();
 	private ScheduledFuture<?> validationTaskFuture;
@@ -106,7 +107,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			public void run() {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						getMessageView().putTaggedMessage( "run_validator", "Validation process in progress.", ErrorKind.info);
+						getMessageView().showMessage( new MessageRecord( "run_validator", "Validation process in progress.", ErrorKind.info));
 					}
 				});
 			}
@@ -123,7 +124,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						getMessageView().putTaggedMessage( "run_validator", "Validation finished.", ErrorKind.success);
+						getMessageView().showMessage( new MessageRecord( "run_validator", "Validation finished.", ErrorKind.success));
 					}
 				});
 			}
@@ -139,7 +140,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
-		messageDisplay = new MessageDisplay( theParent, SWT.NONE);
+		messageDisplay = new DefaultMessageDisplay( theParent, SWT.NONE);
 		messageDisplay.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		messageDisplay.setLookAndBehaviour( getLookAndBehaviour().getMessaagePanelLookAndBehaviour());
 		messageDisplay.getLookAndBehaviour().setChangedListener( new Listener() {
@@ -186,9 +187,9 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				messageView.beginUpdateForSender( senderId);
 				for (ValidationResult validationResult : theValidationResults) {
 					if ( validationResult.isTagged()) {
-						messageView.putTaggedMessage( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind());
+						messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind()));
 					} else {
-						messageView.addUntaggedMessage( validationResult.getErrorMessage(), validationResult.getErrorKind());					
+						messageView.showMessage( new MessageRecord( validationResult.getErrorMessage(), validationResult.getErrorKind()));					
 					}
 				}
 				messageView.endUpdate();

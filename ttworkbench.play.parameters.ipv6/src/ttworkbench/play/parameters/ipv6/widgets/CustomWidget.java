@@ -17,9 +17,9 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 
-import ttworkbench.play.parameters.ipv6.components.messageviews.IMessageView;
-import ttworkbench.play.parameters.ipv6.components.messageviews.MessageDisplay;
-import ttworkbench.play.parameters.ipv6.components.messageviews.MessagePanel;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.DefaultMessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
@@ -44,8 +44,8 @@ public abstract class CustomWidget extends NotifyingWidget {
 	
 	private void createMessagePanel( Composite theParent) {
 		messagePanel = new MessagePanel( theParent, SWT.NONE);
+		messagePanel.setLayoutData( new GridData(GridData.FILL_HORIZONTAL, GridData.BEGINNING, true, false, 0, 0));
 		messagePanel.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
-		messagePanel.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		messagePanel.getLookAndBehaviour().setChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
@@ -58,10 +58,11 @@ public abstract class CustomWidget extends NotifyingWidget {
 	@Override
 	public Control createControl(Composite theParent) {
 
-		theParent.setLayout( new FillLayout(SWT.HORIZONTAL));
+		theParent.setLayout(new GridLayout());
 
 		mainContainer = new Composite( theParent, SWT.None);
-		mainContainer.setLayout( new GridLayout( 1, true));
+		mainContainer.setLayoutData( GridData.FILL_BOTH);
+		mainContainer.setLayout( new GridLayout());
 		//mainContainer.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		
 	  // display message panel above the scrollbox with the editors 
@@ -70,7 +71,8 @@ public abstract class CustomWidget extends NotifyingWidget {
 		// scrollbox with the editors
 	  scrolledComposite = new ScrolledComposite( mainContainer, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayout( new FillLayout( SWT.HORIZONTAL));
-		scrolledComposite.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
+		scrolledComposite.setLayoutData( new GridData(GridData.FILL_HORIZONTAL, GridData.FILL_VERTICAL, true, true, 0, 0));
+
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		

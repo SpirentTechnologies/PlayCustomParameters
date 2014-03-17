@@ -13,6 +13,8 @@ import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.validators.RelatedValidator;
 import ttworkbench.play.parameters.ipv6.validators.RelatedValidator.RelationKey;
+import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
 import ttworkbench.play.parameters.settings.Data.Relation;

@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.components.messageviews;
+package ttworkbench.play.parameters.ipv6.components.messaging.views;
 
 import java.awt.Toolkit;
 import java.util.Collection;
@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
@@ -245,7 +246,21 @@ public class MessagePanel extends Composite implements IMessageView {
 	}
 	
 	@Override
-	public void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
+	public void showMessage( final MessageRecord theMessageRecord) {
+		if ( theMessageRecord.tag == null)
+	    addUntaggedMessage( theMessageRecord.message, theMessageRecord.errorKind);
+		else
+		  putTaggedMessage( theMessageRecord.tag, theMessageRecord.message, theMessageRecord.errorKind);	
+	}
+	
+	@Override
+	public void showMessages(Collection<MessageRecord> theMessageRecords) {
+		for (MessageRecord messageRecord : theMessageRecords) {
+			showMessage( messageRecord);
+		}
+	}
+	
+	private void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
 		if ( !lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
@@ -274,8 +289,7 @@ public class MessagePanel extends Composite implements IMessageView {
     tryOnChange();
 	}
 
-	@Override
-	public void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
+	private void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
 		MessageBlock messageBlock = messages.get( id);
@@ -285,16 +299,16 @@ public class MessagePanel extends Composite implements IMessageView {
 	} 
 	
 	@Override
-	public void flashMessage( final String theTag, final String theWarning, final ErrorKind theErrorKind) {
+	public void flashMessage( final MessageRecord theMessageRecord) {
 		final String id = getThisId();
 		final MessageBlock messageBlock = messages.get( id);
 		
-		final String tag = theTag != null && !theTag.isEmpty() ? theTag : String.valueOf( System.currentTimeMillis());
+		final String tag = theMessageRecord.tag != null && !theMessageRecord.tag.isEmpty() ? theMessageRecord.tag : String.valueOf( System.currentTimeMillis());
 
 		if ( flashMessageFutures.containsKey( tag))
 			flashMessageFutures.get( tag).cancel( true);
 		messageBlock.clearTaggedMessage( tag);
-		messageBlock.putTaggedMessage( tag, theWarning, theErrorKind); 	
+		messageBlock.putTaggedMessage( tag, theMessageRecord.message, theMessageRecord.errorKind); 	
 		
 		Runnable flashWarningTask = new Runnable() {
 			public void run() {
@@ -312,6 +326,13 @@ public class MessagePanel extends Composite implements IMessageView {
 		flashMessageFutures.put( tag, flashMessageFuture);
 		
 		doOnChange();
+	}
+	
+	@Override
+	public void flashMessages(Collection<MessageRecord> theMessageRecords) {
+		for (MessageRecord messageRecord : theMessageRecords) {
+			flashMessage( messageRecord);
+		}
 	}
 	
 	@Override

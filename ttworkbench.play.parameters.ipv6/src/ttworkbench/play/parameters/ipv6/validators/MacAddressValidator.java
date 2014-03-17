@@ -9,7 +9,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class MacAddressValidator extends AbstractValidator {
-
+	
 	private static final String TITLE = "MAC Address Validator";
 	private static final String DESCRIPTION = "";
 	
@@ -33,8 +33,10 @@ public class MacAddressValidator extends AbstractValidator {
 
 	// Chechk if the entered Mac Address has a valid format
 	private boolean isMacAddress(String macEntry){
-		final String MAC_PATTERN = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
-		if (macEntry.matches( MAC_PATTERN)){
+		final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:-]){5}([0-9a-fA-F]{2})$";
+		final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]){5}([0-9a-fA-F]{2})$";
+		final String MAC_PATTERN3 = "^([0-9a-fA-F]{12})$";
+		if (macEntry.matches( MAC_PATTERN1) || macEntry.matches( MAC_PATTERN2) || macEntry.matches( MAC_PATTERN3)){
 			return true;
 		} else {
 			return false;

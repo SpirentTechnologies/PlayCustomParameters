@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
 import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
-import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.widgets.DefaultWidget;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;

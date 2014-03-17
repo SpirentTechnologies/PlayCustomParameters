@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.components.messageviews;
+package ttworkbench.play.parameters.ipv6.components.messaging.views;
 
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -35,80 +36,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.components.ErrorKindCounter;
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
+import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MessageDisplay extends Composite implements IMessageView {
+public class DefaultMessageDisplay extends Composite implements IMessageView {
 	
 	
-	private interface CountListener {
-		
-		void handleIncrementEvent( final ErrorKind theErrorKind, final int theCounterReading);
-		
-		void handleDecrementEvent( final ErrorKind theErrorKind, final int theCounterReading);	
-	}
 	
 	
-	private class ErrorKindCounter {
-		
-		private Map<ErrorKind, Integer> counter = new HashMap<ErrorKind, Integer>();
-		private CountListener countListener;
-		
-		public ErrorKindCounter() {
-			for (ErrorKind errorKind : EnumSet.allOf( ErrorKind.class)) {
-				counter.put( errorKind, 0);
-			}
-		}
-		
-		void inc( final ErrorKind theErrorKind) {
-			Integer count = counter.get( theErrorKind);
-			counter.put( theErrorKind, ++count);
-			countListener.handleIncrementEvent( theErrorKind, count);
-		}
-		
-		void dec( final ErrorKind theErrorKind) {
-			Integer count = counter.get( theErrorKind);
-			count = Math.max( count -1, 0);
-			counter.put( theErrorKind, count);
-			countListener.handleDecrementEvent( theErrorKind, count);
-		}
-		
-		void setListener( CountListener theListener) {
-			this.countListener = theListener;
-		}
-		
-		int getTotalCount() {
-			int total = 0;
-			for ( Integer count : counter.values()) {
-				total += count;
-			}
-			return total;
-		}
-		
-		Integer getCountOfErrorKind( ErrorKind theErrorKind) {
-			return counter.get( theErrorKind);
-		}
-		
-		ErrorKind getHighestErrorKind() {
-			if ( 0 < getCountOfErrorKind( ErrorKind.error))
-			  return ErrorKind.error;
-			if ( 0 < getCountOfErrorKind( ErrorKind.warning))
-			  return ErrorKind.warning;
-			if ( 0 < getCountOfErrorKind( ErrorKind.info))
-			  return ErrorKind.info;
-			return ErrorKind.success;
-		}
-		
-	}
-	
-	private interface IMessageContainer {
-	  Composite getMessageComposite();
-	  Image getMessageImage(ErrorKind theErrorKind);
-		Color getMessageForeground( ErrorKind errorKind);
-    Color getMessageBackground( ErrorKind errorKind);
-	}
 	
 	private class MessageElement extends Composite {
 		private String message;
@@ -132,7 +72,7 @@ public class MessageDisplay extends Composite implements IMessageView {
 		  setMessage( theMessage, theErrorKind);
 			
 			if ( !isFlashMessage())
-			  MessageDisplay.this.errorKindCounter.inc( theErrorKind);
+			  DefaultMessageDisplay.this.errorKindCounter.inc( theErrorKind);
 		}
 		
 		public boolean isFlashMessage() {
@@ -149,7 +89,7 @@ public class MessageDisplay extends Composite implements IMessageView {
 		@Override
 		public void dispose() {
 			if ( !isFlashMessage())
-				MessageDisplay.this.errorKindCounter.dec( errorKind);
+				DefaultMessageDisplay.this.errorKindCounter.dec( errorKind);
 			super.dispose();
 		}
 
@@ -177,7 +117,7 @@ public class MessageDisplay extends Composite implements IMessageView {
 		}
 		
 		private void beep() {
-			if ( MessageDisplay.this.lookAndBehaviour.isBeepEnabled())
+			if ( DefaultMessageDisplay.this.lookAndBehaviour.isBeepEnabled())
 			  Toolkit.getDefaultToolkit().beep();
 		}
 
@@ -309,8 +249,8 @@ public class MessageDisplay extends Composite implements IMessageView {
 
 		private void updateLabel() {
 			// get highest weighted error kind 
-			ErrorKind errorKind = MessageDisplay.this.errorKindCounter.getHighestErrorKind();
-			int messageCount = MessageDisplay.this.errorKindCounter.getCountOfErrorKind( errorKind);
+			ErrorKind errorKind = DefaultMessageDisplay.this.errorKindCounter.getHighestErrorKind();
+			int messageCount = DefaultMessageDisplay.this.errorKindCounter.getCountOfErrorKind( errorKind);
 
 			if ( messageCount == 0) {
 				label.setImage( null);
@@ -365,6 +305,11 @@ public class MessageDisplay extends Composite implements IMessageView {
 		public Image getMessageImage(ErrorKind theErrorKind) {
 			return lookAndBehaviour.getMessageImage( theErrorKind);
 		}
+
+		@Override
+		public Font getMessageFont(ErrorKind theErrorKind) {
+			return lookAndBehaviour.getMessageFont( theErrorKind);
+		}
 		
 		
 	}
@@ -401,6 +346,11 @@ public class MessageDisplay extends Composite implements IMessageView {
 		@Override
 		public Image getMessageImage( final ErrorKind theErrorKind) {
 			return lookAndBehaviour.getMessageImage( theErrorKind);
+		}
+
+		@Override
+		public Font getMessageFont(ErrorKind theErrorKind) {
+			return lookAndBehaviour.getMessageFont( theErrorKind);
 		}
 		
 	}
@@ -528,7 +478,7 @@ public class MessageDisplay extends Composite implements IMessageView {
 	private MessageHeader messageHeader;
 	private Composite wrappedComposite;
 	
-	public MessageDisplay( final Composite theParent, final int theStyle) {
+	public DefaultMessageDisplay( final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
 		createPanel( theParent);
 		initMessageCounting();
@@ -540,14 +490,14 @@ public class MessageDisplay extends Composite implements IMessageView {
 	}
 
 	private void initMessageCounting() {
-		errorKindCounter.setListener( new CountListener() {
+		errorKindCounter.setListener( new ErrorKindCounter.CountListener() {
 
 			@Override
 			public void handleIncrementEvent(ErrorKind theErrorKind, int theCounterReading) {
 				ErrorKind highestErrorKind = errorKindCounter.getHighestErrorKind();
 				Color frameColor = lookAndBehaviour.getMessageBackground( highestErrorKind);
-				MessageDisplay.this.setBackground( frameColor);
-				MessageDisplay.this.messagePopup.update();
+				DefaultMessageDisplay.this.setBackground( frameColor);
+				DefaultMessageDisplay.this.messagePopup.update();
 			}
 
 			@Override
@@ -557,8 +507,8 @@ public class MessageDisplay extends Composite implements IMessageView {
 				Color messageColor = lookAndBehaviour.getMessageBackground( highestErrorKind);
 				Color clearColor	=	getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 				Color frameColor = messageCount > 0 ? messageColor : clearColor;
-				MessageDisplay.this.setBackground( frameColor);
-				MessageDisplay.this.messagePopup.update();
+				DefaultMessageDisplay.this.setBackground( frameColor);
+				DefaultMessageDisplay.this.messagePopup.update();
 			}
 		});
 	}
@@ -603,7 +553,21 @@ public class MessageDisplay extends Composite implements IMessageView {
 	}
 	
 	@Override
-	public void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
+	public void showMessage( final MessageRecord theMessageRecord) {
+		if ( theMessageRecord.tag == null)
+	    addUntaggedMessage( theMessageRecord.message, theMessageRecord.errorKind);
+		else
+		  putTaggedMessage( theMessageRecord.tag, theMessageRecord.message, theMessageRecord.errorKind);	
+	}
+	
+	@Override
+	public void showMessages(Collection<MessageRecord> theMessageRecords) {
+		for (MessageRecord messageRecord : theMessageRecords) {
+			showMessage( messageRecord);
+		}
+	}
+	
+	private void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
 		if ( !lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
@@ -632,8 +596,7 @@ public class MessageDisplay extends Composite implements IMessageView {
     tryOnChange();
 	}
 
-	@Override
-	public void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
+	private void addUntaggedMessage( final String theMessage, final ErrorKind theErrorKind) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
 		MessageBlock messageBlock = messages.get( id);
@@ -643,16 +606,16 @@ public class MessageDisplay extends Composite implements IMessageView {
 	} 
 	
 	@Override
-	public void flashMessage( final String theTag, final String theWarning, final ErrorKind theErrorKind) {
+	public void flashMessage( final MessageRecord theMessageRecord) {
 		final String id = getThisId();
 		final MessageBlock messageBlock = messages.get( id);
 		
-		final String tag = theTag != null && !theTag.isEmpty() ? theTag : String.valueOf( System.currentTimeMillis());
+		final String tag = theMessageRecord.tag != null && !theMessageRecord.tag.isEmpty() ? theMessageRecord.tag : String.valueOf( System.currentTimeMillis());
 
 		if ( flashMessageFutures.containsKey( tag))
 			flashMessageFutures.get( tag).cancel( true);
 		messageBlock.clearTaggedMessage( tag);
-		messageBlock.putTaggedMessage( tag, theWarning, theErrorKind); 	
+		messageBlock.putTaggedMessage( tag, theMessageRecord.message, theMessageRecord.errorKind); 	
 
 		Runnable flashWarningTask = new Runnable() {
 			public void run() {
@@ -670,6 +633,13 @@ public class MessageDisplay extends Composite implements IMessageView {
 		flashMessageFutures.put( tag, flashMessageFuture);
 		
 		doOnChange();
+	}
+	
+	@Override
+	public void flashMessages(Collection<MessageRecord> theMessageRecords) {
+		for (MessageRecord messageRecord : theMessageRecords) {
+			flashMessage( messageRecord);
+		}
 	}
 	
 	@Override
