@@ -31,8 +31,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		// default preset widgets
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
-		// widgetComposers.add( new IPv6WidgetComposer( theConfigurator,
-		// parametersMap));
+		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new IPWidgetComposer( theConfigurator, parametersMap));
 
 		// custom widget configuration
