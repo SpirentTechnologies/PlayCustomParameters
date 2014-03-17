@@ -3,23 +3,23 @@ package ttworkbench.play.parameters.ipv6.composer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import ttworkbench.play.parameters.ipv6.ParameterEditorMapper;
 import ttworkbench.play.parameters.ipv6.ParameterMap;
 import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
-import ttworkbench.play.parameters.ipv6.editors.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
+import ttworkbench.play.parameters.settings.Data.Validator;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
+import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 
 
 public class CustomWidgetComposer extends WidgetComposer {
-
-	private static final String TYPE_MATCH_INTEGER = "^(UInt\\d{0,2}|Int\\d{0,2})$";
 	
 	private Data.Widget widget;
 
@@ -53,21 +53,55 @@ public class CustomWidgetComposer extends WidgetComposer {
 			IParameter<?> parameter = getParametersMap().getParameterById( theId);
 			
 			if(parameter!=null) {
-				IParameterEditor<?> editor = new DefaultEditor();
-				
-				if(parameter.getType().matches( TYPE_MATCH_INTEGER)) {
-					editor = new IntegerEditor();
-				}
+				IParameterEditor<?> editor = ParameterEditorMapper.getInstance().getEditor(parameter);
 				getConfigurator().assign( editor, defaultWidget, parameter);
+				
+				
+				
+				for(Data.Validator dataValidator : dataParameter.getValidators()) {
+					IParameterValidator validator = getValidator(dataValidator);
+					if(validator!=null) {
+						
+						// register the validator to the editor
+						if(editor instanceof IMessageHandler) {
+							validator.registerForMessages( (IMessageHandler) editor);
+						}
+						
+						// assign the validator to the parameter
+						getConfigurator().assign( validator, defaultWidget, parameter);
+					}
+					else {
+						logError( "A validator for \""+theId+"\" could not be resolved: \""+dataValidator.getType()+"\"");
+					}
+				}
 			}
 			else {
-				// TODO logging
-				System.err.println("parameter not found: \""+theId+"\".");
+				logError("The parameter could not be found: \""+theId+"\".");
 			}
 		}
 		
 		
 		
+	}
+
+	private IParameterValidator getValidator(Validator theDataValidator) {
+		IParameterValidator validator = null;
+		Class<?> validatorType = theDataValidator.getType();
+		if(validatorType!=null) {
+			try {
+				Object validatorRaw = validatorType.newInstance();
+				if(validatorRaw instanceof IParameterValidator) {
+					validator = (IParameterValidator) validatorRaw;
+				}
+				else {
+					logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.");
+				}
+			}
+			catch(Exception e) {
+				logError( "Could not create instance from class \""+validatorType+"\". Tried to use constructor without parameters.");
+			}
+		}
+		return validator;
 	}
 
 	private Image getImage(Data.Image theImage) {
@@ -76,12 +110,15 @@ public class CustomWidgetComposer extends WidgetComposer {
 				return new Image( Display.getCurrent(), theImage.getPath());
 			}
 			catch(Exception e) {
-				// TODO logging
-				System.err.println("could not load image: \""+theImage.getPath()+"\".");
-				e.printStackTrace();
+				logError("could not load image: \""+theImage.getPath()+"\".");
 			}
 		}
 		return null;
+	}
+
+	private void logError(String theString) {
+		// TODO logger
+		System.err.println(theString);		
 	}
 
 	

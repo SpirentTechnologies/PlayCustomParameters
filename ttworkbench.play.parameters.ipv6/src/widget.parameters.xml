@@ -19,11 +19,23 @@
 			<editor parameterId="PX_TEST_CAMPAIGN" />
 		</widget>
 		
+		
+		<widget name="MAC Widget">
+			<description>MAC addresses editor</description>
+			<editor parameterId="PX_MAC_LAYER" />
+		</widget>
+		
 	</widgets>
 	
 	
 	<parameters>
+	
+		<parameter id="PX_MAC_LAYER">
+			<validator id="vMAC" />
+		</parameter>
 		
+		
+		<!-- remove -->
 		<parameter id="123">
 			<defaultValue>9283248230958dasd</defaultValue>
 			<description visible="false">Beschreibung</description>
@@ -52,22 +64,21 @@
 				<attribute name="attr1">value1</attribute>
 			</validator>
 		</parameter>
+		<!-- /remove -->
 		
 	</parameters>
 	
 	<validators>
-		<validator id="v456">
+		<validator id="vMAC">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.MacAddressValidator</classpath>
+			<attribute name="attr1">value1</attribute>
+		</validator>
+		
+		<!-- remove -->
+		<validator id="v000">
 			<classpath>edu.nothing.here.Validator456</classpath>
 			<attribute name="attr1">value1</attribute>
 		</validator>
-		<validator id="v789">
-			<classpath>edu.nothing.here.Validator789</classpath>
-		</validator>
-		<validator id="vXXX">
-			<classpath>edu.nothing.here.ValidatorXXX</classpath>
-		</validator>
-		<validator id="vYYY">
-			<classpath>edu.nothing.here.ValidatorYYY</classpath>
-		</validator>
+		<!-- /remove -->
 	</validators>
 </settings>
