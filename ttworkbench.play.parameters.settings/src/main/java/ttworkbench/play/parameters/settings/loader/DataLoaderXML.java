@@ -87,6 +87,10 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				public Map<String, String> getAttributes() {
 					return attributes;
 				}
+
+				public boolean isWidgetNotified() {
+					return false;
+				}
 			});
 		}
 		return result;
@@ -151,7 +155,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 
 		for(HierarchicalConfiguration val : config.configurationsAt("validator")) {
 			String validatorId = val.getString("[@id]");
-			boolean validatorNotify = val.getBoolean("[@notify]", DEFAULT_RELATED_WIDGET_NOTIFY);
+			final boolean validatorNotify = val.getBoolean("[@notify]", DEFAULT_RELATED_WIDGET_NOTIFY);
 			Map<String, String> attrs_new = getAttributesFromConfig(val);
 			
 			final Data.Validator validatorDefault = getValidator(validatorId);
@@ -170,6 +174,10 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				
 				public Map<String, String> getAttributes() {
 					return attrs;
+				}
+
+				public boolean isWidgetNotified() {
+					return validatorNotify;
 				}
 			};
 			

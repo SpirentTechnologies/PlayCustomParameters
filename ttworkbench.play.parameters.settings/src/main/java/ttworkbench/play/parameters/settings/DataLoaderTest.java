@@ -35,7 +35,7 @@ public class DataLoaderTest {
 					for(Relation relation : parameter.getRelations()) {
 						System.out.println("     - Validator-Class: "+relation.getValidator().getType());
 						System.out.println("       Validator-Attributes: "+relation.getValidator().getAttributes());
-						System.out.println("       Notify Widget: "+relation.isWidgetNotified());
+						System.out.println("       Validator-Notify: "+relation.getValidator().isWidgetNotified());
 						
 						System.out.println("       Related Parameters: "+relation.getRelationPartners().length);
 						for(RelationPartner relationPartner : relation.getRelationPartners()) {
@@ -49,6 +49,7 @@ public class DataLoaderTest {
 					for(Validator validator : parameter.getValidators()) {
 						System.out.println("     - Validator-Class: "+validator.getType());
 						System.out.println("       Validator-Attributes: "+validator.getAttributes());
+						System.out.println("       Validator-Notify: "+validator.isWidgetNotified());
 					}
 						
 				}

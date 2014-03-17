@@ -69,7 +69,7 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:short" name="parameterId" use="optional"/>
+                                  <xs:attribute type="xs:string" name="parameterId" use="optional"/>
                   			  	  <xs:attribute type="xs:boolean" name="message" use="optional"/>
                   			  	  <xs:attribute type="xs:boolean" name="action" use="optional"/>
                                 </xs:extension>

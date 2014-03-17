@@ -29,7 +29,6 @@ public interface Data {
 	}
 
 	public interface Relation {
-		boolean isWidgetNotified();
 		Validator getValidator();
 		RelationPartner[] getRelationPartners();
 	}
@@ -41,6 +40,7 @@ public interface Data {
 	}
 	
 	public interface Validator extends WithAttributes {
+		boolean isWidgetNotified();
 		Class<?> getType();
 	}
 	
