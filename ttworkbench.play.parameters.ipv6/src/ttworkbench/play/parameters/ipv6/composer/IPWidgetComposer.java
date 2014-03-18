@@ -1,8 +1,8 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
-import ttworkbench.play.parameters.ipv6.editors.IPv4Editor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
+import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Editor;
 import ttworkbench.play.parameters.ipv6.widgets.IPWidget;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
@@ -26,7 +26,7 @@ public class IPWidgetComposer extends WidgetComposer {
 		// add the Mac widget to the frame work
 		getConfigurator().addWidget( ipWidget);
 
-		ValidatingEditor<?> ipv4Editor = new IPv4Editor( "IPv4", "IPv4 Address");
+		ValidatingEditor<?> ipv4Editor = new IPv4Editor();
 
 		// //The MAC validator
 		// IParameterValidator macValidator = new AbstractValidator(
@@ -55,6 +55,9 @@ public class IPWidgetComposer extends WidgetComposer {
 
 		// assign each parameter to the corresponding editor in this widget
 		getConfigurator().assign( ipv4Editor, ipWidget, ipv4Parameter);
+		getConfigurator().assign( new IPv4Editor(), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new IPv4Editor(), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new IPv4Editor(), ipWidget, ipv4Parameter);
 
 		// //Register the mac validator to the editor
 		// macValidator.registerForMessages( editor_MacAddress);
@@ -63,15 +66,4 @@ public class IPWidgetComposer extends WidgetComposer {
 		// getConfigurator().assign( macValidator, macWidget, parameter_MacAddress);
 
 	}
-
-	// Chechk if the entered Mac Address has a valid format
-	private boolean isMacAddress(String macEntry) {
-		final String MAC_PATTERN = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
-		if (macEntry.matches( MAC_PATTERN)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 }
