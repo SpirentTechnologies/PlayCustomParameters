@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Spinner;
 
 
-
+@Deprecated
 public class SpinnerAdapter implements IEditableWidgetAdapter<Spinner> {
 
 

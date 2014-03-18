@@ -7,6 +7,7 @@ import java.util.Map;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
+@Deprecated
 public class EditableWidgetAdapter {
 	
 	private static final Map<Class<? extends Widget>,IEditableWidgetAdapter> supportedWidgets = new HashMap<Class<? extends Widget>,IEditableWidgetAdapter>();
