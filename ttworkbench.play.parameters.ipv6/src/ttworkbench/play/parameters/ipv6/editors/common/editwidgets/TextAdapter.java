@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 
 
+@Deprecated
 public class TextAdapter implements IEditableWidgetAdapter<Text> {
 
 
