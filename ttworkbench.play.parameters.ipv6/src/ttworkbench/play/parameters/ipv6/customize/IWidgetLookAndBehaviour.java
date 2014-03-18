@@ -10,7 +10,7 @@ public interface IWidgetLookAndBehaviour extends ILookAndBehaviour {
 
 	
 	
-	void setControlChangedListener(Listener theControlChangedListener);
+	void addControlChangedListener(Listener theControlChangedListener);
 
 	void doOnChange();
 	

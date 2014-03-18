@@ -17,7 +17,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBehaviour {
+public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBehaviour, IMessageLookAndBehaviour {
 	
 	private static final Display CURRENT_DISPLAY = Display.getCurrent();
 	private static final Color COLOR_RED = CURRENT_DISPLAY.getSystemColor(SWT.COLOR_RED);
@@ -93,7 +93,7 @@ public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBe
 	}
 	
 	@Override
-	public void setChangedListener( final Listener theChangedListener) {
+	public void addChangedListener( final Listener theChangedListener) {
 		changedListeners.add( theChangedListener);
 	}
 	
@@ -150,32 +150,12 @@ public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBe
 	}
 	
 	
-	@Override
 	public Color getFlashMessageForeground( final ErrorKind theErrorKind) {
-		switch ( theErrorKind) {
-			case error:
-				return COLOR_BLACK;
-			case warning:
-				return COLOR_BLACK;
-	    case info:
-	    	return COLOR_BLACK;
-			default:
-	    	return COLOR_BLACK;
-		}
+		return getFlashMessageLookAndBehaviour().getMessageForeground( theErrorKind);
 	}
 
-	@Override
 	public Color getFlashMessageBackground( final ErrorKind theErrorKind) {
-		 switch ( theErrorKind) {
-				case error:
-					return COLOR_BTN_FACE;
-				case warning:
-					return COLOR_BTN_FACE;
-		    case info:
-		    	return COLOR_BTN_FACE;
-				default:
-		    	return COLOR_BTN_FACE;
-			}
+		return getFlashMessageLookAndBehaviour().getMessageBackground( theErrorKind);
 	}
 
 	@Override
@@ -195,6 +175,16 @@ public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBe
 		FontData fontData = new FontData();
 		fontData.setHeight( fontData.getHeight() -1);
 		return new Font( Display.getCurrent(), fontData);
+	}
+
+	@Override
+	public IMessageLookAndBehaviour getMessageLookAndBehaviour() {
+		return this;
+	}
+
+	@Override
+	public IMessageLookAndBehaviour getFlashMessageLookAndBehaviour() {
+		return this;
 	}
 
 

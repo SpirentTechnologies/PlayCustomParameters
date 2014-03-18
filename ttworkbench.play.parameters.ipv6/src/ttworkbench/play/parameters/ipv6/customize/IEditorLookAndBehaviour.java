@@ -14,7 +14,7 @@ public interface IEditorLookAndBehaviour extends ILookAndBehaviour {
 	Object[] getLayoutDataOfControls();
 	
 	
-	void setControlChangedListener(Listener theControlChangedListener);
+	void addControlChangedListener(Listener theControlChangedListener);
 
 	void doOnChange();
 	

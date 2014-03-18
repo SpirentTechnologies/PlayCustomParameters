@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageInformation;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
@@ -47,5 +48,7 @@ public interface IMessageView {
 	void setLookAndBehaviour( IMessageViewLookAndBehaviour theLookAndBehaviour);
 	
 	void wrapControl( Composite theWrappedComposite);
+	
+	IMessageInformation getMessageRegistry();
 
 }

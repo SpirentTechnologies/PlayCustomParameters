@@ -17,11 +17,11 @@ public class DefaultWidgetLookAndBehaviour implements IWidgetLookAndBehaviour {
 
 	@Override
 	public IMessageViewLookAndBehaviour getMessaagePanelLookAndBehaviour() {
-		return getEditorLookAndBehaviour().getMessaagePanelLookAndBehaviour();
+		return getEditorLookAndBehaviour().getMessagePanelLookAndBehaviour();
 	}
 
 	@Override
-	public void setControlChangedListener(Listener theControlChangedListener) {
+	public void addControlChangedListener(Listener theControlChangedListener) {
 		this.controlChangedListeners.add( theControlChangedListener);
 	}
 

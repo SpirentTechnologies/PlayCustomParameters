@@ -7,7 +7,13 @@ import org.eclipse.swt.widgets.Listener;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public interface IMessageViewLookAndBehaviour extends ILookAndBehaviour {
+public interface IFlashMessageLookAndBehaviour extends ILookAndBehaviour {
+
+	void enableBeep();
+
+	boolean isBeepEnabled();
+
+	void disableBeep();
 
 	void setFlashDurationOfSuccessMessages(int theFlashDurationInSeconds);
 
@@ -27,8 +33,16 @@ public interface IMessageViewLookAndBehaviour extends ILookAndBehaviour {
 
 	boolean isFlashingOfTaggedSuccessMessagesEnabled();
 	
-	IMessageLookAndBehaviour getMessageLookAndBehaviour();
+	Color getMessageForeground( ErrorKind theErrorKind);
 	
-	IMessageLookAndBehaviour getFlashMessageLookAndBehaviour();
+	Color getMessageBackground( ErrorKind theErrorKind);
+
+	Color getFlashMessageForeground( ErrorKind theErrorKind);
 	
+	Color getFlashMessageBackground( ErrorKind theErrorKind);
+	
+	Image getMessageImage( ErrorKind theErrorKind);
+	
+	Font getMessageFont( ErrorKind theErrorKind);	
+
 }
