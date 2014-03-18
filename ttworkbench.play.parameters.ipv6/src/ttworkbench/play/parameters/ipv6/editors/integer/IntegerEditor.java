@@ -31,8 +31,13 @@ import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.common.editwidgets.EditableWidgetAdapter;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
+import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.Verificators;
-import ttworkbench.play.parameters.ipv6.editors.verification.VerifyResult;
+import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingWidget;
+import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingSpinner;
+import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -54,10 +59,10 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
 	private boolean useOnlyTextField;
 	
-	private IntegerTypeVerificator integerTypeVerificator = Verificators.getVerificator( IntegerTypeVerificator.class);
-	private IntegerRangeVerificator integerRangeVerificator = Verificators.getVerificator( IntegerRangeVerificator.class);
+	private IntegerTypeVerificator integerTypeVerificator = new IntegerTypeVerificator();
+	private IntegerRangeVerificator integerRangeVerificator = null;
 	
-	private Widget inputWidget;
+	private IVerifyingWidget inputWidget;
 	
 	
 	public IntegerEditor() {
@@ -77,12 +82,13 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	public void setValue( final BigInteger theValue) {
-		EditableWidgetAdapter.setTextForWidget( theValue.toString(), inputWidget);
+		inputWidget.setText( theValue.toString());
 	}
 	
 	private void determineIntegerType() { 
 		String parameterType = getParameter().getType();
 		integerType = IntegerType.valueOfTypeName( parameterType);
+		integerRangeVerificator = new IntegerRangeVerificator( integerType);
 	}
 
 	
@@ -107,56 +113,33 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			 theTextControl.setSize( theTextControl.computeSize( minWidth, SWT.DEFAULT));
 	}
 	
-	private boolean verifyTextInput( final String theText) {
-		// delegate verification	
-		VerifyResult<String> integerTypeVerifyResult = integerTypeVerificator.verify( theText);
-		VerifyResult<String> integerRangeVerifyResult = integerRangeVerificator.verify( theText, integerType);
-		
-		// evaluate verification result
-		for (VerifyResult<?> verifyResult : Arrays.asList( integerTypeVerifyResult, integerRangeVerifyResult)) {
-			if ( !verifyResult.verified) {
-				getMessageView().flashMessages( verifyResult.messages);
-				return false;
-			}
-		}
-		
-		// verification passed, then write the value to parameter
-		getParameter().getValue().setTheNumber( new BigInteger( theText));
-		// and start the validation process
-		validateDelayed( 2);
-		return true;
-	}
+
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		Text text = new Text( theComposite, SWT.BORDER | SWT.SINGLE);
-		inputWidget = text;
+		inputWidget = new VerifyingText( theComposite, SWT.BORDER | SWT.SINGLE, integerTypeVerificator, integerRangeVerificator);
+		Text text = (Text) inputWidget.getEncapsulatedWidget();
 		text.setText( getParameter().getValue().getTheNumber().toString());
 		text.setLayoutData( theLayoutData);
 		int maxNeededChars = integerType.getMaxValue().toString().length();
 		if ( integerType.getMaxValue() != null)
 		  text.setTextLimit( maxNeededChars);
 		setWidthForText( text, maxNeededChars);
-		text.addListener( SWT.Verify, new Listener() {
-			
-			@Override
-			public void handleEvent( Event theEvent) {
-				theEvent.doit = verifyTextInput( EditableWidgetAdapter.getTextByEvent( theEvent));
-			}
-		});
+		
+		setVerifyListenerToWidget( inputWidget);
 		
 		text.addListener( SWT.FocusOut, new Listener() {
 			
 			@Override
 			public void handleEvent(Event theArg0) {
-				if ( EditableWidgetAdapter.getTextFromWidget( inputWidget).isEmpty())
-					EditableWidgetAdapter.setTextForWidget( "0", inputWidget);
+				if ( inputWidget.getText().isEmpty())
+					inputWidget.setText( "0");
 			}
 		});
 	}
-
+	
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		Spinner spinner = new Spinner ( theComposite, SWT.BORDER);
-		inputWidget = spinner;
+		inputWidget = new VerifyingSpinner( theComposite, SWT.BORDER);
+		Spinner spinner = (Spinner) inputWidget.getEncapsulatedWidget();
 		spinner.setMinimum( integerType.getMinValue().intValue());
 		spinner.setMaximum( integerType.getMaxValue().intValue());
 		spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
@@ -165,15 +148,42 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		spinner.setTextLimit( integerType.getMaxValue().toString().length());
 		spinner.setLayoutData( theLayoutData);
 		
-		spinner.addListener( SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event theEvent) {
-				theEvent.doit = verifyTextInput( EditableWidgetAdapter.getTextByEvent( theEvent));
-			}
-		});
+		setVerifyListenerToWidget( inputWidget);
 	
 	}
+
+	private void setVerifyListenerToWidget( IVerifyingWidget<?> theInputWidget) {
+		theInputWidget.setListener( new IVerificationListener<String>() {
+			
+			@Override
+			public void beforeVerification(final VerificationEvent<String> theEvent) {}
+			
+			@Override
+			public void afterVerificationStep(final VerificationEvent<String> theEvent) {
+				final List<VerificationResult<String>> results = theEvent.verificationResults;
+				final VerificationResult<String> lastResult = results.get( results.size() -1);
+				if ( !lastResult.verified) {
+					getMessageView().flashMessages( lastResult.messages);
+					theEvent.skipVerification = true;
+					theEvent.doit = false;
+				}
+			}
+			
+			@Override
+			public void afterVerification(final VerificationEvent<String> theEvent) {
+				// verification passed, then write the value to parameter
+				getParameter().getValue().setTheNumber( new BigInteger( theEvent.inputToVerify));
+				// and start the validation process
+				validateDelayed( 2);
+				
+				theEvent.doit = true;
+			}
+			
+			
+		});
+	}
+
+
 	
 	@Override
 	protected void createEditRow(Composite theContainer) {

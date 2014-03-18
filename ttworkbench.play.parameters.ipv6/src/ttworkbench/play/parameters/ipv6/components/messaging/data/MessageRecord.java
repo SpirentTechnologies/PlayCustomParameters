@@ -26,7 +26,7 @@ public class MessageRecord {
 	}
 	
 	public boolean isTagged() {
-		return tag != null;
+		return tag != null && !tag.isEmpty();
 	}
 	
 	

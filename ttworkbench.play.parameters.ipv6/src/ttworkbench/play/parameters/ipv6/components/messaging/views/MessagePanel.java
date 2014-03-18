@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageInformation;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
@@ -54,7 +55,7 @@ public class MessagePanel extends Composite implements IMessageView {
 			label = new Label( this, SWT.NONE);
 			FontData[] fontData = label.getFont().getFontData();
 			fontData[0].setHeight( fontData[0].getHeight() -1);
-			label.setFont( lookAndBehaviour.getMessageFont( theErrorKind));//new Font( Display.getCurrent(), fontData[0]));
+			label.setFont( lookAndBehaviour.getMessageLookAndBehaviour().getMessageFont( theErrorKind));//new Font( Display.getCurrent(), fontData[0]));
 			
 			setMessage( theMessage, theErrorKind);
 		}
@@ -67,8 +68,8 @@ public class MessagePanel extends Composite implements IMessageView {
 	    
 	    // set look
 	    this.errorKind = theErrorKind;
-	    Color foregroundColor = lookAndBehaviour.getMessageForeground( errorKind);
-	    Color backgroundColor = lookAndBehaviour.getMessageBackground( errorKind);
+	    Color foregroundColor = lookAndBehaviour.getMessageLookAndBehaviour().getMessageForeground( errorKind);
+	    Color backgroundColor = lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( errorKind);
 	    label.setForeground( foregroundColor);
 	    label.setBackground( backgroundColor);
 	    
@@ -82,7 +83,7 @@ public class MessagePanel extends Composite implements IMessageView {
 		}
 		
 		private void beep() {
-			if ( MessagePanel.this.lookAndBehaviour.isBeepEnabled())
+			if ( MessagePanel.this.lookAndBehaviour.getMessageLookAndBehaviour().isBeepEnabled())
 			  Toolkit.getDefaultToolkit().beep();
 		}
 
@@ -404,6 +405,12 @@ public class MessagePanel extends Composite implements IMessageView {
 		
     this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		this.layout();
+	}
+
+	@Override
+	public IMessageInformation getMessageRegistry() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

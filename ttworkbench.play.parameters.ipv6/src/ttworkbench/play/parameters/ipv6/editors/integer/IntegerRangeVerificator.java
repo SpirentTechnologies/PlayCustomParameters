@@ -6,12 +6,19 @@ import java.util.List;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
-import ttworkbench.play.parameters.ipv6.editors.verification.VerifyResult;
+import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class IntegerRangeVerificator implements IVerificator<String> {
 
+	final IntegerType integerType;
+	
+	public IntegerRangeVerificator( final IntegerType theIntegerType) {
+		super();
+		this.integerType = theIntegerType;
+	}
+	
 	private boolean isValueInRange( final String theValue, final IntegerType theIntegerType) {
 		if ( theValue == null)
 			return false;
@@ -43,20 +50,17 @@ public class IntegerRangeVerificator implements IVerificator<String> {
 		return false;
 	}
 	
-	public VerifyResult<String> verify(String theInput, IntegerType theIntegerType) {
-		return verify( theInput, (Object) theIntegerType); 
-	}
 	
 	@Override
-	public VerifyResult<String> verify(String theInput, Object... theParams) {
-		final IntegerType integerType = (IntegerType) theParams[0];
-    boolean verified = isValueInRange( theInput, integerType);
+	public VerificationResult<String> verify(String theInput, Object... theParams) {
+		boolean verified = isValueInRange( theInput, integerType);
 		
 		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", theInput), ErrorKind.warning); 
 		MessageRecord codomainInfo = new MessageRecord( "valid_chars_info", String.format( "Only integers in range [%s,%s] accepted.", integerType.getMinValue(), integerType.getMaxValue()), ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, codomainInfo); 
-		return new VerifyResult<String>( theInput, verified, messages);
+		return new VerificationResult<String>( theInput, verified, messages);
 	}
+
 	
 
 }

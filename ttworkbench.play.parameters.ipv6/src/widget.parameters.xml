@@ -23,7 +23,6 @@
 		<widget name="Custom MAC Widget">
 			<description>MAC addresses editor</description>
 			<editor parameterId="PC_MAC_UCA_HS01" />
-			<editor parameterId="MacLayer" />
 		</widget>
 		
 		
