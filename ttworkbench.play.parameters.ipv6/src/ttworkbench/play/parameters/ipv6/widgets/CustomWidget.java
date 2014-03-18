@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 
-import ttworkbench.play.parameters.ipv6.components.messaging.views.DefaultMessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
@@ -46,7 +46,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 		messagePanel = new MessagePanel( theParent, SWT.NONE);
 		messagePanel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
 		messagePanel.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
-		messagePanel.getLookAndBehaviour().setChangedListener( new Listener() {
+		messagePanel.getLookAndBehaviour().addChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
 				updateControl();
@@ -117,7 +117,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 				
 				// react on dynamically insertion/deletion of controls when messages occur
 				if ( editor instanceof AbstractEditor<?>)
-					((AbstractEditor<?>) editor).getLookAndBehaviour().setControlChangedListener( new Listener() {
+					((AbstractEditor<?>) editor).getLookAndBehaviour().addControlChangedListener( new Listener() {
 						
 						@Override
 						public void handleEvent(Event theArg0) {

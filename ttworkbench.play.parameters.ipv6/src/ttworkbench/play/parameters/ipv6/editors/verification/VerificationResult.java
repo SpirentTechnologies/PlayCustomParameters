@@ -4,7 +4,7 @@ import java.util.List;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 
-public class VerifyResult<T> {
+public class VerificationResult<T> {
 	
 	/**
 	 * input to verify
@@ -22,7 +22,7 @@ public class VerifyResult<T> {
 	public final List<MessageRecord> messages;
 	
 	
-	public VerifyResult( final T theInput, final boolean isVerified, final List<MessageRecord> theMessages) {
+	public VerificationResult( final T theInput, final boolean isVerified, final List<MessageRecord> theMessages) {
 		super();
 		this.input = theInput;
 		this.verified = isVerified;

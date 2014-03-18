@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.DefaultMessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
@@ -40,7 +40,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
 
-	private DefaultMessageDisplay messageDisplay = null;
+	private MessageDisplay messageDisplay = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
 	private static final ScheduledExecutorService validationMessageWorker = Executors.newSingleThreadScheduledExecutor();
 	private ScheduledFuture<?> validationTaskFuture;
@@ -139,10 +139,10 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
-		messageDisplay = new DefaultMessageDisplay( theParent, SWT.NONE);
+		messageDisplay = new MessageDisplay( theParent, SWT.NONE);
 		messageDisplay.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
-		messageDisplay.setLookAndBehaviour( getLookAndBehaviour().getMessaagePanelLookAndBehaviour());
-		messageDisplay.getLookAndBehaviour().setChangedListener( new Listener() {
+		messageDisplay.setLookAndBehaviour( getLookAndBehaviour().getMessagePanelLookAndBehaviour());
+		messageDisplay.getLookAndBehaviour().addChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
 				updateControl();
