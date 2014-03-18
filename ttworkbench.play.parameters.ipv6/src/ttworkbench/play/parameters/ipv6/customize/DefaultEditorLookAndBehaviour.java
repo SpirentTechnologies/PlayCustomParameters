@@ -27,7 +27,7 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 	@Override
 	public Object[] getLayoutDataOfControls() {
 		GridData[] gridData = new GridData[1];
-		gridData[0] = new GridData( SWT.FILL, SWT.FILL, true, false);
+		gridData[0] = new GridData( SWT.LEFT, SWT.TOP, true, false);
 		return gridData;
 	}
 

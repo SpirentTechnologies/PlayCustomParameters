@@ -155,7 +155,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public final Composite createControl(Composite theParent) {
 	
 	  Composite container = new Composite( theParent, SWT.None);
-	  GridLayout containerLayout = new GridLayout( 1, true);
+	  GridLayout containerLayout = new GridLayout();
 	  containerLayout.marginHeight = 0;
 	  containerLayout.marginWidth = 0;
 	  container.setLayout( containerLayout);
