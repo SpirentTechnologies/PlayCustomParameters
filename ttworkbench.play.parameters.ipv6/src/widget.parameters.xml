@@ -86,7 +86,7 @@
 			<classpath>ttworkbench.play.parameters.ipv6.validators.MacAddressValidator</classpath>
 			<attribute name="attr1">value1</attribute>
 		</validator>
-
+		
 		<validator id="fibValidator_PX_FIB_NUMBER">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_NUMBER</classpath>
 		</validator>

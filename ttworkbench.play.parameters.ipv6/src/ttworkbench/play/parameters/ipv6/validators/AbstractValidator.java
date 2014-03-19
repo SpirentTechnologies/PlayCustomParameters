@@ -79,5 +79,48 @@ public abstract class AbstractValidator implements IParameterValidator {
 	public void registerForActions(IActionHandler theActionHandler) {
 		actionHandlers.add( theActionHandler);
 	}
+	
 
+	@Override
+	public long getId() {
+		return hashCode();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ( ( attributes == null) ? 0 : attributes.hashCode());
+		result = prime * result + ( ( description == null) ? 0 : description.hashCode());
+		result = prime * result + ( ( title == null) ? 0 : title.hashCode());
+		return result;
+	}
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractValidator other = (AbstractValidator) obj;
+		if (attributes == null) {
+			if (other.attributes != null)
+				return false;
+		} else if (!attributes.equals( other.attributes))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals( other.description))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals( other.title))
+			return false;
+		return true;
+	}
 }

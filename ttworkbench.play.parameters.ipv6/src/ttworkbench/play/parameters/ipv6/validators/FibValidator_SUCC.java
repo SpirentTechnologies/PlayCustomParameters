@@ -30,5 +30,6 @@ public class FibValidator_SUCC extends FibValidator {
 			validationResults.add( new ValidationResult(  String.format( "%s: %s is successor of %s.", this.getTitle(), fibNextValue, fibValue), ErrorKind.info, "tag_succ_fib_hint"));    	
 		}
 		return validationResults;
-	}
+	}	
+
 }

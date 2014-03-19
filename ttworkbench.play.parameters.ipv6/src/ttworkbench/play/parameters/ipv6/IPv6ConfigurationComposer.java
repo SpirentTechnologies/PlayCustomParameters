@@ -5,6 +5,7 @@ import java.util.List;
 
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
 import ttworkbench.play.parameters.settings.Data;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;

@@ -14,7 +14,7 @@ public class ParameterEditorMapper {
 	private static ConcurrentHashMap<String, String> PARAMETER_TYPE_EDITOR_CLASS_MAP = new ConcurrentHashMap<String, String>();
 	static {
 		PARAMETER_TYPE_EDITOR_CLASS_MAP.put( "^(UInt\\d{0,2}|Int\\d{0,2})$", "ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor");
-		PARAMETER_TYPE_EDITOR_CLASS_MAP.put( "^(PC_MAC_UCA_HS01|MacLayer)$", "ttworkbench.play.parameters.ipv6.editors.MacAddressEditor");
+		PARAMETER_TYPE_EDITOR_CLASS_MAP.put( "^(PC_MAC_UCA_HS01|MacAddress)$", "ttworkbench.play.parameters.ipv6.editors.MacAddressEditor");
 	}
 	
 	

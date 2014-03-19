@@ -183,7 +183,9 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			public void run() {				
 				IMessageView messageView = getMessageView();
 				if ( messageView != null) {
-					String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
+					String senderId = String.valueOf( theValidator.getId());
+					// TODO
+					System.out.println( "senderId: " + senderId);
 					messageView.beginUpdateForSender( senderId);
 					for (ValidationResult validationResult : theValidationResults) {
 						if ( validationResult.isTagged()) {

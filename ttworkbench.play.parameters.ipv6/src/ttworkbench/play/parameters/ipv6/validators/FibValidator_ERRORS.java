@@ -23,9 +23,9 @@ public class FibValidator_ERRORS extends FibValidator {
 
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 		
-		IParameterEditor<?> editor_PX_N = getEditor( ParameterKey.PX_N);
-		IParameterEditor<?> editor_PX_FIB_NUMBER = getEditor( ParameterKey.PX_FIB_NUMBER);
-		IParameterEditor<?> editor_PX_FIB_SUCC_NUMBER = getEditor( ParameterKey.PX_FIB_SUCC_NUMBER);
+		IParameterEditor<?> editor_PX_N = getEditors( ParameterKey.PX_N)[0];
+		IParameterEditor<?> editor_PX_FIB_NUMBER = getEditors( ParameterKey.PX_FIB_NUMBER)[0];
+		IParameterEditor<?> editor_PX_FIB_SUCC_NUMBER = getEditors( ParameterKey.PX_FIB_SUCC_NUMBER)[0];
 		
 		int totalErrors = 0;
 		int totalWarnings = 0;

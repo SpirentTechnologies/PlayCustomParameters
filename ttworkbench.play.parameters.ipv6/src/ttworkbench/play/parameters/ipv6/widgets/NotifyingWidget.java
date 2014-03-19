@@ -27,11 +27,11 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 
 	@Override
 	public void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
-			IParameter theParameter) {
+			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				IMessageView messageView = getMessageView();
-				String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
+				String senderId = String.valueOf( theValidator.getId());
 				messageView.beginUpdateForSender( senderId);
 				MessageRecord messageRecord;
 				for (ValidationResult validationResult : theValidationResults) {
