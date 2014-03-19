@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.controls;
 
 import java.awt.Toolkit;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -10,7 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
@@ -24,6 +26,7 @@ public class MessageElement extends Composite {
 	private CLabel label;
 	private IMessageContainer messageContainer;
 	private IMessageLookAndBehaviour lookAndBehaviour;
+	private final Set<MessageElement> delegateInstances = new HashSet<MessageElement>();
 	
 	public MessageElement( final IMessageContainer theMessageContainer, final String theMessage, final ErrorKind theErrorKind) {
 		super( theMessageContainer.getMessageComposite(), SWT.NONE);
@@ -39,6 +42,21 @@ public class MessageElement extends Composite {
 	  setMessage( theMessage, theErrorKind);
 	
 	}
+	
+	public MessageElement newDelegate( final IMessageContainer theMessageContainer, final MessageElement theTemplateMessageElement) {
+		final MessageElement delegate = new MessageElement( theMessageContainer, this.message, this.errorKind);
+		delegateInstances.add( delegate);
+		return delegate;
+	}
+	
+	@Override
+	public void dispose() {
+		for (MessageElement messageElement : delegateInstances) {
+			messageElement.dispose();
+		}
+		super.dispose();
+	}
+		
 	
 	private void setDefaultLayoutData() {
 		setLayoutData( messageContainer.getMessageLayoutData());
@@ -79,5 +97,6 @@ public class MessageElement extends Composite {
 	public String getMessage() {
 		return message;
 	}
+	
 	
 }

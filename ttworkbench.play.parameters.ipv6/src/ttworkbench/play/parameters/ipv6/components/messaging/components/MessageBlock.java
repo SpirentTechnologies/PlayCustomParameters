@@ -15,7 +15,7 @@ import org.eclipse.swt.events.DisposeListener;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageElement;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
@@ -97,7 +97,8 @@ public class MessageBlock {
 			
 			@Override
 			public void widgetDisposed(DisposeEvent theEvent) {
-			  messageRegistry.deregisterMessage( (MessageElement) theEvent.widget);	
+				if ( messageRegistry != null)
+			    messageRegistry.deregisterMessage( (MessageElement) theEvent.widget);	
 			}
 		};
 	}

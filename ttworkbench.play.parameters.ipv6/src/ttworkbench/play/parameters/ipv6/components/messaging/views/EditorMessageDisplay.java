@@ -35,7 +35,7 @@ import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MessageDisplay extends Composite implements IMessageView {
+public class EditorMessageDisplay extends Composite implements IMessageView<Composite> {
 	
 	
 	
@@ -59,7 +59,7 @@ public class MessageDisplay extends Composite implements IMessageView {
 	MessageHeader messageHeader;
 	private Composite wrappedComposite;
 	
-	public MessageDisplay( final Composite theParent, final int theStyle) {
+	public EditorMessageDisplay( final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
 		createPanel( theParent);
 		initMessageRegistry();
@@ -77,19 +77,21 @@ public class MessageDisplay extends Composite implements IMessageView {
 			public void handleRegisterEvent( RegistryEvent theEvent) {
 				ErrorKind highestErrorKind = theEvent.registry.getHighestErrorKind();
 				Color frameColor = lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( highestErrorKind);
-				MessageDisplay.this.setBackground( frameColor);
-				MessageDisplay.this.messagePopup.update();
+				EditorMessageDisplay.this.setBackground( frameColor);
+				EditorMessageDisplay.this.messagePopup.update();
 			}
 			
 			@Override
 			public void handleDeregisterEvent(RegistryEvent theEvent) {
-				ErrorKind highestErrorKind = theEvent.registry.getHighestErrorKind();
-				int messageCount = theEvent.registry.getCountOfMessagesWithErrorKind( EnumSet.of( highestErrorKind));
-				Color messageColor = lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( highestErrorKind);
-				Color clearColor	=	getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-				Color frameColor = messageCount > 0 ? messageColor : clearColor;
-				MessageDisplay.this.setBackground( frameColor);
-				MessageDisplay.this.messagePopup.update();	
+				if ( !isDisposed()) {
+					ErrorKind highestErrorKind = theEvent.registry.getHighestErrorKind();
+					int messageCount = theEvent.registry.getCountOfMessagesWithErrorKind( EnumSet.of( highestErrorKind));
+					Color messageColor = lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( highestErrorKind);
+					Color clearColor	=	getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+					Color frameColor = messageCount > 0 ? messageColor : clearColor;
+					EditorMessageDisplay.this.setBackground( frameColor);
+					EditorMessageDisplay.this.messagePopup.update();	
+				}
 			}
 		});
 	}
@@ -284,10 +286,10 @@ public class MessageDisplay extends Composite implements IMessageView {
 	}
 
 	@Override
-	public void wrapControl(Composite theWrappedComposite) {
+	public void setClientComponent( Composite theClientCompoent) {
 		if ( wrappedComposite != null)
 			wrappedComposite.dispose();
-		this.wrappedComposite = theWrappedComposite;
+		this.wrappedComposite = theClientCompoent;
 		wrappedComposite.setParent( this);
 		
 		GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0);

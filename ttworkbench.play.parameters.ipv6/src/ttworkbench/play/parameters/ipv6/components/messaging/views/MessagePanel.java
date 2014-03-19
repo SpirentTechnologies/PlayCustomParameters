@@ -38,7 +38,7 @@ import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MessagePanel extends Composite implements IMessageView {
+public class MessagePanel extends Composite implements IMessageView<Composite> {
 	
 	
 	private class MessageLine extends Composite {
@@ -397,15 +397,16 @@ public class MessagePanel extends Composite implements IMessageView {
 	}
 
 	@Override
-	public void wrapControl(Composite theWrappedComposite) {
+	public void setClientComponent(Composite theClientComponent) {
 		if ( wrappedComposite != null)
 			wrappedComposite.dispose();
-		this.wrappedComposite = theWrappedComposite;
+		this.wrappedComposite = theClientComponent;
 		wrappedComposite.setParent( this);
 		
     this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		this.layout();
 	}
+	
 
 	@Override
 	public IMessageInformation getMessageRegistry() {

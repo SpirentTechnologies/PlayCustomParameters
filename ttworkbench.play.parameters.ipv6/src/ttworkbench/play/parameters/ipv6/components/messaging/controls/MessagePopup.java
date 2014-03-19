@@ -31,6 +31,7 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	private CLabel label;
 	private Shell popupShell;
 	private Listener mouseMoveListener = createMouseMoveListener();
+	private String labelTextFormat = "%d %s.";  //were %d is replaced by the count and %s by the mesage kind.
 	
 	public MessagePopup( IMessageView theMessageView, final Composite theParent) {
 		super( theParent, SWT.None);
@@ -159,14 +160,14 @@ public class MessagePopup extends Composite implements IMessageContainer {
 			String message;
 			switch (errorKind) {
 				case error:
-					message = String.format( "%d errors.", messageCount);
+					message = String.format( labelTextFormat, messageCount, "errors");
 					// size = 
 					break;
 				case warning:
-					message = String.format( "%d warings.", messageCount);
+					message = String.format( labelTextFormat, messageCount, "warings");
 					break;
 				default:
-					message = String.format( "%d Informations.", messageCount);
+					message = String.format( labelTextFormat, messageCount, "informations");
 					break;
 			}
 
@@ -176,11 +177,13 @@ public class MessagePopup extends Composite implements IMessageContainer {
 			this.setVisible( true);
 			label.setVisible( true);
 		}
-		//setSize( computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		//getShell().layout();
+		setSize( computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		layout( true);
 	}
 
-
+	public void setLabelTextFormat(String theLabelTextFormat) {
+		labelTextFormat = theLabelTextFormat;
+	}
 
 	@Override
 	public Composite getMessageComposite() {

@@ -17,9 +17,10 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 
-import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.WidgetMessageDisplay;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
@@ -32,8 +33,8 @@ public abstract class CustomWidget extends NotifyingWidget {
 	private Composite editorsContainer;
 	private ScrolledComposite scrolledComposite;
 	private IWidgetLookAndBehaviour lookAndBehaviour;
-	private MessagePanel messagePanel;
-
+	//private MessagePanel messagePanel;
+  private WidgetMessageDisplay messageDisplay;
 	
 	
 	public CustomWidget( String theTitle, String theDescription, Image theImage) {
@@ -42,11 +43,23 @@ public abstract class CustomWidget extends NotifyingWidget {
 	}
 	
 	
-	private void createMessagePanel( Composite theParent) {
-		messagePanel = new MessagePanel( theParent, SWT.NONE);
-		messagePanel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
-		messagePanel.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
-		messagePanel.getLookAndBehaviour().addChangedListener( new Listener() {
+//	private void createMessagePanel( Composite theParent) {
+//		messagePanel = new MessagePanel( theParent, SWT.NONE);
+//		messagePanel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
+//		messagePanel.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
+//		messagePanel.getLookAndBehaviour().addChangedListener( new Listener() {
+//			@Override
+//			public void handleEvent(Event theArg0) {
+//				updateControl();
+//			}
+//		});
+//	}
+	
+	private void createMessageDisplay( Composite theParent) {
+		messageDisplay = new WidgetMessageDisplay( theParent, SWT.NONE);
+		messageDisplay.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
+		messageDisplay.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
+		messageDisplay.getLookAndBehaviour().addChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
 				updateControl();
@@ -66,8 +79,9 @@ public abstract class CustomWidget extends NotifyingWidget {
 		mainContainer.setLayout( new GridLayout());
 		
 	  // display message panel above the scrollbox with the editors 
-		createMessagePanel( mainContainer); 
-		
+		//createMessagePanel( mainContainer); 
+		createMessageDisplay( mainContainer);
+				
 		// scrollbox with the editors
 	  scrolledComposite = new ScrolledComposite( mainContainer, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayout( new FillLayout( SWT.HORIZONTAL));
@@ -134,7 +148,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 
 	@Override
 	protected IMessageView getMessageView() {
-		return messagePanel;
+		return messageDisplay;
 	}
 
 	

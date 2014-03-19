@@ -12,7 +12,7 @@ import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public interface IMessageView {
+public interface IMessageView<ClientComponent> {
 
 	/**
 	 * Finishes an update cycle. 
@@ -47,7 +47,7 @@ public interface IMessageView {
 	
 	void setLookAndBehaviour( IMessageViewLookAndBehaviour theLookAndBehaviour);
 	
-	void wrapControl( Composite theWrappedComposite);
+	void setClientComponent( ClientComponent theClientComponent);
 	
 	IMessageInformation getMessageRegistry();
 
