@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageDisplay;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
@@ -40,7 +40,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
 
-	private MessageDisplay messageDisplay = null;
+	private EditorMessageDisplay messageDisplay = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
 	private static final ScheduledExecutorService validationMessageWorker = Executors.newSingleThreadScheduledExecutor();
 	private ScheduledFuture<?> validationTaskFuture;
@@ -92,10 +92,8 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 
   /**
    * Validates the current parameter value delayed in another thread.
-   * TODO remove parameter theDelayInSeconds -> put into behavior class
-   * @param theDelayInSeconds 
    */
-	protected void validateDelayed( final int theDelayInSeconds) {
+	protected void validateDelayed() {
 		if ( validationTaskFuture != null) 
 			validationTaskFuture.cancel( true);
 		if ( validationMessageTaskFuture != null) 
@@ -111,7 +109,8 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				});
 			}
 		};
-		validationMessageTaskFuture = validationMessageWorker.schedule( validationMessageTask, theDelayInSeconds +1, TimeUnit.SECONDS);	
+		final long showValidationMessageDelay = getLookAndBehaviour().getShowValidationInProgressMessageDelay();
+		validationMessageTaskFuture = validationMessageWorker.schedule( validationMessageTask, showValidationMessageDelay, TimeUnit.MILLISECONDS);	
 		
 		Runnable validationTask = new Runnable() {
 			@Override
@@ -128,7 +127,8 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				});
 			}
 		};
-		validationTaskFuture = validationWorker.schedule( validationTask, theDelayInSeconds, TimeUnit.SECONDS);
+		final long startValidationDelay = getLookAndBehaviour().getStartValidationDelay();		
+		validationTaskFuture = validationWorker.schedule( validationTask, startValidationDelay, TimeUnit.MILLISECONDS);
 	}
 
 
@@ -139,7 +139,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	private void createMessageRow(Composite theParent) {
 		// TODO Auto-generated method stub
-		messageDisplay = new MessageDisplay( theParent, SWT.NONE);
+		messageDisplay = new EditorMessageDisplay( theParent, SWT.NONE);
 		messageDisplay.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		messageDisplay.setLookAndBehaviour( getLookAndBehaviour().getMessagePanelLookAndBehaviour());
 		messageDisplay.getLookAndBehaviour().addChangedListener( new Listener() {
@@ -167,7 +167,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		Composite editRowContainer = new Composite( container, SWT.None);
 		editRowContainer.setLayout( getLookAndBehaviour().getEditorLookAndBehaviour().getLayout());
 		createEditRow( editRowContainer);
-		getMessageView().wrapControl( editRowContainer);
+		getMessageView().setClientComponent( editRowContainer);
 		
 		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		container.layout();

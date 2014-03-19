@@ -138,7 +138,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		inputWidget = new VerifyingSpinner( theComposite, SWT.BORDER);
+		inputWidget = new VerifyingSpinner( theComposite, SWT.BORDER, integerTypeVerificator, integerRangeVerificator);
 		Spinner spinner = (Spinner) inputWidget.getEncapsulatedWidget();
 		spinner.setMinimum( integerType.getMinValue().intValue());
 		spinner.setMaximum( integerType.getMaxValue().intValue());
@@ -174,7 +174,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 				// verification passed, then write the value to parameter
 				getParameter().getValue().setTheNumber( new BigInteger( theEvent.inputToVerify));
 				// and start the validation process
-				validateDelayed( 2);
+				validateDelayed();
 				
 				theEvent.doit = true;
 			}

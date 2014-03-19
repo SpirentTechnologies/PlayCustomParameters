@@ -51,4 +51,16 @@ public class DefaultEditorLookAndBehaviour implements IValidatingEditorLookAndBe
 		}
 	}
 
+	@Override
+	public long getStartValidationDelay() {
+		// TODO Auto-generated method stub
+		return 1500;
+	}
+
+	@Override
+	public long getShowValidationInProgressMessageDelay() {
+		// TODO Auto-generated method stub
+		return 2000;
+	}
+
 }
