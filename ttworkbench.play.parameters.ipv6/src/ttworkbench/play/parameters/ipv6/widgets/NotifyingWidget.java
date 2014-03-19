@@ -27,7 +27,7 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 
 	@Override
 	public void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
-			IParameter theParameter) {
+			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				IMessageView messageView = getMessageView();

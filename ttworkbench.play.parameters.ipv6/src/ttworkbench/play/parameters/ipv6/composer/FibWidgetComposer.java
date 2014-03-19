@@ -8,6 +8,8 @@ import ttworkbench.play.parameters.ipv6.validators.FibValidator_ERRORS;
 import ttworkbench.play.parameters.ipv6.validators.FibValidator_NUMBER;
 import ttworkbench.play.parameters.ipv6.validators.FibValidator_SEQ;
 import ttworkbench.play.parameters.ipv6.validators.FibValidator_SUCC;
+import ttworkbench.play.parameters.ipv6.validators.IValidatorContext;
+import ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext;
 import ttworkbench.play.parameters.ipv6.widgets.FibWidget;
 import ttworkbench.play.parameters.ipv6.widgets.NotifyingWidget;
 
@@ -32,41 +34,32 @@ public class FibWidgetComposer extends WidgetComposer {
 					
 		getConfigurator().addWidget( fibWidget);
 
-		FibValidator fibValidator_PX_FIB_NUMBER = new FibValidator_NUMBER();
-		FibValidator fibSeqValidator = new FibValidator_SEQ();
-		FibValidator fibSuccValidator = new FibValidator_SUCC();
-		FibValidator fibWidgetLayerValidator = new FibValidator_ERRORS();
-		
 
-		// create an editor for each parameter
+
+		// 1) create an editor for each parameter
 		ValidatingEditor<?> editor_PX_N = new IntegerEditor();
 		ValidatingEditor<?> editor_PX_FIB_NUMBER = new IntegerEditor();
 		ValidatingEditor<?> editor_PX_FIB_SUCC_NUMBER = new IntegerEditor();
-		
-		
 
-
-		fibSeqValidator.addParameter( FibValidator.ParameterKey.PX_N, parameter_PX_N);
-		fibSeqValidator.addParameter( FibValidator.ParameterKey.PX_FIB_NUMBER, parameter_PX_FIB_NUMBER);
-		
-		fibSuccValidator.addParameter( FibValidator.ParameterKey.PX_FIB_NUMBER, parameter_PX_FIB_NUMBER);
-		fibSuccValidator.addParameter( FibValidator.ParameterKey.PX_FIB_SUCC_NUMBER, parameter_PX_FIB_SUCC_NUMBER);
-
-		fibWidgetLayerValidator.addEditor( FibValidator.ParameterKey.PX_N, editor_PX_N);
-		fibWidgetLayerValidator.addEditor( FibValidator.ParameterKey.PX_FIB_NUMBER, editor_PX_FIB_NUMBER);
-		fibWidgetLayerValidator.addEditor( FibValidator.ParameterKey.PX_FIB_SUCC_NUMBER, editor_PX_FIB_SUCC_NUMBER);
-		
-		
-		
-		
-		
-
-		// assign each parameter to the corresponding editor in this widget
+		// 2) assign each parameter to the corresponding editor in this widget
 		getConfigurator().assign( editor_PX_N, fibWidget, parameter_PX_N);
 		getConfigurator().assign( editor_PX_FIB_NUMBER, fibWidget, parameter_PX_FIB_NUMBER);
 		getConfigurator().assign( editor_PX_FIB_SUCC_NUMBER, fibWidget, parameter_PX_FIB_SUCC_NUMBER);
 
-		// register editors to corresponding validators
+
+		// 3) create validators with context
+		IValidatorContext context = new SimpleValidatorContext(
+				getConfigurator(),
+				parameter_PX_N, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);		
+
+		FibValidator fibValidator_PX_FIB_NUMBER = new FibValidator_NUMBER().with(context);
+		FibValidator fibSeqValidator = new FibValidator_SEQ().with(context);
+		FibValidator fibSuccValidator = new FibValidator_SUCC().with(context);
+		FibValidator fibWidgetLayerValidator = new FibValidator_ERRORS().with(context);
+
+		
+		
+		// 4) register editors to corresponding validators
 		fibValidator_PX_FIB_NUMBER.registerForMessages( editor_PX_FIB_NUMBER);
 		fibValidator_PX_FIB_NUMBER.registerForMessages( fibWidget);
 		fibValidator_PX_FIB_NUMBER.registerForMessages( editor_PX_FIB_SUCC_NUMBER);
@@ -75,10 +68,10 @@ public class FibWidgetComposer extends WidgetComposer {
 		fibSuccValidator.registerForActions( editor_PX_FIB_SUCC_NUMBER);
 		
 		
-	  // register widgets to corresponding validators
+	  // 5) register widgets to corresponding validators
 		// fibWidgetLayerValidator.registerForMessages( fibWidget);
 
-		// assign validators to the parameters they have to check
+		// 6) assign validators to the parameters they have to check
 		getConfigurator().assign( fibValidator_PX_FIB_NUMBER, fibWidget, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);
 		getConfigurator().assign( fibSeqValidator, fibWidget, parameter_PX_N, parameter_PX_FIB_NUMBER);
 		getConfigurator().assign( fibSuccValidator, fibWidget, parameter_PX_FIB_NUMBER, parameter_PX_FIB_SUCC_NUMBER);

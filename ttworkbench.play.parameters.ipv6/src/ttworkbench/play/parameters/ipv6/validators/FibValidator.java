@@ -2,9 +2,12 @@ package ttworkbench.play.parameters.ipv6.validators;
 
 import java.math.BigInteger;
 
-public abstract class FibValidator extends RelatedValidator {
-	public enum ParameterKey implements RelatedValidator.RelationKey {
-		PX_N, PX_FIB_NUMBER, PX_FIB_SUCC_NUMBER
+public abstract class FibValidator extends ContextualValidator {
+	
+	public static class ParameterKey {
+		static final int PX_N = 0;
+		static final int PX_FIB_NUMBER = 1;
+		static final int PX_FIB_SUCC_NUMBER = 2;
 	}
 
 	
@@ -20,13 +23,12 @@ public abstract class FibValidator extends RelatedValidator {
 	public FibValidator( String theTitle) {
 		super( theTitle, "");
 	}
+	
 
-	@Override
-	public RelationKey[] getRelationKeys() {
-		return ParameterKey.values();
+	public FibValidator with(IValidatorContext theContext) {
+		setContext( theContext);
+		return this;
 	}
-	
-	
 	
 	
 	protected BigInteger getFibonacciNumber( BigInteger theValue) {

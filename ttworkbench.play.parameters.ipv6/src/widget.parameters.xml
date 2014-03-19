@@ -66,7 +66,6 @@
 				<relation parameterId="PX_FIB_NUMBER" />
 				<relation parameterId="PX_FIB_SUCC_NUMBER" message="true" action="true" />
 			</validator>
-			<relation id="r1">
 		</parameter>
 		
 		<parameter id="PX_FIB_SUCC_NUMBER">
@@ -77,20 +76,9 @@
 				<relation parameterId="PX_FIB_NUMBER" />
 				<relation parameterId="PX_FIB_SUCC_NUMBER" message="true" action="true" />
 			</validator>
-			<relation id="r1">
 		</parameter>
 
 	</parameters>
-	
-	<relations>
-	  <relation id="r1">
-				<validator id="fibSuccValidator">
-				<p1 parameterId="PX_N" />
-				<p2 parameterId="PX_FIB_NUMBER" />
-				<p3 parameterId="PX_FIB_SUCC_NUMBER" message="true" action="true" />
-			</relation>
-	</relations>
-	
 	
 	<validators>
 	

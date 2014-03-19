@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -11,8 +12,10 @@ import ttworkbench.play.parameters.ipv6.ParameterEditorMapper;
 import ttworkbench.play.parameters.ipv6.ParameterMap;
 import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.validators.RelatedValidator;
-import ttworkbench.play.parameters.ipv6.validators.RelatedValidator.RelationKey;
+import ttworkbench.play.parameters.ipv6.validators.ContextualValidator;
+import ttworkbench.play.parameters.ipv6.validators.IValidatorContext;
+import ttworkbench.play.parameters.ipv6.validators.IWithValidatorContext;
+import ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
@@ -28,7 +31,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 	
 	private Data.Widget widget;
 	
-	private HashMap<RelatedValidator, Data.Relation> triggeredRelations = new HashMap<RelatedValidator, Data.Relation>();
+	private HashMap<IParameterValidator, Data.Relation> triggeredRelations = new HashMap<IParameterValidator, Data.Relation>();
 	private HashMap<Data.Validator, IParameterValidator> validatorMapping = new HashMap<Data.Validator, IParameterValidator>();
 
 	
@@ -95,9 +98,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 					IParameterValidator validator = getValidator(dataRelation.getValidator());
 					if(validator!=null) {
 						
-						if(validator instanceof RelatedValidator) {
-							triggerRelations((RelatedValidator) validator, dataRelation);
-						}
+						triggerRelations(validator, dataRelation);
 						
 						// assign the validator to the parameter
 						getConfigurator().assign( validator, defaultWidget, parameter);
@@ -120,28 +121,27 @@ public class CustomWidgetComposer extends WidgetComposer {
 
 	
 	private void triggerRelations() {
-		for(Entry<RelatedValidator, Data.Relation> triggerEntry : triggeredRelations.entrySet()) {
-			RelatedValidator validator = triggerEntry.getKey();
+		for(Entry<IParameterValidator, Data.Relation> triggerEntry : triggeredRelations.entrySet()) {
+			IParameterValidator validator = triggerEntry.getKey();
+			SimpleValidatorContext context = getValidatorContext(validator);
 			Data.Relation relation = triggerEntry.getValue();
 			Data.RelationPartner[] parameter = relation.getRelationPartners();
 			
-			RelationKey[] keys = validator.getRelationKeys();
-			for(int i=0; i<keys.length && i<parameter.length; i++) {
+			for(int i=0; i<parameter.length; i++) {
 				String id = parameter[i].getParameter().getId();
 				boolean msg = parameter[i].isRegisteredForMessages();
 				boolean act = parameter[i].isRegisteredForActions();
 				
 				// set related parameter instance
 				IParameter<?> relatedParameter = getParametersMap().getParameterById( id);
-				validator.addParameter( keys[i], relatedParameter);
+				if(context!=null) {
+					context.addParameter( relatedParameter);
+				}
 				
 				// set related parameter editor
 				Set<IParameterEditor> editors = getConfigurator().getEditors( relatedParameter);
 				if(editors.size()>0) {
 					IParameterEditor<?> editor = editors.iterator().next();
-					
-					validator.addEditor( keys[i], editor);
-					
 
 					// register for messages
 					if(msg && editor instanceof IMessageHandler) {
@@ -164,7 +164,18 @@ public class CustomWidgetComposer extends WidgetComposer {
 		}
 	}
 
-	private synchronized void triggerRelations(RelatedValidator theValidator, Data.Relation theRelation) {
+	private SimpleValidatorContext getValidatorContext(IParameterValidator theValidator) {
+		SimpleValidatorContext context = null;
+		if(theValidator instanceof IWithValidatorContext) {
+			IValidatorContext rawContext = ( (IWithValidatorContext) theValidator).getContext();
+			if(rawContext instanceof SimpleValidatorContext) {
+				context = (SimpleValidatorContext) rawContext;
+			}
+		}
+		return context;
+	}
+
+	private synchronized void triggerRelations(IParameterValidator theValidator, Data.Relation theRelation) {
 			triggeredRelations.put( theValidator, theRelation);
 	}
 	
@@ -175,8 +186,17 @@ public class CustomWidgetComposer extends WidgetComposer {
 			if(validatorType!=null) {
 				try {
 					Object validatorRaw = validatorType.newInstance();
+					
 					if(validatorRaw instanceof IParameterValidator) {
 						validator = (IParameterValidator) validatorRaw;
+						
+						if(validator instanceof IWithValidatorContext) {
+							((IWithValidatorContext) validator).setContext(
+									new SimpleValidatorContext(
+										getConfigurator()
+									)
+								);
+						}
 	
 						for(Entry<String, String> attribute : theDataValidator.getAttributes().entrySet()) {
 							validator.setAttribute( attribute.getKey(), attribute.getValue());
@@ -189,7 +209,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 					}
 				}
 				catch(Exception e) {
-					logError( "Could not create instance from class \""+validatorType+"\". Tried to use constructor without parameters.");
+					logError( "Could not create instance from class \""+validatorType+"\". Tried to use the default constructor without parameter.");
 				}
 			}
 		}

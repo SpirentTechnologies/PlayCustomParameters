@@ -6,13 +6,12 @@ import java.util.List;
 
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IValidatorContext;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class FibValidator_SUCC extends FibValidator {
 
-	public FibValidator_SUCC( IContext theContext) {
+	public FibValidator_SUCC() {
 		super("Fibonacci Successor Validator");
 	}
 	
@@ -31,13 +30,6 @@ public class FibValidator_SUCC extends FibValidator {
 			validationResults.add( new ValidationResult(  String.format( "%s: %s is successor of %s.", this.getTitle(), fibNextValue, fibValue), ErrorKind.info, "tag_succ_fib_hint"));    	
 		}
 		return validationResults;
-	}
-
-	@Override
-	public IValidatorContext getContext() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+	}	
 
 }
