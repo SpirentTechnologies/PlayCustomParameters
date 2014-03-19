@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings xmlns="https://github.com/TestingTechnologies/PlayCustomParameters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/TestingTechnologies/PlayCustomParameters widget.parameters.xsd ">
 
+	<types>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor">	
+			<expression>^UInt\\d{0,2}$</expression>
+			<expression>^Int\\d{0,2}$</expression>
+			<attribute name="attr1">value1</attribute>
+		</editor>
+	</types>
+
+
 	<widgets>
 		<widget name="Custom Widget 1">
 			<description>text</description>
@@ -8,31 +17,34 @@
 			
 			<editor parameterId="PX_UDP_PORT_HS02" />
 			<editor parameterId="PX_IUT_ROLE" />
-			<editor parameterId="PX_N" />
 			<editor parameterId="PX_CONFIGURATION_ID" />
+			<!-- TODO
+			<editor parameterId="PX_N" />
 			<editor parameterId="PX_FIB_NUMBER" />
+			<editor parameterId="PX_FIB_SUCC_NUMBER" />
+			-->
 			<editor parameterId="PX_BIG_NUMBER" />
 			<editor parameterId="PX_IPv4_ADDR_IUT" />
 			<editor parameterId="PX_NET_DEVICE_ID_1" />
 			<editor parameterId="PX_MAC_LAYER" />
-			<editor parameterId="PX_FIB_SUCC_NUMBER" />
 			<editor parameterId="PX_TEST_CAMPAIGN" />
 		</widget>
 		
 		
-		<widget name="MAC Widget">
+		<widget name="Custom MAC Widget">
 			<description>MAC addresses editor</description>
-			<editor parameterId="PX_MAC_LAYER" />
+			<editor parameterId="PC_MAC_UCA_HS01" />
 		</widget>
 		
 		
-		<widget name="Fibonacci">
+
+		<widget name="Custom Fibonacci">
 			<description>Fibonacci editor</description>
 			<editor parameterId="PX_N" />
 			<editor parameterId="PX_FIB_NUMBER" />
 			<editor parameterId="PX_FIB_SUCC_NUMBER" />
 		</widget>
-		
+
 	</widgets>
 	
 	
@@ -42,12 +54,12 @@
 			<validator id="vMAC" />
 		</parameter>
 		
-		
+
 		<parameter id="PX_N">
 			<description visible="true">Beschreibung</description>
 			<validator id="fibSeqValidator">
 				<relation parameterId="PX_N" />
-				<relation parameterId="PX_FIB_NUMBER" />
+				<relation parameterId="PX_FIB_NUMBER" message="true" />
 			</validator>	
 		</parameter>
 		
@@ -74,7 +86,7 @@
 				<relation parameterId="PX_FIB_SUCC_NUMBER" message="true" action="true" />
 			</validator>
 		</parameter>
-		
+
 	</parameters>
 	
 	<validators>
@@ -82,7 +94,6 @@
 			<classpath>ttworkbench.play.parameters.ipv6.validators.MacAddressValidator</classpath>
 			<attribute name="attr1">value1</attribute>
 		</validator>
-		
 		<validator id="fibValidator_PX_FIB_NUMBER">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_NUMBER</classpath>
 		</validator>
@@ -95,5 +106,6 @@
 		<validator id="fibWidgetLayerValidator">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_ERRORS</classpath>
 		</validator>
+		
 	</validators>
 </settings>
