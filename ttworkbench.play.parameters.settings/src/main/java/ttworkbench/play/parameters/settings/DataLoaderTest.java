@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.settings;
 
 
+import ttworkbench.play.parameters.settings.Data.EditorTypeMapping;
 import ttworkbench.play.parameters.settings.Data.Parameter;
 import ttworkbench.play.parameters.settings.Data.Relation;
 import ttworkbench.play.parameters.settings.Data.RelationPartner;
@@ -55,6 +56,13 @@ public class DataLoaderTest {
 				}
 			}
 			
+
+			System.out.println("Type-Mappings: "+data.getTypeEditorMappings().length);
+			for(EditorTypeMapping mapping : data.getTypeEditorMappings()) {
+					System.out.println(" - Editor-Class: "+mapping.getType());
+					System.out.println("   Editor-Attributes: "+mapping.getAttributes());
+					System.out.println("   Mapping Type: "+mapping.getTypeExpression());
+			}
 			
 			
 			System.out.println();

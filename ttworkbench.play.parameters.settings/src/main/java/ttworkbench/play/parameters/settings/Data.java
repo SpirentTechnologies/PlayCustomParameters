@@ -6,6 +6,7 @@ public interface Data {
 
 	Widget[] getWidgets();
 	
+	EditorTypeMapping[] getTypeEditorMappings();
 	
 	public interface Widget extends WithAttributes {
 		String getName();
@@ -46,5 +47,10 @@ public interface Data {
 	
 	public interface WithAttributes {
 		Map<String, String> getAttributes();
+	}
+	
+	public interface EditorTypeMapping extends WithAttributes {
+		String getTypeExpression();
+		Class<?> getType();
 	}
 }

@@ -24,9 +24,14 @@ public class DataLoader extends DataLoaderAbstract {
 			if (data == null) {
 				DataLoaderXML dataLoader = new DataLoaderXML(defaultFileName);
 				final Data.Widget[] widgets = dataLoader.getWidgets();
+				final Data.EditorTypeMapping[] editorTypeMappings = dataLoader.getEditorTypeMappings();
 				data = new Data() {
 					public Widget[] getWidgets() {
 						return widgets;
+					}
+
+					public EditorTypeMapping[] getTypeEditorMappings() {
+						return editorTypeMappings;
 					}
 				};
 			}

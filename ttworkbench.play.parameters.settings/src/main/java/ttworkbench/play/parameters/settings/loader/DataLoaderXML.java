@@ -12,6 +12,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import ttworkbench.play.parameters.settings.Data;
+import ttworkbench.play.parameters.settings.data.EditorTypeMappingImpl;
 import ttworkbench.play.parameters.settings.data.ParameterImpl;
 import ttworkbench.play.parameters.settings.data.ValidatorImpl;
 import ttworkbench.play.parameters.settings.data.WidgetImpl;
@@ -27,6 +28,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 	
 	private String file;
 	private Data.Widget[] widgets;
+	private Data.EditorTypeMapping[] editorTypeMappings;
 	
 	
 	
@@ -47,9 +49,18 @@ public class DataLoaderXML extends DataLoaderAbstract {
 		return widgets;
 	}
 
+
+	public Data.EditorTypeMapping[] getEditorTypeMappings() throws ParameterConfigurationException {
+		if(editorTypeMappings==null) {
+			loadFromSettingsFile();
+		}
+		return editorTypeMappings;
+	}
+
 	private void loadFromSettingsFile() throws ParameterConfigurationException {
 		try {
 			XMLConfiguration config = new XMLConfiguration();
+			config.setDelimiterParsingDisabled(true);
 			config.setFileName(file);
 			config.setSchemaValidation(true);
 			config.load();
@@ -61,11 +72,13 @@ public class DataLoaderXML extends DataLoaderAbstract {
 			setParameters(parameters);
 			
 			widgets = loadWidgets(config);
+			editorTypeMappings = loadEditorTypeMappings(config);
 			
 		} catch (ConfigurationException e) {
 			MalformedParameterConfigurationException exception = new MalformedParameterConfigurationException("Configuration could not be read: "+e.getMessage(), e);
 			addError(exception);
 			widgets = new Data.Widget[0];
+			editorTypeMappings = new Data.EditorTypeMapping[0];
 		}
 	}
 
@@ -73,6 +86,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 	/*
 	 * validators
 	 */
+
 
 	private Map<String, Data.Validator> loadValidators(XMLConfiguration config) throws ParameterConfigurationException {
 		HashMap<String, Data.Validator> result = new HashMap<String, Data.Validator>();
@@ -179,7 +193,33 @@ public class DataLoaderXML extends DataLoaderAbstract {
 		return result.toArray(new Data.Widget[0]);
 	}
 
+	
+	/*
+	 * Value Type <-> Editor Class Mappings
+	 */
 
+	private Data.EditorTypeMapping[] loadEditorTypeMappings(XMLConfiguration config) throws ParameterConfigurationException {
+		LinkedList<Data.EditorTypeMapping> result = new LinkedList<Data.EditorTypeMapping>();
+
+		for(HierarchicalConfiguration val : config.configurationsAt("types.editor")) {
+			Class<?> type = getType(val.getString("[@classpath]"));
+			Map<String, String> attrs = getAttributesFromConfig(val);
+			for(Object expression : val.getList("expression")) {
+				result.add(new EditorTypeMappingImpl(
+						expression.toString(),
+						type,
+						attrs));
+			}
+		}
+		
+		return result.toArray(new Data.EditorTypeMapping[0]);
+	}
+	
+
+	/*
+	 * misc
+	 */
+	
 	private Map<String, String> getAttributesFromConfig(HierarchicalConfiguration config) {
 		HashMap<String, String> result = new HashMap<String,String>();
 		
@@ -190,5 +230,6 @@ public class DataLoaderXML extends DataLoaderAbstract {
 		}
 		return result;
 	}
+
 	
 }
