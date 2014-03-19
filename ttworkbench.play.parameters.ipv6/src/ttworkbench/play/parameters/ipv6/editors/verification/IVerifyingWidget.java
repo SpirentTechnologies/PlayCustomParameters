@@ -15,5 +15,7 @@ public interface IVerifyingWidget<T extends Widget> {
 	List<VerificationResult<String>> getVerificationResults();
 
 	void setListener(IVerificationListener<String> theListener);
+
+	void addVerificatorToEvent(IVerificator<String> theVerificator, int theEventType);
 	
 }

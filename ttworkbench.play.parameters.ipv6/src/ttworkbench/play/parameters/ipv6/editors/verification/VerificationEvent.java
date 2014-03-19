@@ -5,6 +5,8 @@ import java.util.List;
 
 public class VerificationEvent<T> {
 	
+	public int eventType;
+	
 	public T inputToVerify;
 	
 	public boolean skipVerification = false;
@@ -15,7 +17,8 @@ public class VerificationEvent<T> {
 	
 	public Object[] verificatorParams = {};
 	
-	public VerificationEvent( T theInputToVerify, List<VerificationResult<T>> theVerificationResults) {
+	public VerificationEvent( int theEventType, T theInputToVerify, List<VerificationResult<T>> theVerificationResults) {
+		this.eventType = theEventType;
 		this.inputToVerify = theInputToVerify;
 		this.verificationResults = theVerificationResults;
 	}

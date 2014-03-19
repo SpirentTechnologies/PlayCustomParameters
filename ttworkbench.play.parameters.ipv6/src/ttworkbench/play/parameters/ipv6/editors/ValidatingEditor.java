@@ -64,7 +64,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public abstract IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour();
 	
 	
-	public IMessageView getMessageView() {
+	public IMessageView<Composite> getMessageView() {
 		return messageDisplay;
 	}
 	
@@ -180,18 +180,20 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public synchronized void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
 			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			public void run() {				
 				IMessageView messageView = getMessageView();
-				String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
-				messageView.beginUpdateForSender( senderId);
-				for (ValidationResult validationResult : theValidationResults) {
-					if ( validationResult.isTagged()) {
-						messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind()));
-					} else {
-						messageView.showMessage( new MessageRecord( validationResult.getErrorMessage(), validationResult.getErrorKind()));					
+				if ( messageView != null) {
+					String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
+					messageView.beginUpdateForSender( senderId);
+					for (ValidationResult validationResult : theValidationResults) {
+						if ( validationResult.isTagged()) {
+							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind()));
+						} else {
+							messageView.showMessage( new MessageRecord( validationResult.getErrorMessage(), validationResult.getErrorKind()));					
+						}
 					}
+					messageView.endUpdate();
 				}
-				messageView.endUpdate();
 			}
 		});
 	}

@@ -147,8 +147,9 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		spinner.setPageIncrement( 100);
 		spinner.setTextLimit( integerType.getMaxValue().toString().length());
 		spinner.setLayoutData( theLayoutData);
-		
+
 		setVerifyListenerToWidget( inputWidget);
+		
 	
 	}
 
