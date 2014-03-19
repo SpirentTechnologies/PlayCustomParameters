@@ -39,6 +39,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
+	enum controlstate { none, constructed, created, messageOk};
 
 	private EditorMessageDisplay messageDisplay = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
@@ -153,7 +154,6 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	@Override
 	public final Composite createControl(Composite theParent) {
-	
 	  Composite container = new Composite( theParent, SWT.None);
 	  GridLayout containerLayout = new GridLayout();
 	  containerLayout.marginHeight = 0;
@@ -197,6 +197,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			}
 		});
 	}
+	
 	
 	@Override
 	public void trigger(IParameterValidator theValidator, List<ValidationAction> theValidationActions,

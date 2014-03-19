@@ -94,8 +94,7 @@ public abstract class AbstractWidget implements IWidget {
 
 	@Override
 	public void addEditor( IParameterEditor theEditors) {
-		editors.add( theEditors);
-		
+		editors.add( theEditors);	
 	}
 	
 	protected Set<IParameterEditor> getEditors() {

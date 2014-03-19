@@ -1,5 +1,8 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -35,7 +38,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 	private IWidgetLookAndBehaviour lookAndBehaviour;
 	//private MessagePanel messagePanel;
   private WidgetMessageDisplay messageDisplay;
-	
+	private final Map<IParameterEditor, Composite> editorControls = new HashMap<IParameterEditor, Composite>();
 	
 	public CustomWidget( String theTitle, String theDescription, Image theImage) {
 		super( theTitle, theDescription, theImage);
@@ -96,7 +99,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 		editorsContainer.setLayout( editorsLayout);
 		editorsContainer.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false, 0, 0));
 		
-		createParameterEditors();
+		createFreshEditors();
 		
 		scrolledComposite.setContent( editorsContainer);
 		scrolledComposite.setMinSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
@@ -107,9 +110,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 
 	@Override
 	public void update() {
-		// TODO better add editors incremental
-		deleteParameterEditors();
-		createParameterEditors();
+		createFreshEditors();
 	}	
 	
 	protected void deleteParameterEditors() {
@@ -121,28 +122,37 @@ public abstract class CustomWidget extends NotifyingWidget {
 		}
 	}
 
-	protected void createParameterEditors() {
+	
+	protected void createFreshEditors() {
+		Set<IParameterEditor> freshEditors = getEditors();
+		freshEditors.removeAll( editorControls.keySet());
+		for (IParameterEditor freshEditor : freshEditors) {
+			createParameterEditor( freshEditor);
+		}
+	}
+		
+		
+	protected void createParameterEditor( final IParameterEditor theEditor) {
 		GridData editorGridData = new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0);
 		if ( editorsContainer != null) {	
-			Set<IParameterEditor> editors = getEditors();
-			for ( IParameterEditor editor : editors) {
-				Control editorControl = editor.createControl( editorsContainer);
-				editorControl.setLayoutData( editorGridData);
-				
-				// react on dynamically insertion/deletion of controls when messages occur
-				if ( editor instanceof AbstractEditor<?>)
-					((AbstractEditor<?>) editor).getLookAndBehaviour().addControlChangedListener( new Listener() {
-						
-						@Override
-						public void handleEvent(Event theArg0) {
-							scrolledComposite.setMinSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-							scrolledComposite.layout( true, true);
-						}
-					});
-			}
-			editorsContainer.setSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-			editorsContainer.layout();
+			Composite editorControl = theEditor.createControl( editorsContainer);
+			editorControls.put( theEditor, editorControl);
+			
+			editorControl.setLayoutData( editorGridData);
+
+			// react on dynamically insertion/deletion of controls when messages occur
+			if ( theEditor instanceof AbstractEditor<?>)
+				((AbstractEditor<?>) theEditor).getLookAndBehaviour().addControlChangedListener( new Listener() {
+
+					@Override
+					public void handleEvent(Event theArg0) {
+						scrolledComposite.setMinSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+						scrolledComposite.layout( true, true);
+					}
+				});
 		}
+		editorsContainer.setSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		editorsContainer.layout();
 	}
 
 
