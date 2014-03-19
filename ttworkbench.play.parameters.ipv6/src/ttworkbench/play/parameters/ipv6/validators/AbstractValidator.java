@@ -10,6 +10,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
+import com.testingtech.ttworkbench.ttman.parameters.api.IValidatorContext;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public abstract class AbstractValidator implements IParameterValidator {
@@ -79,5 +80,6 @@ public abstract class AbstractValidator implements IParameterValidator {
 	public void registerForActions(IActionHandler theActionHandler) {
 		actionHandlers.add( theActionHandler);
 	}
+	
 
 }

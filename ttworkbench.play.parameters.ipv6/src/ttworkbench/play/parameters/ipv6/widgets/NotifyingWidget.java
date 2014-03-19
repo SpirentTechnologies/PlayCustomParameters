@@ -31,7 +31,7 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				IMessageView messageView = getMessageView();
-				String senderId = String.format( "%s@%s", theValidator.getClass().getName(), theValidator.hashCode());
+				String senderId = String.valueOf( theValidator.getId());
 				messageView.beginUpdateForSender( senderId);
 				MessageRecord messageRecord;
 				for (ValidationResult validationResult : theValidationResults) {
