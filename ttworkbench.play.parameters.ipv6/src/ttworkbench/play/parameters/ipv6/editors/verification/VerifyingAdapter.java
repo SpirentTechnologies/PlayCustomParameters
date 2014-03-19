@@ -20,7 +20,8 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 		super();
 		this.widget = createWidget( theParent, theStyle);
 		this.verificators = theVerificators;
-		if ( verificators.length > 0)
+		// TODO commented-out following line. PLEASE FIX THIS
+		// if ( verificators.length > 0) 
 			widget.addListener( SWT.Verify, getVerifyListener());
 	}
 

@@ -13,11 +13,8 @@ import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.validators.RelatedValidator;
 import ttworkbench.play.parameters.ipv6.validators.RelatedValidator.RelationKey;
-import ttworkbench.play.parameters.ipv6.editors.DefaultEditor;
-import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
-import ttworkbench.play.parameters.settings.Data.Relation;
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
@@ -32,6 +29,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 	private Data.Widget widget;
 	
 	private HashMap<RelatedValidator, Data.Relation> triggeredRelations = new HashMap<RelatedValidator, Data.Relation>();
+	private HashMap<Data.Validator, IParameterValidator> validatorMapping = new HashMap<Data.Validator, IParameterValidator>();
 
 	
 	
@@ -94,7 +92,6 @@ public class CustomWidgetComposer extends WidgetComposer {
 				 * related validation
 				 */
 				for(Data.Relation dataRelation : dataParameter.getRelations()) {
-					Data.RelationPartner[] parametersRelated = dataRelation.getRelationPartners();
 					IParameterValidator validator = getValidator(dataRelation.getValidator());
 					if(validator!=null) {
 						
@@ -123,7 +120,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 
 	
 	private void triggerRelations() {
-		for(Entry<RelatedValidator, Relation> triggerEntry : triggeredRelations.entrySet()) {
+		for(Entry<RelatedValidator, Data.Relation> triggerEntry : triggeredRelations.entrySet()) {
 			RelatedValidator validator = triggerEntry.getKey();
 			Data.Relation relation = triggerEntry.getValue();
 			Data.RelationPartner[] parameter = relation.getRelationPartners();
@@ -170,26 +167,30 @@ public class CustomWidgetComposer extends WidgetComposer {
 	private synchronized void triggerRelations(RelatedValidator theValidator, Data.Relation theRelation) {
 			triggeredRelations.put( theValidator, theRelation);
 	}
-
+	
 	private IParameterValidator getValidator(Data.Validator theDataValidator) {
-		IParameterValidator validator = null;
-		Class<?> validatorType = theDataValidator.getType();
-		if(validatorType!=null) {
-			try {
-				Object validatorRaw = validatorType.newInstance();
-				if(validatorRaw instanceof IParameterValidator) {
-					validator = (IParameterValidator) validatorRaw;
-
-					for(Entry<String, String> attribute : theDataValidator.getAttributes().entrySet()) {
-						validator.setAttribute( attribute.getKey(), attribute.getValue());
+		IParameterValidator validator = validatorMapping.get( theDataValidator);
+		if(validator==null) {
+			Class<?> validatorType = theDataValidator.getType();
+			if(validatorType!=null) {
+				try {
+					Object validatorRaw = validatorType.newInstance();
+					if(validatorRaw instanceof IParameterValidator) {
+						validator = (IParameterValidator) validatorRaw;
+	
+						for(Entry<String, String> attribute : theDataValidator.getAttributes().entrySet()) {
+							validator.setAttribute( attribute.getKey(), attribute.getValue());
+						}
+						
+						validatorMapping.put( theDataValidator, validator);
+					}
+					else {
+						logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.");
 					}
 				}
-				else {
-					logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.");
+				catch(Exception e) {
+					logError( "Could not create instance from class \""+validatorType+"\". Tried to use constructor without parameters.");
 				}
-			}
-			catch(Exception e) {
-				logError( "Could not create instance from class \""+validatorType+"\". Tried to use constructor without parameters.");
 			}
 		}
 		return validator;
