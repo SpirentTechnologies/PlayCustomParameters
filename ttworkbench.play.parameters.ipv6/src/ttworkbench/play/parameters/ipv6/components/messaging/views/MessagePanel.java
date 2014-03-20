@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageInformation;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;

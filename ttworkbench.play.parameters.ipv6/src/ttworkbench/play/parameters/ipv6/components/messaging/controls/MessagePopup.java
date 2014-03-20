@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageRegistry;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
 

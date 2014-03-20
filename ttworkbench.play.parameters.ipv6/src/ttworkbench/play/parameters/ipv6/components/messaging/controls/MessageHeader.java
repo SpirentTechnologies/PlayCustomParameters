@@ -6,8 +6,8 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageInformation;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageRegistry;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
 

@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.components.messaging.components;
+package ttworkbench.play.parameters.ipv6.components.messaging.components.registry;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 

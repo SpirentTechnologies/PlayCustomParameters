@@ -12,15 +12,16 @@ import java.util.Set;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
-import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageElement;
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageLabel;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 /**
- * Groups several {@link MessageElement} objects. Discriminates between tagged messages and not tagged messages.
+ * Groups several {@link MessageLabel} objects. Discriminates between tagged messages and not tagged messages.
  * If a message has a tag, a prior message with the same tag will be replaced while adding this new message. 
  * Otherwise messages simple be added to the block.    
  * 
@@ -29,9 +30,13 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
  */
 public class MessageBlock {
 
-	private Map<String, MessageElement> taggedMessageElements = new HashMap<String,MessageElement>();
+	public enum RegisterDirective {
+		REGISTER, NO_REGISTRATION 
+	}
+	
+	private Map<String, MessageLabel> taggedMessageElements = new HashMap<String,MessageLabel>();
 	private Set<String> agedMessageTags = new HashSet<String>();
-	private List<MessageElement> untaggedMessageElements = new ArrayList<MessageElement>();
+	private List<MessageLabel> untaggedMessageElements = new ArrayList<MessageLabel>();
 	
 	private IMessageContainer messageContainer;
 	private IMessageRegistry messageRegistry;
@@ -41,9 +46,16 @@ public class MessageBlock {
 		this.messageRegistry = theMessageRegistry;
 	}
 	
-	public synchronized void putTaggedMessage( final MessageRecord theMessageRecord, final boolean doRegister) {
+	private boolean tryRegister( MessageLabel theMessageLabel) {
+		if ( messageRegistry == null)
+			return false;
+		messageRegistry.registerMessage( theMessageLabel);		
+		return true;
+	}
+	
+	public synchronized void putTaggedMessage( final MessageRecord theMessageRecord, final RegisterDirective theRegisterDirective) {
 		MessageRecord msg = theMessageRecord;
-		MessageElement oldMessageLine = taggedMessageElements.remove( msg.tag);
+		MessageLabel oldMessageLine = taggedMessageElements.remove( msg.tag);
 		
 		// release old message control first
 		if ( oldMessageLine != null)
@@ -54,65 +66,52 @@ public class MessageBlock {
 				msg.errorKind.equals( ErrorKind.success))
 			return;
 		
-		MessageElement newMessageElement = new MessageElement( messageContainer, msg.message, msg.errorKind);
-		newMessageElement.addDisposeListener( getMessageDisposeListener());
+		MessageLabel newMessageElement = new MessageLabel( messageContainer, msg);
 		taggedMessageElements.put( theMessageRecord.tag, newMessageElement);
 		
-		if ( doRegister)
-			messageRegistry.registerMessage( newMessageElement);
+		if ( theRegisterDirective == RegisterDirective.REGISTER)
+			tryRegister( newMessageElement);
 	}
 
 	public synchronized void clearTaggedSuccessMessage( final String theTag) {
-		MessageElement messageElement = taggedMessageElements.get( theTag);
-		if ( messageElement != null &&
-				messageElement.getErrorKind().equals( ErrorKind.success)) {
+		MessageLabel messageLabel = taggedMessageElements.get( theTag);
+		if ( messageLabel != null &&
+				messageLabel.getErrorKind().equals( ErrorKind.success)) {
 			taggedMessageElements.remove( theTag);
-			messageElement.dispose();
+			messageLabel.dispose();
 		}
 	}
 	
 	public synchronized void clearTaggedMessage( final String theTag) {
-		MessageElement messageElement = taggedMessageElements.remove( theTag);
-		if ( messageElement != null) {
-			messageElement.dispose();
+		MessageLabel messageLabel = taggedMessageElements.remove( theTag);
+		if ( messageLabel != null) {
+			messageLabel.dispose();
 		}
 	}
 	
-	public void addUntaggedMessage( final MessageRecord theMessageRecord, final boolean doRegister) {
+	public void addUntaggedMessage( final MessageRecord theMessageRecord, final RegisterDirective theRegisterDirective) {
 		MessageRecord msg = theMessageRecord;
 		if ( msg.errorKind.equals( ErrorKind.success))
 			return;
 		
-		MessageElement newMessageElement = new MessageElement( messageContainer, msg.message, msg.errorKind);
-		newMessageElement.addDisposeListener( getMessageDisposeListener());
-		untaggedMessageElements.add( newMessageElement);
+		MessageLabel newMessageLabel = new MessageLabel( messageContainer, theMessageRecord);
+		untaggedMessageElements.add( newMessageLabel);
 		
-		if ( doRegister)
-			messageRegistry.registerMessage( newMessageElement);
+		if ( theRegisterDirective == RegisterDirective.REGISTER)
+			tryRegister( newMessageLabel);
 	}
 
-	
-	private DisposeListener getMessageDisposeListener() {
-		return new DisposeListener() {
-			
-			@Override
-			public void widgetDisposed(DisposeEvent theEvent) {
-				if ( messageRegistry != null)
-			    messageRegistry.deregisterMessage( (MessageElement) theEvent.widget);	
-			}
-		};
-	}
 
 	private void clearAllTaggedMessages() {
-		for (MessageElement messageElement : taggedMessageElements.values()) {
-			messageElement.dispose();
+		for (MessageLabel messageLabel : taggedMessageElements.values()) {
+			messageLabel.dispose();
 		}
 		taggedMessageElements.clear();
 	}
 	
 	private void clearAllUntaggedMessages() {
-		for (MessageElement messageElement : untaggedMessageElements) {
-			messageElement.dispose();
+		for (MessageLabel messageLabel : untaggedMessageElements) {
+			messageLabel.dispose();
 		}
 		untaggedMessageElements.clear();
 	}
@@ -138,10 +137,10 @@ public class MessageBlock {
 
 	public List<String> getMessages( EnumSet<ErrorKind> theMessageKinds) {
 		List<String> result = new ArrayList<String>();
-		Collection<MessageElement> messageElements = taggedMessageElements.values();
-		for (MessageElement messageElement : messageElements) {
-			if ( theMessageKinds.contains( messageElement.getErrorKind()))
-			  result.add( messageElement.getMessage());
+		Collection<MessageLabel> messageLabels = taggedMessageElements.values();
+		for (MessageLabel messageLabel : messageLabels) {
+			if ( theMessageKinds.contains( messageLabel.getErrorKind()))
+			  result.add( messageLabel.getMessage());
 		}
 		return result;
 	}		

@@ -84,7 +84,11 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			Set<IParameterValidator> validators = configuration.getValidators( parameter);
 			for (IParameterValidator validator : validators) {
 				if ( !Thread.currentThread().isInterrupted())
-				  validationResults.addAll( validator.validate( parameter));
+					try {
+				    validationResults.addAll( validator.validate( parameter));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 			}
 		}
 		return validationResults;
