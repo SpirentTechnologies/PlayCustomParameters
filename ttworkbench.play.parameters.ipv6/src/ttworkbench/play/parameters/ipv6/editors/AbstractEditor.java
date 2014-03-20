@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,7 +31,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	
 	private IEditorLookAndBehaviour lookAndBehaviour;
 	
-	
+	private Map<String,String> attributes = new HashMap<String, String>();
 	
 	public AbstractEditor( final String theTitle, final String theDescription) {
 		super();
@@ -75,8 +77,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	@Override
 	public void setAttribute(String theName, String theValue) {
-		// TODO Auto-generated method stub
-		
+		attributes.put( theName, theValue);
 	}
 
 	@Override
