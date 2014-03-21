@@ -1,25 +1,19 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.components;
 
-import java.awt.Toolkit;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Widget;
-
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageLabel;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageLabel;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
+
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MessageHydra implements IMessageHydra {
 
