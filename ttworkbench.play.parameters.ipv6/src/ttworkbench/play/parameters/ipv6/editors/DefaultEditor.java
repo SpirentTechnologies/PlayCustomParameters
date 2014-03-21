@@ -37,8 +37,6 @@ public class DefaultEditor extends AbstractEditor<Object> {
 		
 		Text text = new Text(composite, SWT.READ_ONLY);
 		text.setText( ParameterValueUtil.getValue( parameter));
-		System.out.println( String.valueOf( parameter.getValue()));
-		System.out.println( String.valueOf( parameter.getValue()));
 		
 		text.setToolTipText( parameter.getType());
 		
