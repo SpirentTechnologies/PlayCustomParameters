@@ -1,7 +1,7 @@
 package ttworkbench.play.parameters.settings.loader;
 
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -78,7 +78,7 @@ public abstract class DataLoaderAbstract {
 						thisId,
 						"",
 						null,
-						new HashMap<String, String>());
+						new LinkedHashMap<String, String>());
 			}
 			else {
 				ParameterDefinitionNotFoundException exception = new ParameterDefinitionNotFoundException("Could not find parameter by id "+parameterId);
