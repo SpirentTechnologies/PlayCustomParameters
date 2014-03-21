@@ -8,7 +8,7 @@ public interface Data {
 	
 	EditorTypeMapping[] getTypeEditorMappings();
 	
-	public interface Widget extends WithAttributes {
+	public interface Widget extends WithAttributes, Partner {
 		String getName();
 		String getDescription();
 		Image getImage();
@@ -19,13 +19,12 @@ public interface Data {
 		String getPath();
 	}
 	
-	public interface Parameter extends WithAttributes {
+	public interface Parameter extends WithAttributes, Partner {
 		String getId();
 		Object getDefaultValue();
 		String getDescription();
 		boolean isDescriptionVisible();
-
-		Validator[] getValidators();
+		
 		Relation[] getRelations();
 	}
 
@@ -35,13 +34,12 @@ public interface Data {
 	}
 	
 	public interface RelationPartner {
-		Parameter getParameter();
+		Partner getPartner();
 		boolean isRegisteredForMessages();
 		boolean isRegisteredForActions();
 	}
 	
 	public interface Validator extends WithAttributes {
-		boolean isWidgetNotified();
 		Class<?> getType();
 	}
 	
@@ -52,5 +50,8 @@ public interface Data {
 	public interface EditorTypeMapping extends WithAttributes {
 		String getTypeExpression();
 		Class<?> getType();
+	}
+	
+	public interface Partner {
 	}
 }

@@ -2,7 +2,6 @@ package ttworkbench.play.parameters.settings.loader;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,6 @@ import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationExc
 
 public class DataLoaderXML extends DataLoaderAbstract {
 
-	private static boolean DEFAULT_RELATED_WIDGET_NOTIFY = false;
 	private static boolean DEFAULT_RELATED_PARAMETER_MESSAGE = false;
 	private static boolean DEFAULT_RELATED_PARAMETER_ACTION = false;
 	private static boolean DEFAULT_DESCRIPTION_VISIBLE = true;
@@ -71,8 +69,12 @@ public class DataLoaderXML extends DataLoaderAbstract {
 			Map<String, Data.Parameter> parameters = loadParameters(config);
 			setParameters(parameters);
 			
-			widgets = loadWidgets(config);
+			Map<String, Data.Widget> widgets = loadWidgets(config);
+			setWidgets(widgets);
+			
 			editorTypeMappings = loadEditorTypeMappings(config);
+			
+			this.widgets = widgets.values().toArray(new Data.Widget[0]);
 			
 		} catch (ConfigurationException e) {
 			MalformedParameterConfigurationException exception = new MalformedParameterConfigurationException("Configuration could not be read: "+e.getMessage(), e);
@@ -95,7 +97,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 			String id = val.getString("[@id]");
 			Class<?> type = getType(val.getString("classpath"));
 			Map<String, String> attributes = getAttributesFromConfig(val);
-			result.put(id, new ValidatorImpl(type, attributes, false));
+			result.put(id, new ValidatorImpl(type, attributes));
 		}
 		return result;
 	}
@@ -109,16 +111,13 @@ public class DataLoaderXML extends DataLoaderAbstract {
 		HashMap<String, Data.Parameter> result = new HashMap<String, Data.Parameter>();
 		for(HierarchicalConfiguration val : config.configurationsAt("parameters.parameter")) {
 
-			LinkedList<Data.Relation> relations = new LinkedList<Data.Relation>();
-			LinkedList<Data.Validator> validators = new LinkedList<Data.Validator>();
-			loadRelations(val, relations, validators);
+			LinkedList<Data.Relation> relations = loadRelations(val);
 			
 			String thisId = val.getString("[@id]");
 			
 			result.put(thisId, new ParameterImpl(
 					val.getBoolean("description[@visible]", DEFAULT_DESCRIPTION_VISIBLE),
 					relations.toArray(new Data.Relation[0]),
-					validators.toArray(new Data.Validator[0]),
 					thisId,
 					val.getString("description"),
 					val.getString("defaultValue"),
@@ -128,11 +127,11 @@ public class DataLoaderXML extends DataLoaderAbstract {
 		return result;
 	}
 
-	private void loadRelations(HierarchicalConfiguration config, Collection<Data.Relation> relations, Collection<Data.Validator> validators) throws ParameterConfigurationException {
+	private LinkedList<Data.Relation> loadRelations(HierarchicalConfiguration config) throws ParameterConfigurationException {
+		LinkedList<Data.Relation> result = new LinkedList<Data.Relation>();
 
 		for(HierarchicalConfiguration val : config.configurationsAt("validator")) {
 			String validatorId = val.getString("[@id]");
-			boolean validatorNotify = val.getBoolean("[@notify]", DEFAULT_RELATED_WIDGET_NOTIFY);
 			Map<String, String> attrs_new = getAttributesFromConfig(val);
 			
 			Data.Validator validatorDefault = getValidator(validatorId);
@@ -145,25 +144,26 @@ public class DataLoaderXML extends DataLoaderAbstract {
 
 			Data.Validator validator = new ValidatorImpl(
 					validatorDefault.getType(),
-					attrs,
-					validatorNotify);
+					attrs);
 			
 			
 			LazyRelation relation = new LazyRelation(validator);
 			for(HierarchicalConfiguration editor : val.configurationsAt("relation")) {
 				String parId = editor.getString("[@parameterId]");
-				boolean parMsg = editor.getBoolean("[@message]", DEFAULT_RELATED_PARAMETER_MESSAGE);
-				boolean parAct = editor.getBoolean("[@action]", DEFAULT_RELATED_PARAMETER_ACTION);
-				relation.addRelatedParameter(parId, parMsg, parAct);
+				String widgetName = editor.getString("[@widgetName]");
+				boolean msg = editor.getBoolean("[@message]", DEFAULT_RELATED_PARAMETER_MESSAGE);
+				boolean act = editor.getBoolean("[@action]", DEFAULT_RELATED_PARAMETER_ACTION);
+				if(parId!=null) {
+					relation.addRelatedParameter(parId, msg, act);
+				}
+				else if(widgetName!=null) {
+					relation.addRelatedWidget(widgetName, msg, act);
+				}
 			}
-			if(relation.getNumParametersRelated()>0) {
-				relation.setWidgetNotified(validatorNotify);
-				relations.add(relation);
-			}
-			else {
-				validators.add(validator);
-			}
+			
+			result.add(relation);
 		}
+		return result;
 	}
 
 
@@ -171,8 +171,8 @@ public class DataLoaderXML extends DataLoaderAbstract {
 	 * Widgets
 	 */
 	
-	private Data.Widget[] loadWidgets(XMLConfiguration config) throws ParameterConfigurationException {
-		LinkedList<Data.Widget> result = new LinkedList<Data.Widget>();
+	private Map<String, Data.Widget> loadWidgets(XMLConfiguration config) throws ParameterConfigurationException {
+		Map<String, Data.Widget> result = new HashMap<String, Data.Widget>();
 
 		for(HierarchicalConfiguration val : config.configurationsAt("widgets.widget")) {
 			List<Data.Parameter> paras = new LinkedList<Data.Parameter>();
@@ -182,15 +182,18 @@ public class DataLoaderXML extends DataLoaderAbstract {
 					paras.add(parameter);
 				}
 			}
+			
+			String name = val.getString("[@name]");
 
-			result.add(new WidgetImpl(
-					val.getString("[@name]"),
+			result.put(name,
+				new WidgetImpl(
+					name,
 					val.getString("description"),
 					val.getString("image[@path]"),
 					paras.toArray(new Data.Parameter[0]),
 					getAttributesFromConfig(val)));
 		}
-		return result.toArray(new Data.Widget[0]);
+		return result;
 	}
 
 	

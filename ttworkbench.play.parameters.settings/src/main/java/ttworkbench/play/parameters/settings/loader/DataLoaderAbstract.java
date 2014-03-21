@@ -23,6 +23,7 @@ public abstract class DataLoaderAbstract {
 	
 	private Map<String, Data.Validator> validators;
 	private Map<String, Data.Parameter> parameters;
+	private Map<String, Data.Widget> widgets;
 
 	
 	public static Vector<Exception> getErrors() {
@@ -54,8 +55,8 @@ public abstract class DataLoaderAbstract {
 		}
 
 		private Data.Validator validator;
-		private LinkedList<Rel> relParameters = new LinkedList<Rel>();
-		private Data.RelationPartner[] parameters = null;
+		private LinkedList<Rel> relPartners = new LinkedList<Rel>();
+		private Data.RelationPartner[] partners = null;
 		private boolean widgetNotify = false;;
 
 		public LazyRelation(Data.Validator validator) {
@@ -66,15 +67,15 @@ public abstract class DataLoaderAbstract {
 		}
 
 		public Data.RelationPartner[] getRelationPartners() {
-			if(parameters==null) {
+			if(partners==null) {
+				LinkedList<Data.RelationPartner> partnersList = new LinkedList<Data.RelationPartner>();
 				try {
-					parameters = new Data.RelationPartner[relParameters.size()];
-					for(int i=0; i<parameters.length; i++) {
-						Rel rel = relParameters.get(i);
+					for(Rel rel : relPartners) {
 						final boolean thisRegisteredForMessages = rel.msg;
 						final boolean thisRegisteredForActions = rel.act;
-						final Data.Parameter thisParameter = getParameter(rel.id);
-						parameters[i] = new RelationPartner() {
+						final Data.Partner thisPartner = (rel instanceof RelParameter ? getParameter(rel.id) : getWidget(rel.id));
+
+						partnersList.add(new RelationPartner() {
 							
 							public boolean isRegisteredForMessages() {
 								return thisRegisteredForMessages;
@@ -84,25 +85,26 @@ public abstract class DataLoaderAbstract {
 								return thisRegisteredForActions;
 							}
 							
-							public Data.Parameter getParameter() {
-								return thisParameter;
+							public Data.Partner getPartner() {
+								return thisPartner;
 							}
-						};
+						});
 					}
 				} catch (ParameterDefinitionNotFoundException e) {
 					errors.add(e);
 				}
+				partners = partnersList.toArray(new Data.RelationPartner[0]);
 			}
-			return parameters;
+			return partners;
 		}
 		public void addRelatedParameter(String parId, boolean parMsg, boolean parAct) {
-			relParameters.add(new RelParameter(parId, parMsg, parAct));
+			relPartners.add(new RelParameter(parId, parMsg, parAct));
 		}
 		public void addRelatedWidget(String widgetName, boolean parMsg, boolean parAct) {
-			relParameters.add(new RelWidget(widgetName, parMsg, parAct));
+			relPartners.add(new RelWidget(widgetName, parMsg, parAct));
 		}
 		public int getNumParametersRelated() {
-			return relParameters.size();
+			return relPartners.size();
 		}
 		public void setWidgetNotified(boolean validatorNotify) {
 			this.widgetNotify = validatorNotify;
@@ -144,6 +146,9 @@ public abstract class DataLoaderAbstract {
 		return validator;
 	}
 
+	protected Data.Widget getWidget(String widgetName) {
+		return widgets.get(widgetName);
+	}
 
 	protected Data.Parameter getParameter(String parameterId) throws ParameterDefinitionNotFoundException {
 		Data.Parameter parameter = this.parameters.get(parameterId);
@@ -154,10 +159,6 @@ public abstract class DataLoaderAbstract {
 					
 					public boolean isDescriptionVisible() {
 						return false;
-					}
-					
-					public Data.Validator[] getValidators() {
-						return new Data.Validator[0];
 					}
 					
 					public Data.Relation[] getRelations() {
@@ -207,5 +208,8 @@ public abstract class DataLoaderAbstract {
 
 	protected void setValidators(Map<String, Data.Validator> validators) {
 		this.validators = validators;
+	}
+	public void setWidgets(Map<String, Data.Widget> widgets) {
+		this.widgets = widgets;
 	}
 }
