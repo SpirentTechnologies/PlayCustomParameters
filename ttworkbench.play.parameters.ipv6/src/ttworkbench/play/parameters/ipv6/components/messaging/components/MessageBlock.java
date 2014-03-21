@@ -12,6 +12,7 @@ import java.util.Set;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageElement;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;

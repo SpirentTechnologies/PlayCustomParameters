@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -12,7 +11,6 @@ import ttworkbench.play.parameters.ipv6.ParameterEditorMapper;
 import ttworkbench.play.parameters.ipv6.ParameterMap;
 import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.validators.ContextualValidator;
 import ttworkbench.play.parameters.ipv6.validators.IValidatorContext;
 import ttworkbench.play.parameters.ipv6.validators.IWithValidatorContext;
 import ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext;
@@ -70,25 +68,6 @@ public class CustomWidgetComposer extends WidgetComposer {
 				getConfigurator().assign( editor, defaultWidget, parameter);
 				
 				
-				/*
-				 * self validation 
-				 */
-				for(Data.Validator dataValidator : dataParameter.getValidators()) {
-					IParameterValidator validator = getValidator(dataValidator);
-					if(validator!=null) {
-						
-						// register the validator to the editor
-						if(editor instanceof IMessageHandler) {
-							validator.registerForMessages( (IMessageHandler) editor);
-						}
-						
-						// assign the validator to the parameter
-						getConfigurator().assign( validator, defaultWidget, parameter);
-					}
-					else {
-						logError( "A validator for \""+theId+"\" could not be resolved: \""+dataValidator.getType()+"\"");
-					}
-				}
 				
 				
 				/*
@@ -125,40 +104,56 @@ public class CustomWidgetComposer extends WidgetComposer {
 			IParameterValidator validator = triggerEntry.getKey();
 			SimpleValidatorContext context = getValidatorContext(validator);
 			Data.Relation relation = triggerEntry.getValue();
-			Data.RelationPartner[] parameter = relation.getRelationPartners();
+			Data.RelationPartner[] relationPartners = relation.getRelationPartners();
 			
-			for(int i=0; i<parameter.length; i++) {
-				String id = parameter[i].getParameter().getId();
-				boolean msg = parameter[i].isRegisteredForMessages();
-				boolean act = parameter[i].isRegisteredForActions();
+			for(Data.RelationPartner relationPartner : relationPartners) {
+
+				Data.Partner partner = relationPartner.getPartner();
+				
+				boolean msg = relationPartner.isRegisteredForMessages();
+				boolean act = relationPartner.isRegisteredForActions();
 				
 				// set related parameter instance
-				IParameter<?> relatedParameter = getParametersMap().getParameterById( id);
-				if(context!=null) {
-					context.addParameter( relatedParameter);
-				}
-				
-				// set related parameter editor
-				Set<IParameterEditor> editors = getConfigurator().getEditors( relatedParameter);
-				if(editors.size()>0) {
-					IParameterEditor<?> editor = editors.iterator().next();
+					if(partner instanceof Data.Parameter) {
+						String id = ((Data.Parameter) partner).getId();
+						IParameter<?> relatedParameter = getParametersMap().getParameterById( id);
+						if(context!=null) {
+							context.addParameter( relatedParameter);
+						}
+						
 
-					// register for messages
-					if(msg && editor instanceof IMessageHandler) {
-						validator.registerForMessages( (IMessageHandler) editor);
+						// set related parameter editor
+						Set<IParameterEditor> editors = getConfigurator().getEditors( relatedParameter);
+						// TODO consider reevaluation: should all editors of a parameter be registered for messages/actions 
+						for(IParameterEditor<?> editor : editors) {
+							
+							// register for messages
+							if(msg && editor instanceof IMessageHandler) {
+								validator.registerForMessages( (IMessageHandler) editor);
+							}
+							
+							// register for actions
+							if(act && editor instanceof IActionHandler) {
+								validator.registerForActions( (IActionHandler) editor);
+							}
+						}
+						
 					}
-					if(relation.getValidator().isWidgetNotified() && widget instanceof IMessageHandler) {
-						validator.registerForMessages( (IMessageHandler) widget);
+					else if(partner instanceof Data.Widget) {
+						String name = ((Data.Widget) partner).getName();
+						IWidget widget = getWidgetByName( name);
+						if(context!=null) {
+							context.addWidget( widget);
+						}
+						
+						if(msg && widget instanceof IMessageHandler) {
+							validator.registerForMessages( (IMessageHandler) widget);
+						}
+						if(act && widget instanceof IActionHandler) {
+							validator.registerForActions( (IActionHandler) widget);
+						}
 					}
-					
-					// register for actions
-					if(act && editor instanceof IActionHandler) {
-						validator.registerForActions( (IActionHandler) editor);
-					}
-					if(relation.getValidator().isWidgetNotified() && widget instanceof IActionHandler) {
-						validator.registerForActions( (IActionHandler) widget);
-					}
-				}
+				
 				
 			}
 		}
@@ -216,6 +211,16 @@ public class CustomWidgetComposer extends WidgetComposer {
 		return validator;
 	}
 
+	
+	private IWidget getWidgetByName(String name) {
+		for(IWidget widget : getConfigurator().getWidgets()) {
+			if(widget.getTitle().equals( name)) {
+				return widget;
+			}
+		}
+		return null;
+	}
+	
 	private Image getImage(Data.Image theImage) {
 		if(theImage!=null && theImage.getPath()!=null) {
 			try {

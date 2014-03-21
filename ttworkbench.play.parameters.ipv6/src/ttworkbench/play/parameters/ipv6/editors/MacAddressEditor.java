@@ -151,7 +151,7 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 				getParameter().getValue().setTheContent(theEvent.inputToVerify);
 				System.out.println("my parameter" + getParameter().getValue().getTheContent());
 				// and start the validation process
-				validateDelayed();
+				validateDelayed(theEvent);
 				
 				theEvent.doit = true;
 			}
@@ -175,4 +175,5 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 		 else
 			 theTextControl.setSize( theTextControl.computeSize( minWidth + 20, SWT.DEFAULT));
 	}
+
 }

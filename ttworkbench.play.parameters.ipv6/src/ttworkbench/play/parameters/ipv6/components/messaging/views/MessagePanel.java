@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageInformation;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
@@ -409,9 +409,15 @@ public class MessagePanel extends Composite implements IMessageView<Composite> {
 	
 
 	@Override
-	public IMessageInformation getMessageRegistry() {
+	public IMessageInformation getMessageInformation() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setSuperiorView(IMessageView<?> theMessageView) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

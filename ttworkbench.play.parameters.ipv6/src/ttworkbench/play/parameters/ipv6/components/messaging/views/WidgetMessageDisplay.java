@@ -22,11 +22,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageInformation;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IRegistryListener;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageRegistry;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.RegistryEvent;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock.RegisterDirective;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IRegistryListener;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.MessageRegistry;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.RegistryEvent;
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageHeader;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePopup;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
@@ -95,6 +97,13 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 					messageHeader.layout( true);
 				}
 			}
+			
+			@Override
+			public void handleHydraPublishedEvent( IMessageHydra theMessageHydra) {
+				theMessageHydra.newLabel( messagePopup);
+				WidgetMessageDisplay.this.messagePopup.update();
+			}
+			
 		});
 	}
 
@@ -116,6 +125,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		 */
 		{
 			messageHeader = new MessageHeader( this, this);
+			messageHeader.setBackground( lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( ErrorKind.error));
 			GridData messageContainerGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 0, 0);
 			messageContainerGridData.minimumHeight = MESSAGE_CONTAINER_HEIGHT;
 			messageHeader.setLayoutData( messageContainerGridData);
@@ -159,7 +169,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			return; 
 		
 		final MessageBlock messageBlock = messages.get( id);
-		messageBlock.putTaggedMessage( theMessageRecord, true);
+		messageBlock.putTaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
 		
 		if ( lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				theMessageRecord.errorKind.equals( ErrorKind.success)) {
@@ -184,7 +194,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
 		MessageBlock messageBlock = messages.get( id);
-		messageBlock.addUntaggedMessage( theMessageRecord, true);
+		messageBlock.addUntaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
 	
     tryOnChange();
 	} 
@@ -194,12 +204,12 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		final String id = getThisId();
 		final MessageBlock messageBlock = messages.get( id);
 		
-		final MessageRecord msg = theMessageRecord.isTagged() ? theMessageRecord : new MessageRecord( String.valueOf( System.currentTimeMillis()), theMessageRecord.message, theMessageRecord.errorKind);
+		final MessageRecord msg = theMessageRecord.hasTag() ? theMessageRecord : new MessageRecord( String.valueOf( System.currentTimeMillis()), theMessageRecord.message, theMessageRecord.errorKind);
 		
 		if ( flashMessageFutures.containsKey( msg.tag))
 			flashMessageFutures.get( msg.tag).cancel( true);
 		messageBlock.clearTaggedMessage( msg.tag);
-		messageBlock.putTaggedMessage( msg, false); 	
+		messageBlock.putTaggedMessage( msg, RegisterDirective.NO_REGISTRATION); 	
 
 		Runnable flashWarningTask = new Runnable() {
 			public void run() {
@@ -288,13 +298,19 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 
 
 	@Override
-	public IMessageInformation getMessageRegistry() {
+	public IMessageInformation getMessageInformation() {
 		return messageRegistry;
 	}
 
 	@Override
 	public void setClientComponent( IWidget theClientComponent) {
 		// TODO
+	}
+
+	@Override
+	public void setSuperiorView(IMessageView<?> theMessageView) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

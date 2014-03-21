@@ -35,9 +35,9 @@ public class IPv6WidgetComposer extends WidgetComposer {
 		
 		IParameterValidator njetValidator = new AbstractValidator( "No Validator", ""){
             @Override
-			protected List<ValidationResult> validateParameter( IParameter parameter) {
+			protected List<ValidationResult> validateParameter( IParameter parameter, Object theClient) {
 					List<ValidationResult> l = new ArrayList<ValidationResult>();
-					l.add( new ValidationResult( "nay-sayer", ErrorKind.error));
+					l.add( new ValidationResult( "nay-sayer", ErrorKind.error, theClient));
 					return l;
 			}
             
@@ -46,10 +46,10 @@ public class IPv6WidgetComposer extends WidgetComposer {
 		IParameterValidator yeahValidator = new AbstractValidator("Yes Validator", ""){
 
 			@Override
-			protected List<ValidationResult> validateParameter( IParameter parameter) {
+			protected List<ValidationResult> validateParameter( IParameter parameter, Object theClient) {
 				List<ValidationResult> l = new ArrayList<ValidationResult>();
-				l.add( new ValidationResult( "yea-sayer", ErrorKind.success));
-				l.add( new ValidationResult( "gasbag", ErrorKind.info));
+				l.add( new ValidationResult( "yea-sayer", ErrorKind.success, theClient));
+				l.add( new ValidationResult( "gasbag", ErrorKind.info, theClient));
 				return l;
 			}
 			

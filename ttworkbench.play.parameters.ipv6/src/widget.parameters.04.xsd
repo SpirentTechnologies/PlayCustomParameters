@@ -5,7 +5,7 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
   <xs:complexType name="Attribute">
 	<xs:simpleContent>
 		<xs:extension base="xs:string">
-		  <xs:attribute type="xs:string" name="name"/>
+		  <xs:attribute type="xs:string" name="name" use="required"/>
 		</xs:extension>
 	</xs:simpleContent>
   </xs:complexType>
@@ -13,6 +13,23 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
   <xs:element name="settings">
     <xs:complexType>
       <xs:sequence>
+      
+        <xs:element name="types">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="editor" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="expression" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="attribute" type="tns:Attribute" minOccurs="0" maxOccurs="unbounded" />
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="classpath" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      
         <xs:element name="widgets">
           <xs:complexType>
             <xs:sequence>
@@ -46,6 +63,7 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        
         <xs:element name="parameters">
           <xs:complexType>
             <xs:sequence>
@@ -70,6 +88,7 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
                                   <xs:attribute type="xs:string" name="parameterId" use="optional"/>
+                                  <xs:attribute type="xs:string" name="widgetName" use="optional"/>
                   			  	  <xs:attribute type="xs:boolean" name="message" use="optional"/>
                   			  	  <xs:attribute type="xs:boolean" name="action" use="optional"/>
                                 </xs:extension>
@@ -79,7 +98,6 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
                           <xs:element name="attribute" type="tns:Attribute" minOccurs="0" maxOccurs="unbounded" />
                         </xs:sequence>
                         <xs:attribute type="xs:string" name="id" use="optional"/>
-                  		<xs:attribute type="xs:boolean" name="notify" use="optional"/>
                       </xs:complexType>
                     </xs:element>
                     <xs:element name="attribute" type="tns:Attribute" minOccurs="0" maxOccurs="unbounded" />
@@ -90,6 +108,7 @@ targetNamespace="https://github.com/TestingTechnologies/PlayCustomParameters" xm
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        
         <xs:element name="validators">
           <xs:complexType>
             <xs:sequence>

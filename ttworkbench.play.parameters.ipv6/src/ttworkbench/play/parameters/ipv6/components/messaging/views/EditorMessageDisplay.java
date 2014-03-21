@@ -22,16 +22,20 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IMessageInformation;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.IRegistryListener;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageRegistry;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.RegistryEvent;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock.RegisterDirective;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IRegistryListener;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.MessageRegistry;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.RegistryEvent;
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageHeader;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePopup;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
@@ -93,6 +97,12 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 					EditorMessageDisplay.this.messagePopup.update();	
 				}
 			}
+			
+			@Override
+			public void handleHydraPublishedEvent(IMessageHydra theMessageHydra) {
+				// nothing todo
+			}
+			
 		});
 	}
 
@@ -158,7 +168,7 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 			return; 
 		
 		final MessageBlock messageBlock = messages.get( id);
-		messageBlock.putTaggedMessage( theMessageRecord, true);
+		messageBlock.putTaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
 		
 		if ( lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				theMessageRecord.errorKind.equals( ErrorKind.success)) {
@@ -183,7 +193,7 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
 		MessageBlock messageBlock = messages.get( id);
-		messageBlock.addUntaggedMessage( theMessageRecord, true);
+		messageBlock.addUntaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
 	
     tryOnChange();
 	} 
@@ -193,12 +203,12 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 		final String id = getThisId();
 		final MessageBlock messageBlock = messages.get( id);
 		
-		final MessageRecord msg = theMessageRecord.isTagged() ? theMessageRecord : new MessageRecord( String.valueOf( System.currentTimeMillis()), theMessageRecord.message, theMessageRecord.errorKind);
+		final MessageRecord msg = theMessageRecord.hasTag() ? theMessageRecord : new MessageRecord( String.valueOf( System.currentTimeMillis()), theMessageRecord.message, theMessageRecord.errorKind);
 		
 		if ( flashMessageFutures.containsKey( msg.tag))
 			flashMessageFutures.get( msg.tag).cancel( true);
 		messageBlock.clearTaggedMessage( msg.tag);
-		messageBlock.putTaggedMessage( msg, false); 	
+		messageBlock.putTaggedMessage( msg, RegisterDirective.NO_REGISTRATION); 	
 
 		Runnable flashWarningTask = new Runnable() {
 			public void run() {
@@ -300,8 +310,19 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 	}
 
 	@Override
-	public IMessageInformation getMessageRegistry() {
+	public IMessageInformation getMessageInformation() {
 		return messageRegistry;
 	}
+	
+	@Override
+	public void setSuperiorView( final IMessageView<?> theMessageView) {
+		IMessageInformation superiorMessageInformation = theMessageView.getMessageInformation();
+		if ( superiorMessageInformation instanceof MessageRegistry) {
+			MessageRegistry superiorMessageRegistry = (MessageRegistry) superiorMessageInformation;
+			this.messageRegistry.setParent( superiorMessageRegistry);
+		}
+	}
+	
+	
 	
 }
