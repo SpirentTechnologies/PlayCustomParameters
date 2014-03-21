@@ -62,21 +62,20 @@
 			<description visible="true">Beschreibung</description>
 			<validator id="fibSeqValidator">
 				<relation parameterId="PX_N" message="true" />
-				<relation parameterId="PX_FIB_NUMBER" />
-			</validator>	
+				<relation parameterId="PX_FIB_NUMBER" message="true" />
+			</validator>
 		</parameter>
 		
 		
 		<parameter id="PX_FIB_NUMBER">
 			<description visible="true">Beschreibung</description>
 			<validator id="fibValidator_PX_FIB_NUMBER">
-				<relation widgetName="Fibonacci" message="true" action="true"/>
 			</validator>
 
 			<validator id="fibSeqValidator">
 				<relation parameterId="PX_N" />
 				<relation parameterId="PX_FIB_NUMBER" message="true" />
-			</validator>
+			</validator> 
 
 			<validator id="fibSuccValidator">
 				<relation parameterId="PX_N" />
@@ -88,7 +87,6 @@
 		<parameter id="PX_FIB_SUCC_NUMBER">
 			<description visible="true">Beschreibung</description>
 			<validator id="fibValidator_PX_FIB_NUMBER">
-				<relation widgetName="Fibonacci" message="true" action="true"/>
 			</validator>
 			<validator id="fibSuccValidator">
 				<relation parameterId="PX_N" />
