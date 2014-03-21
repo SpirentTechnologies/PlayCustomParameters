@@ -18,4 +18,6 @@ public interface IVerifyingWidget<T extends Widget> {
 
 	void addVerificatorToEvent(IVerificator<String> theVerificator, int theEventType);
 	
+	void setFocus();
+	
 }

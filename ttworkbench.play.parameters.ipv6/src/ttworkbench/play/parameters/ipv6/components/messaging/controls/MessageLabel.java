@@ -1,17 +1,25 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.controls;
 
 import java.awt.Toolkit;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Widget;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
@@ -63,6 +71,7 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		// set content
 		messageRecord.message = theMessage;
 		label.setText( theMessage);
+	
 
 		// set look
 		messageRecord.errorKind = theErrorKind;
@@ -75,7 +84,7 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		if ( lookAndBehaviour.isBeepEnabled())
 			if ( EnumSet.of( ErrorKind.error, ErrorKind.warning).contains( theErrorKind))
 				beep();
-
+		
 		messageChanged();
 	}
 	
@@ -108,6 +117,24 @@ public class MessageLabel extends Composite implements IMessageLabel {
 	
 	public MessageRecord getMessageRecord() {
 		return messageRecord;
+	}
+
+	@Override
+	public void navigateToCauser() {
+		if ( messageRecord.causer != null) {
+			Method setFocusMethod;
+			try {
+				setFocusMethod = messageRecord.causer.getClass().getMethod( "setFocus");
+			} catch (Exception  e) {
+				return;
+			} 
+			try {
+				setFocusMethod.invoke( messageRecord.causer);
+			} catch (Exception e) {
+				return;
+			}
+		}
+				
 	}
 	
 	

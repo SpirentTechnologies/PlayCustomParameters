@@ -48,5 +48,11 @@ public class VerifyingSpinner extends VerifyingAdapter<Spinner> {
 	}
 	
 	
+	@Override
+	public void setFocus() {
+		getEncapsulatedWidget().setFocus();
+	}
+	
+	
 
 }

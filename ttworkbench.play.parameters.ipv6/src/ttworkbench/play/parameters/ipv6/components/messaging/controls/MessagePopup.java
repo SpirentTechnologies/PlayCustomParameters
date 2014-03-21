@@ -79,14 +79,29 @@ public class MessagePopup extends Composite implements IMessageContainer {
     popupShell.addListener( SWT.MouseDown, new Listener() {
 			
 			@Override
-			public void handleEvent(Event theArg0) {
+			public void handleEvent(Event theEvent) {
 				hidePopup();
+
+				if ( theEvent.button == 1) {  
+					Control underlayingControl = getUnterlayingControl( theEvent);
+					if ( underlayingControl instanceof MessageLabel) {
+						MessageLabel messageLabel = (MessageLabel) underlayingControl;
+						messageLabel.navigateToCauser();
+					}
+				}
+			}
+
+			private Control getUnterlayingControl( Event theEvent) {
+				for ( Control control : popupShell.getChildren()) {
+					if ( control.getBounds().contains( theEvent.x,theEvent.y))
+						return control;
+				}
+				return null;
 			}
 		});
-    
-		
-	
+  
 	}
+		
 	
 	private void showPopup( final Point theMousePosition) {
 		// TODO: handle case if popup is shown out of or intersect with getDisplay.getClientArea()

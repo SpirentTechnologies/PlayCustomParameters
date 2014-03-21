@@ -85,9 +85,10 @@ public abstract class CustomWidget extends NotifyingWidget {
 	  scrolledComposite = new ScrolledComposite( mainContainer, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayout( new FillLayout( SWT.HORIZONTAL));
 		scrolledComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 0, 0));
-
-		scrolledComposite.setExpandHorizontal(true);
+    scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
+		// important! to show causer of an error when click on the corresponding message
+		scrolledComposite.setShowFocusedControl( true);
 		
 		editorsContainer = new Composite( scrolledComposite, SWT.None);
 		GridLayout editorsLayout = new GridLayout();

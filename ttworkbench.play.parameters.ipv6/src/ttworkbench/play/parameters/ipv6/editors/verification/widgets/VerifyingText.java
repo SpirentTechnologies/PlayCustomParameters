@@ -47,4 +47,10 @@ public class VerifyingText extends VerifyingAdapter<Text> {
 
 		return modifiedText;		
 	}
+	
+	@Override
+	public void setFocus() {
+		getEncapsulatedWidget().setFocus();
+	}
+	
 }

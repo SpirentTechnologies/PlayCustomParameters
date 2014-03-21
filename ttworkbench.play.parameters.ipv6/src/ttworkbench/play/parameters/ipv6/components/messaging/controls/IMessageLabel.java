@@ -11,4 +11,6 @@ public interface IMessageLabel {
 	String getMessage();
 	
 	boolean hasTag();
+
+	void navigateToCauser();
 }
