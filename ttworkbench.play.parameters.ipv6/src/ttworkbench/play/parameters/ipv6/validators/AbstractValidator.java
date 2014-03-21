@@ -62,13 +62,13 @@ public abstract class AbstractValidator implements IParameterValidator {
 	}
 
 	private void notifyMessageHandlers(AbstractValidator theAbstractValidator,
-			List<ValidationResult> theResults, IParameter theParameter) {
+			List<ValidationResult> theResults, IParameter<?> theParameter) {
 		for ( IMessageHandler messageHandler : messageHandlers) {
 			messageHandler.report( this, theResults, theParameter);
 		} 
 	}
 
-	protected abstract List<ValidationResult> validateParameter(IParameter theParameter, Object theClient);
+	protected abstract List<ValidationResult> validateParameter(IParameter<?> theParameter, Object theClient);
 
 	@Override
 	public void registerForMessages(IMessageHandler theMessageHandler) {

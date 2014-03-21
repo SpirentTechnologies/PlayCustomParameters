@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors.verification;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class VerificationEvent<T> {

@@ -12,7 +12,7 @@ public class WidgetGridControl {
 
 	private Composite parent;
 	private Composite composite;
-	private Collection<IParameterEditor> editors;
+	private Collection<IParameterEditor<?>> editors;
 
 
 	public WidgetGridControl(Composite parent) {
@@ -28,7 +28,7 @@ public class WidgetGridControl {
 	}
 
 
-	public WidgetGridControl setEditors(Collection<IParameterEditor> editors) {
+	public WidgetGridControl setEditors(Collection<IParameterEditor<?>> editors) {
 		this.editors = editors;
 		return this;
 	}
@@ -37,7 +37,7 @@ public class WidgetGridControl {
 		composite = new Composite(parent, SWT.None);
 		GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, false);
 		composite.setLayout( new GridLayout( 2, false));
-	    for ( IParameterEditor editor : editors) {
+	    for ( IParameterEditor<?> editor : editors) {
 			
 		    CLabel label = new CLabel( composite, SWT.LEFT);
 			label.setText( editor.getParameter().getName());

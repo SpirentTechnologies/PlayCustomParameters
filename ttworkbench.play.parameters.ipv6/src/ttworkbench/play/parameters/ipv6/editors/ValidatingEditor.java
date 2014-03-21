@@ -9,24 +9,16 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
-import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
@@ -187,7 +179,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {				
-				IMessageView messageView = getMessageView();
+				IMessageView<?> messageView = getMessageView();
 				if ( messageView != null) {
 					String senderId = String.valueOf( theValidator.getId());
 					// TODO

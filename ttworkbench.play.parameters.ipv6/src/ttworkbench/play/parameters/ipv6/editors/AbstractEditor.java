@@ -6,12 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -24,7 +20,6 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	
 	private String title;
 	private String description;
-	private IAttribute attribute;
 	private IParameter<T> parameter;
 	private IConfiguration configuration;
 	private Set<T> values = new TreeSet<T>();

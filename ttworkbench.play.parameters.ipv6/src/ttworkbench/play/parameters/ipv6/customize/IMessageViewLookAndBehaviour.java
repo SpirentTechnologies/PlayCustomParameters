@@ -1,11 +1,6 @@
 package ttworkbench.play.parameters.ipv6.customize;
 
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Listener;
-
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public interface IMessageViewLookAndBehaviour extends ILookAndBehaviour {
 

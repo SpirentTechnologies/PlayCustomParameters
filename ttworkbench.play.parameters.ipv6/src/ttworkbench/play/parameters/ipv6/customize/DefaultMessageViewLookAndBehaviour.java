@@ -10,13 +10,13 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
+@SuppressWarnings("unused")
 public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBehaviour, IMessageLookAndBehaviour {
 	
 	private static final Display CURRENT_DISPLAY = Display.getCurrent();

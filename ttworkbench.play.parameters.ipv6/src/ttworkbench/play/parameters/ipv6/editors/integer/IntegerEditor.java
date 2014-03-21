@@ -1,39 +1,26 @@
 package ttworkbench.play.parameters.ipv6.editors.integer;
 
-import java.awt.Toolkit;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
-
-import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
-import ttworkbench.play.parameters.ipv6.editors.common.editwidgets.EditableWidgetAdapter;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
-import ttworkbench.play.parameters.ipv6.editors.verification.Verificators;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingWidget;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingSpinner;
@@ -41,9 +28,6 @@ import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingTe
 
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-
-import de.tu_berlin.cs.uebb.muttcn.runtime.PortLocalEntity.ObjectState;
 
 public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
