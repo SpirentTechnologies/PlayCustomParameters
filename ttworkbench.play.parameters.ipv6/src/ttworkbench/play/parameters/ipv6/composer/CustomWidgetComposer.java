@@ -17,6 +17,7 @@ import ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
 
+import com.testingtech.ttworkbench.ttman.ManagementPlugin;
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
@@ -83,12 +84,12 @@ public class CustomWidgetComposer extends WidgetComposer {
 						getConfigurator().assign( validator, defaultWidget, parameter);
 					}
 					else {
-						logError( "A validator for \""+theId+"\" could not be resolved: \""+dataRelation.getValidator().getType()+"\"");
+						logError( "A validator for \""+theId+"\" could not be resolved: \""+dataRelation.getValidator().getType()+"\"", null);
 					}
 				}
 			}
 			else {
-				logError("The parameter could not be found: \""+theId+"\".");
+				logError("The parameter could not be found: \""+theId+"\".", null);
 			}
 		}
 		
@@ -200,11 +201,11 @@ public class CustomWidgetComposer extends WidgetComposer {
 						relations.put( theDataRelation, validator);
 					}
 					else {
-						logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.");
+						logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.", null);
 					}
 				}
 				catch(Exception e) {
-					logError( "Could not create instance from class \""+validatorType+"\". Tried to use the default constructor without parameter.");
+					logError( "Could not create instance from class \""+validatorType+"\". Tried to use the default constructor without parameter.", e);
 				}
 			}
 		}
@@ -227,15 +228,16 @@ public class CustomWidgetComposer extends WidgetComposer {
 				return new Image( Display.getCurrent(), theImage.getPath());
 			}
 			catch(Exception e) {
-				logError("could not load image: \""+theImage.getPath()+"\".");
+				logError("could not load image: \""+theImage.getPath()+"\".", e);
 			}
 		}
 		return null;
 	}
 
-	private void logError(String theString) {
-		// TODO logger
-		System.err.println(theString);		
+	private void logError(String theString, Exception e) {
+		ManagementPlugin
+		.getSharedInstance()
+		.eclipseLog(theString,  e);
 	}
 
 	

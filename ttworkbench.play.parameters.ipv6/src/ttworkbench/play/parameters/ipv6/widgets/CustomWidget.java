@@ -131,7 +131,6 @@ public abstract class CustomWidget extends NotifyingWidget {
 				validatingEditor.getMessageView().setSuperiorView( this.messageDisplay);
 			}
 		}
-		System.out.println("Created "+i+" fresh editors.");
 	}
 		
 		
