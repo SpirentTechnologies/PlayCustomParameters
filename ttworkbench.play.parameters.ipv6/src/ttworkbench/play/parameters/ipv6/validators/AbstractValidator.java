@@ -9,7 +9,6 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 

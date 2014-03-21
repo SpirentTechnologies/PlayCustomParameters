@@ -1,9 +1,8 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -11,22 +10,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.WidgetMessageDisplay;
-import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
@@ -41,7 +32,9 @@ public abstract class CustomWidget extends NotifyingWidget {
 	private IWidgetLookAndBehaviour lookAndBehaviour;
 	//private MessagePanel messagePanel;
   private WidgetMessageDisplay messageDisplay;
-	private final Map<IParameterEditor, Composite> editorControls = new HashMap<IParameterEditor, Composite>();
+  
+  // TODO following parameter map is never read(?)
+	private final Map<IParameterEditor<?>, Composite> editorControls = new LinkedHashMap<IParameterEditor<?>, Composite>();
 	
 	public CustomWidget( String theTitle, String theDescription, Image theImage) {
 		super( theTitle, theDescription, theImage);
@@ -127,7 +120,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 
 	
 	protected void createFreshEditors() {
-		Set<IParameterEditor> freshEditors = getEditors();
+		List<IParameterEditor<?>> freshEditors = getEditors();
 		freshEditors.removeAll( editorControls.keySet());
 		int i=0;
 		for (IParameterEditor<?> freshEditor : freshEditors) {
@@ -142,7 +135,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 	}
 		
 		
-	protected void createParameterEditor( final IParameterEditor theEditor) {
+	protected void createParameterEditor( final IParameterEditor<?> theEditor) {
 		GridData editorGridData = new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0);
 		if ( editorsContainer != null) {	
 			Composite editorControl = theEditor.createControl( editorsContainer);

@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -57,7 +58,7 @@ public class IPv6Widget extends AbstractWidget {
 		//GridLayout gridLayout = new GridLayout( 1, false);
 		//gridLayout.makeColumnsEqualWidth = false;
 		if ( editorsContainer != null) {	
-			Set<IParameterEditor> editors = getEditors();
+			List<IParameterEditor<?>> editors = getEditors();
 			for ( IParameterEditor editor : editors) {
 				Control editorControl = editor.createControl( editorsContainer/*, gridData, gridLayout*/);
 				editorControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));

@@ -16,7 +16,6 @@ import ttworkbench.play.parameters.ipv6.validators.IWithValidatorContext;
 import ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
-import ttworkbench.play.parameters.settings.Data.Relation;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
@@ -101,7 +100,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 
 	
 	private void triggerRelations() {
-		for(Entry<Relation, IParameterValidator> triggerEntry : relations.entrySet()) {
+		for(Entry<Data.Relation, IParameterValidator> triggerEntry : relations.entrySet()) {
 			Data.Relation relation = triggerEntry.getKey();
 			IParameterValidator validator = triggerEntry.getValue();
 			SimpleValidatorContext context = getValidatorContext(validator);
