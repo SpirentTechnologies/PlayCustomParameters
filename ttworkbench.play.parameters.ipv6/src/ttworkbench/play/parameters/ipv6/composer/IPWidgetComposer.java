@@ -1,8 +1,10 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
-import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
-import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Editor;
+import ttworkbench.play.parameters.ipv6.editors.ip.HostnameVerificator;
+import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Verificator;
+import ttworkbench.play.parameters.ipv6.editors.ip.IPv6Verificator;
+import ttworkbench.play.parameters.ipv6.editors.ip.VerifyingIPEditor;
 import ttworkbench.play.parameters.ipv6.widgets.IPWidget;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
@@ -21,12 +23,10 @@ public class IPWidgetComposer extends WidgetComposer {
 
 	@Override
 	public void compose() {
-		// declare a Mac Address Widget
+		// declare a IP Address Widget
 		IWidget ipWidget = new IPWidget();
-		// add the Mac widget to the frame work
+		// add the IP widget to the frame work
 		getConfigurator().addWidget( ipWidget);
-
-		ValidatingEditor<?> ipv4Editor = new IPv4Editor();
 
 		// //The MAC validator
 		// IParameterValidator macValidator = new AbstractValidator(
@@ -54,10 +54,11 @@ public class IPWidgetComposer extends WidgetComposer {
 		// };
 
 		// assign each parameter to the corresponding editor in this widget
-		getConfigurator().assign( ipv4Editor, ipWidget, ipv4Parameter);
-		getConfigurator().assign( new IPv4Editor(), ipWidget, ipv4Parameter);
-		getConfigurator().assign( new IPv4Editor(), ipWidget, ipv4Parameter);
-		getConfigurator().assign( new IPv4Editor(), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new VerifyingIPEditor( new IPv4Verificator()), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new VerifyingIPEditor( new IPv4Verificator(), new IPv6Verificator()), ipWidget,
+				ipv4Parameter);
+		getConfigurator().assign( new VerifyingIPEditor( new IPv6Verificator()), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new VerifyingIPEditor( new HostnameVerificator()), ipWidget, ipv4Parameter);
 
 		// //Register the mac validator to the editor
 		// macValidator.registerForMessages( editor_MacAddress);

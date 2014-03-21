@@ -3,21 +3,16 @@ package ttworkbench.play.parameters.ipv6.test.editors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Verificator;
-import ttworkbench.play.parameters.ipv6.editors.verification.Verificators;
 
 /*
  * Problems: Only paste of numbers, without dot-separation
@@ -28,17 +23,32 @@ public class EditorTest {
 	final StyledText input;
 	final Display display = Display.getCurrent();
 
-	public EditorTest( Composite theComposite) {
-		label = new CLabel( theComposite, SWT.LEFT);
+	public EditorTest( Composite theParent) {
+
+		final Composite container = new Composite( theParent, SWT.None);
+		GridLayout containerLayout = new GridLayout();
+		containerLayout.marginHeight = 0;
+		containerLayout.marginWidth = 0;
+		theParent.setLayout( containerLayout);
+		// TODO check layout data. Is compatible? to Flowlayout or Filllayout
+		container.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
+		container.setLayout( new RowLayout());
+
+		label = new CLabel( container, SWT.LEFT);
 		label.setText( "IP-Address");
-		new Text( theComposite, SWT.BORDER | SWT.SINGLE);
 
-		input = new StyledText( theComposite, SWT.BORDER | SWT.SINGLE);
+		Text text = new Text( container, SWT.BORDER | SWT.SINGLE);
 
-		EventHandler handler = new EventHandler();
-		input.addVerifyListener( handler);
-		input.addModifyListener( handler);
-		input.addFocusListener( handler);
+		input = new StyledText( container, SWT.BORDER | SWT.SINGLE);
+
+		Button reset = new Button( container, SWT.PUSH);
+		reset.setText( "Reset");
+		reset.addSelectionListener( new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent theE) {
+				container.update();
+			}
+		});
 
 	}
 
@@ -62,82 +72,5 @@ public class EditorTest {
 
 		// disposes all associated windows and their components
 		display.dispose();
-	}
-
-	private class EventHandler implements VerifyListener, ModifyListener, FocusListener {
-
-		final String HELPVALUE = "IP or hostname";
-		final Color COLOR_HELP = display.getSystemColor( SWT.COLOR_GRAY);
-		final Color COLOR_NORMAL = display.getSystemColor( SWT.COLOR_BLACK);
-
-		private IPv4Verificator verificator = Verificators.getVerificator( IPv4Verificator.class);
-
-		protected boolean ignore = false;
-		/* indicates the State, with no Input */
-		protected boolean empty = true;
-
-		// private StyledText input = text;
-
-		public EventHandler() {
-			super();
-			/* Fill with DefaultHelpText */
-			focusLost( null);
-		}
-
-		@Override
-		public void focusGained(FocusEvent e) {
-			if (empty) {
-				setText( "");
-			}
-
-		}
-
-		@Override
-		public void focusLost(FocusEvent e) {
-			if (empty) {
-				setText( HELPVALUE);
-				input.setForeground( COLOR_HELP);
-			}
-		}
-
-		@Override
-		public void modifyText(ModifyEvent e) {
-			if (!ignore) {
-				if (empty) {
-					input.setForeground( COLOR_NORMAL);
-					empty = false;
-				} else {
-					if (input.getText() == "")
-						empty = true;
-				}
-				// verifyText( text.getText());
-			}
-		}
-
-		@Override
-		public void verifyText(VerifyEvent e) {
-			if (!ignore) {
-				if (empty) {
-					return;
-				}
-			}
-		}
-
-		private void setText(String theText) {
-			ignore = true;
-			input.setText( theText);
-			ignore = false;
-		}
-
-		// private boolean verifyText(final String theText) {
-		// VerifyResult<String> result = verificator.verify( theText);
-		//
-		// // evaluate verification result
-		// if (!result.verified) {
-		// getMessageView().flashMessages( result.messages);
-		// return false;
-		// }
-		// return true;
-		// }
 	}
 }
