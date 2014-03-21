@@ -42,6 +42,7 @@ public class MessageRegistry implements IMessageRegistry, IMessageInformation {
 		}
 	}
 	
+	@Override
 	public void setParent( MessageRegistry theParentRegistry) {
 	  this.parentRegistry = theParentRegistry;
 	  for ( Integer messageCode : messageMap.keySet()) {
@@ -93,8 +94,14 @@ public class MessageRegistry implements IMessageRegistry, IMessageInformation {
 		
 		errorKindMap.get( theMessageHydra.getErrorKind()).add( theMessageHydra);
 		messageMap.put( theMessageCode, theMessageHydra);
-		if ( parentRegistry != null)
+		if ( parentRegistry != null) {
 			parentRegistry.publishHydra( theMessageCode, theMessageHydra);
+			
+		  // we inform all listeners in parent about this new registration 
+			for ( IRegistryListener listener : parentRegistry.listeners) {
+				listener.handleHydraPublishedEvent( theMessageHydra);
+			}
+		}
 	}
 	
 	private void createMessageFromLabel( final MessageLabel theMessageLabel) {

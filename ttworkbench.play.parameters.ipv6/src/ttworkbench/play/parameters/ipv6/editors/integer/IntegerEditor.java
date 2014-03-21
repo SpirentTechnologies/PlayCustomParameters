@@ -62,7 +62,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	private IntegerTypeVerificator integerTypeVerificator = new IntegerTypeVerificator();
 	private IntegerRangeVerificator integerRangeVerificator = null;
 	
-	private IVerifyingWidget inputWidget;
+	private IVerifyingWidget<?> inputWidget;
 	
 	
 	public IntegerEditor() {
@@ -153,7 +153,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
 	}
 
-	private void setVerifyListenerToWidget( IVerifyingWidget<?> theInputWidget) {
+	private void setVerifyListenerToWidget( final IVerifyingWidget<?> theInputWidget) {
 		theInputWidget.setListener( new IVerificationListener<String>() {
 			
 			@Override
@@ -175,7 +175,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 				// verification passed, then write the value to parameter
 				getParameter().getValue().setTheNumber( new BigInteger( theEvent.inputToVerify));
 				// and start the validation process
-				validateDelayed();
+				validateDelayed( theInputWidget);
 				
 				theEvent.doit = true;
 			}

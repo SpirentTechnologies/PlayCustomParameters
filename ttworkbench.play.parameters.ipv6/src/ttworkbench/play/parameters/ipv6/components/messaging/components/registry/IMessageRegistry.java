@@ -10,4 +10,6 @@ public interface IMessageRegistry {
 	@Deprecated
 	void deregisterMessage( final MessageLabel theMessageLabel);
 
+	void setParent(MessageRegistry theParentRegistry);
+
 }

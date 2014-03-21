@@ -28,6 +28,7 @@ import ttworkbench.play.parameters.ipv6.components.messaging.components.registry
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IRegistryListener;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.MessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.RegistryEvent;
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageHeader;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePopup;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
@@ -96,6 +97,13 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 					messageHeader.layout( true);
 				}
 			}
+			
+			@Override
+			public void handleHydraPublishedEvent( IMessageHydra theMessageHydra) {
+				theMessageHydra.newLabel( messagePopup);
+				WidgetMessageDisplay.this.messagePopup.update();
+			}
+			
 		});
 	}
 
@@ -117,6 +125,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		 */
 		{
 			messageHeader = new MessageHeader( this, this);
+			messageHeader.setBackground( lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( ErrorKind.error));
 			GridData messageContainerGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 0, 0);
 			messageContainerGridData.minimumHeight = MESSAGE_CONTAINER_HEIGHT;
 			messageHeader.setLayoutData( messageContainerGridData);
@@ -289,13 +298,19 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 
 
 	@Override
-	public IMessageInformation getMessageRegistry() {
+	public IMessageInformation getMessageInformation() {
 		return messageRegistry;
 	}
 
 	@Override
 	public void setClientComponent( IWidget theClientComponent) {
 		// TODO
+	}
+
+	@Override
+	public void setSuperiorView(IMessageView<?> theMessageView) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

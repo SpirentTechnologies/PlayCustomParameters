@@ -221,7 +221,7 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 		
 		if(modifiedText.matches( insertionPattern) && modifiedText.length() <= MAC_LENGTH){
 		getParameter().getValue().setTheContent( modifiedText);
-			validateDelayed();
+			validateDelayed( theEvent.widget);
 			theEvent.doit = true;
 		} else if(modifiedText.length() > MAC_LENGTH){
 			theEvent.doit = false;

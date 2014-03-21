@@ -25,14 +25,17 @@ import org.eclipse.ui.PlatformUI;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock.RegisterDirective;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IRegistryListener;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.MessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.RegistryEvent;
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageHeader;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePopup;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
@@ -94,6 +97,12 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 					EditorMessageDisplay.this.messagePopup.update();	
 				}
 			}
+			
+			@Override
+			public void handleHydraPublishedEvent(IMessageHydra theMessageHydra) {
+				// nothing todo
+			}
+			
 		});
 	}
 
@@ -301,8 +310,19 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 	}
 
 	@Override
-	public IMessageInformation getMessageRegistry() {
+	public IMessageInformation getMessageInformation() {
 		return messageRegistry;
 	}
+	
+	@Override
+	public void setSuperiorView( final IMessageView<?> theMessageView) {
+		IMessageInformation superiorMessageInformation = theMessageView.getMessageInformation();
+		if ( superiorMessageInformation instanceof MessageRegistry) {
+			MessageRegistry superiorMessageRegistry = (MessageRegistry) superiorMessageInformation;
+			this.messageRegistry.setParent( superiorMessageRegistry);
+		}
+	}
+	
+	
 	
 }

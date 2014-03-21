@@ -15,7 +15,7 @@ public class FibValidator_SEQ extends FibValidator {
 	}
 	
 	@Override
-	protected List<ValidationResult> validateParameter( IParameter parameter) {
+	protected List<ValidationResult> validateParameter( IParameter parameter, Object theClient) {
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 	
 		BigInteger inputSeqenceNumber = this.<IntegerValue>getParameter( ParameterKey.PX_N).getValue().getTheNumber();
@@ -23,10 +23,10 @@ public class FibValidator_SEQ extends FibValidator {
 		BigInteger fibValue = getFibonacciNumber( inputSeqenceNumber);
 
     if ( inputFibValue.compareTo( fibValue) != 0) {
-    	validationResults.add( new ValidationResult( String.format( "%s: %s is NOT the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.error, "tag_is_not_fib_of_n"));		
-      validationResults.add( new ValidationResult(  String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), fibValue, inputSeqenceNumber), ErrorKind.info, "tag_is_fib_of_hint")); 
+    	validationResults.add( new ValidationResult( String.format( "%s: %s is NOT the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.error, theClient, "tag_is_not_fib_of_n"));		
+      validationResults.add( new ValidationResult(  String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), fibValue, inputSeqenceNumber), ErrorKind.info, theClient, "tag_is_fib_of_hint")); 
     } else {
-    	validationResults.add( new ValidationResult( String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.success, "tag_is_not_fib_of_n"));		
+    	validationResults.add( new ValidationResult( String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.success, theClient, "tag_is_not_fib_of_n"));		
     }
     	
     return validationResults;

@@ -409,9 +409,15 @@ public class MessagePanel extends Composite implements IMessageView<Composite> {
 	
 
 	@Override
-	public IMessageInformation getMessageRegistry() {
+	public IMessageInformation getMessageInformation() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setSuperiorView(IMessageView<?> theMessageView) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

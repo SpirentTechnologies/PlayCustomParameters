@@ -17,7 +17,7 @@ public class IPv6Validator extends AbstractValidator {
 	}
 
 	@Override
-	protected List<ValidationResult> validateParameter(IParameter theParameter) {
+	protected List<ValidationResult> validateParameter(IParameter theParameter, Object theClient) {
 		return new ArrayList<ValidationResult>();
 	}
 

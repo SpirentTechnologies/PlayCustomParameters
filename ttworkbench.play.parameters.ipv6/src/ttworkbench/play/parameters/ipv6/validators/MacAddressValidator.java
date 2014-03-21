@@ -18,15 +18,15 @@ public class MacAddressValidator extends AbstractValidator {
 	}
 
 	@Override
-	protected List<ValidationResult> validateParameter( IParameter parameter) {
+	protected List<ValidationResult> validateParameter( IParameter parameter, Object theClient) {
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 
 		String theValue = ((StringValue)parameter.getValue()).getTheContent();
 		System.out.println("this is my parameter value:  "+theValue);
 		if ( isMacAddress( theValue))
-			validationResults.add( new ValidationResult("This entry has a valid MAC Address format.", ErrorKind.success, "tag_is_mac"));
+			validationResults.add( new ValidationResult("This entry has a valid MAC Address format.", ErrorKind.success, theClient, "tag_is_mac"));
 		else {
-			validationResults.add( new ValidationResult( "This entry does not have a valid MAC Address format.", ErrorKind.error, "tag_is_mac"));
+			validationResults.add( new ValidationResult( "This entry does not have a valid MAC Address format.", ErrorKind.error, theClient, "tag_is_mac"));
 		}
 		return validationResults;
 	}

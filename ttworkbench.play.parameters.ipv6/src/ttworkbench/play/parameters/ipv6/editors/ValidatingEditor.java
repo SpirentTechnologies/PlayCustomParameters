@@ -15,6 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
@@ -74,9 +75,10 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	/**
 	 * Validates the current parameter value in the main thread.
+	 * @param theCauser 
 	 * @return
 	 */
-	protected List<ValidationResult> validate() {
+	protected List<ValidationResult> validate( final Object theCauser) {
 		IConfiguration configuration = getConfiguration();
 		IParameter<?> parameter = getParameter();
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
@@ -85,7 +87,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			for (IParameterValidator validator : validators) {
 				if ( !Thread.currentThread().isInterrupted())
 					try {
-				    validationResults.addAll( validator.validate( parameter));
+				    validationResults.addAll( validator.validate( parameter, theCauser));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -98,7 +100,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
   /**
    * Validates the current parameter value delayed in another thread.
    */
-	protected void validateDelayed() {
+	protected void validateDelayed( final Object theCauser) {
 		if ( validationTaskFuture != null) 
 			validationTaskFuture.cancel( true);
 		if ( validationMessageTaskFuture != null) 
@@ -121,7 +123,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 			@Override
 			public void run() {
 				
-				validate();	
+				validate( theCauser);	
 				
 				validationMessageTaskFuture.cancel( false);
 				
@@ -189,13 +191,12 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				if ( messageView != null) {
 					String senderId = String.valueOf( theValidator.getId());
 					// TODO
-					System.out.println( "senderId: " + senderId);
 					messageView.beginUpdateForSender( senderId);
 					for (ValidationResult validationResult : theValidationResults) {
 						if ( validationResult.isTagged()) {
-							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind()));
+							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind(), validationResult.getClient()));
 						} else {
-							messageView.showMessage( new MessageRecord( validationResult.getErrorMessage(), validationResult.getErrorKind()));					
+							messageView.showMessage( new MessageRecord( null, validationResult.getErrorMessage(), validationResult.getErrorKind(), validationResult.getClient()));					
 						}
 					}
 					messageView.endUpdate();

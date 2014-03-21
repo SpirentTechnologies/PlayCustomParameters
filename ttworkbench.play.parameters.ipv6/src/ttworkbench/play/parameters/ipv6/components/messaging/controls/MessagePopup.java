@@ -140,14 +140,14 @@ public class MessagePopup extends Composite implements IMessageContainer {
 		popupShell.layout( true);
 		popupShell.setSize( popupShell.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		popupShell.update();
-		if ( messageView.getMessageRegistry().getTotalCount() == 0)
+		if ( messageView.getMessageInformation().getTotalCount() == 0)
 		  hidePopup();
 	}
 
 	private void updateLabel() {
 		// get highest weighted error kind 
-		ErrorKind errorKind = messageView.getMessageRegistry().getHighestErrorKind();
-		int messageCount = messageView.getMessageRegistry().getCountOfMessagesWithErrorKind( EnumSet.of( errorKind));
+		ErrorKind errorKind = messageView.getMessageInformation().getHighestErrorKind();
+		int messageCount = messageView.getMessageInformation().getCountOfMessagesWithErrorKind( EnumSet.of( errorKind));
 
 		if ( messageCount == 0) {
 			label.setImage( null);
@@ -179,6 +179,7 @@ public class MessagePopup extends Composite implements IMessageContainer {
 		}
 		setSize( computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		layout( true);
+		//System.out.println( label.getBounds() + "  " + this.getParent().getParent().getClass().getSimpleName());
 	}
 
 	public void setLabelTextFormat(String theLabelTextFormat) {

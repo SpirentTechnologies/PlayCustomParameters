@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
 
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
+import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
@@ -27,6 +29,7 @@ import ttworkbench.play.parameters.ipv6.components.messaging.views.WidgetMessage
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
+import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
@@ -128,6 +131,10 @@ public abstract class CustomWidget extends NotifyingWidget {
 		freshEditors.removeAll( editorControls.keySet());
 		for (IParameterEditor freshEditor : freshEditors) {
 			createParameterEditor( freshEditor);
+			if ( freshEditor instanceof ValidatingEditor<?>) {
+				ValidatingEditor<?> validatingEditor = (ValidatingEditor<?>) freshEditor;
+				validatingEditor.getMessageView().setSuperiorView( this.messageDisplay);
+			}
 		}
 	}
 		

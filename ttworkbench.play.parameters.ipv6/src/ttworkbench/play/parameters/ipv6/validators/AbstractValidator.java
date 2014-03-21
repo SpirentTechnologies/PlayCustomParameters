@@ -9,6 +9,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
@@ -49,8 +50,8 @@ public abstract class AbstractValidator implements IParameterValidator {
 	}
 	
 	@Override
-	public synchronized final List<ValidationResult> validate(IParameter theParameter) {
-		List<ValidationResult> results = validateParameter( theParameter);
+	public synchronized final List<ValidationResult> validate( IParameter theParameter, Object theClient) {
+		List<ValidationResult> results = validateParameter( theParameter, theClient);
 		
 		if ( results == null)
 			results = new ArrayList<ValidationResult>();
@@ -68,7 +69,7 @@ public abstract class AbstractValidator implements IParameterValidator {
 		} 
 	}
 
-	protected abstract List<ValidationResult> validateParameter(IParameter theParameter);
+	protected abstract List<ValidationResult> validateParameter(IParameter theParameter, Object theClient);
 
 	@Override
 	public void registerForMessages(IMessageHandler theMessageHandler) {

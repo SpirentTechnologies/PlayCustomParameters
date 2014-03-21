@@ -16,7 +16,7 @@ public class FibValidator_SUCC extends FibValidator {
 	}
 	
 	@Override
-	protected List<ValidationResult> validateParameter( IParameter parameter) {
+	protected List<ValidationResult> validateParameter( IParameter parameter, Object theClient) {
 
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 		BigInteger fibSuccValue = this.<IntegerValue>getParameter( ParameterKey.PX_FIB_SUCC_NUMBER).getValue().getTheNumber();
@@ -24,10 +24,10 @@ public class FibValidator_SUCC extends FibValidator {
 		BigInteger fibNextValue = nextFibonacciNumber( fibValue);
 
 		if ( fibSuccValue.compareTo( fibNextValue) == 0) {
-			validationResults.add( new ValidationResult(  String.format( "%s: %s is the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.success, "tag_succ_fib"));
+			validationResults.add( new ValidationResult(  String.format( "%s: %s is the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.success, theClient, "tag_succ_fib"));
 		} else {
-			validationResults.add( new ValidationResult(  String.format( "%s: %s is NOT the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.error, "tag_succ_fib"));
-			validationResults.add( new ValidationResult(  String.format( "%s: %s is successor of %s.", this.getTitle(), fibNextValue, fibValue), ErrorKind.info, "tag_succ_fib_hint"));    	
+			validationResults.add( new ValidationResult(  String.format( "%s: %s is NOT the successor of %s.", this.getTitle(), fibSuccValue, fibValue), ErrorKind.error, theClient, "tag_succ_fib"));
+			validationResults.add( new ValidationResult(  String.format( "%s: %s is successor of %s.", this.getTitle(), fibNextValue, fibValue), ErrorKind.info, theClient, "tag_succ_fib_hint"));    	
 		}
 		return validationResults;
 	}	

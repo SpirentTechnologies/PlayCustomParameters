@@ -49,6 +49,8 @@ public interface IMessageView<ClientComponent> {
 	
 	void setClientComponent( ClientComponent theClientComponent);
 	
-	IMessageInformation getMessageRegistry();
+	IMessageInformation getMessageInformation();
+
+	void setSuperiorView(IMessageView<?> theMessageView);
 
 }
