@@ -20,7 +20,7 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 	}
 
 	
-	protected abstract IMessageView getMessageView();
+	protected abstract IMessageView<?> getMessageView();
 	
 	
 	
@@ -30,7 +30,7 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 			final IParameter theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				IMessageView messageView = getMessageView();
+				IMessageView<?> messageView = getMessageView();
 				String senderId = String.valueOf( theValidator.getId());
 				messageView.beginUpdateForSender( senderId);
 				MessageRecord messageRecord;

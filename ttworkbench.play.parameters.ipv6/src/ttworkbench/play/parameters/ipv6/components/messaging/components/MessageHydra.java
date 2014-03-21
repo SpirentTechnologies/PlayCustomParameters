@@ -12,7 +12,6 @@ import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHy
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageLabel;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageLabel;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MessageHydra implements IMessageHydra {

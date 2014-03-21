@@ -2,23 +2,15 @@ package ttworkbench.play.parameters.ipv6.editors;
 
 import java.util.Set;
 
-import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 
 import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
-
-import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 
 public class IPv6Editor extends AbstractEditor<String> {
 

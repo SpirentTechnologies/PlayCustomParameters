@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors.common.editwidgets;
 
-import org.apache.commons.lang.UnhandledException;
 import org.eclipse.swt.widgets.Event;
 
 @Deprecated

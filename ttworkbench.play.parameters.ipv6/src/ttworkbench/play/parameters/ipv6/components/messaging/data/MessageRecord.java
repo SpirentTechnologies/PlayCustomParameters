@@ -1,7 +1,5 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.data;
 
-import org.eclipse.swt.widgets.Control;
-
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MessageRecord {

@@ -16,6 +16,7 @@ public class Verificators {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public static < T extends IVerificator<?>> T getVerificator( Class<T> theClass) {
   	if ( verificators.containsKey( theClass))
   		return (T) verificators.get( theClass);
@@ -23,7 +24,8 @@ public class Verificators {
   	return newVerificator( theClass);
   }
 
-  public static < T extends IVerificator<?>> T newVerificator( Class<T> theClass) {
+  @SuppressWarnings("unchecked")
+	public static < T extends IVerificator<?>> T newVerificator( Class<T> theClass) {
   	IVerificator<?> verificator = createVerificator( theClass);
   	if ( !verificators.containsKey( theClass))
   		verificators.put( theClass, verificator);

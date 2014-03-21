@@ -36,7 +36,7 @@ public class MacValueProvider implements IParameterValueProvider{
 	@Override
 	public <T> Set<T> getAvailableValues(IParameter<T> theParameter) {
 		// TODO Auto-generated method stub
-		Set<T> values = new HashSet();
+		Set<T> values = new HashSet<T>();
 		values.add( theParameter.getValue());
 		values.add( theParameter.getDefaultValue());
 		return values;

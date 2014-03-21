@@ -1,13 +1,10 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.controls;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
 
@@ -16,9 +13,9 @@ public class MessageHeader extends Composite implements IMessageContainer {
 	/**
 	 * 
 	 */
-	private final IMessageView messageView;
+	private final IMessageView<?> messageView;
 
-	public MessageHeader( IMessageView theMessageView, final Composite theParent) {
+	public MessageHeader( IMessageView<?> theMessageView, final Composite theParent) {
 		super( theParent, SWT.NONE);
 		this.messageView = theMessageView;
 		

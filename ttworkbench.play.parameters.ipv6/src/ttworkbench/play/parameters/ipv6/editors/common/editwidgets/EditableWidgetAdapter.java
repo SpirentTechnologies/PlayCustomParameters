@@ -1,7 +1,6 @@
 package ttworkbench.play.parameters.ipv6.editors.common.editwidgets;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Event;

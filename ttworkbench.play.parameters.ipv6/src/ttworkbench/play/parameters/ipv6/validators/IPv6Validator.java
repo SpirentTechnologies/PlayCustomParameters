@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 
 public class IPv6Validator extends AbstractValidator {
