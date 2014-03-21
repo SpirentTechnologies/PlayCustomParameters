@@ -129,13 +129,16 @@ public abstract class CustomWidget extends NotifyingWidget {
 	protected void createFreshEditors() {
 		Set<IParameterEditor> freshEditors = getEditors();
 		freshEditors.removeAll( editorControls.keySet());
-		for (IParameterEditor freshEditor : freshEditors) {
+		int i=0;
+		for (IParameterEditor<?> freshEditor : freshEditors) {
+			i++;
 			createParameterEditor( freshEditor);
 			if ( freshEditor instanceof ValidatingEditor<?>) {
 				ValidatingEditor<?> validatingEditor = (ValidatingEditor<?>) freshEditor;
 				validatingEditor.getMessageView().setSuperiorView( this.messageDisplay);
 			}
 		}
+		System.out.println("Created "+i+" fresh editors.");
 	}
 		
 		
