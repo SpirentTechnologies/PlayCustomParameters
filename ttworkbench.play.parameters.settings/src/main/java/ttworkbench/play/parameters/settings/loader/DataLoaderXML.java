@@ -12,6 +12,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 import ttworkbench.play.parameters.settings.Data;
 import ttworkbench.play.parameters.settings.data.EditorTypeMappingImpl;
+import ttworkbench.play.parameters.settings.data.LazyRelationImpl;
 import ttworkbench.play.parameters.settings.data.ParameterImpl;
 import ttworkbench.play.parameters.settings.data.ValidatorImpl;
 import ttworkbench.play.parameters.settings.data.WidgetImpl;
@@ -147,7 +148,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 					attrs);
 			
 			
-			LazyRelation relation = new LazyRelation(validator);
+			LazyRelationImpl relation = new LazyRelationImpl(this, validator);
 			for(HierarchicalConfiguration editor : val.configurationsAt("relation")) {
 				String parId = editor.getString("[@parameterId]");
 				String widgetName = editor.getString("[@widgetName]");
