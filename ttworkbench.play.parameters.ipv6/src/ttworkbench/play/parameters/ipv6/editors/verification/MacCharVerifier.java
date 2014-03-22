@@ -9,7 +9,7 @@ import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 
 public class MacCharVerifier implements IVerificator<String> {
 
-	private static final String VALID_CHAR_PATTERN = "^[0-9a-fA-F:-]$";
+	private static final String VALID_CHAR_PATTERN = "^([0-9a-fA-F:-])*$";
 	
 	private boolean isValidChar(String theInput){
 		if(theInput.matches( VALID_CHAR_PATTERN)){

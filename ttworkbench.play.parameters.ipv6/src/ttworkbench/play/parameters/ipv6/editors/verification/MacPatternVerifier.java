@@ -9,18 +9,20 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MacPatternVerifier implements IVerificator<String>{
 
-	private static final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:]{5}[0-9a-fA-F]{2})$";
-	private static final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]{5}[0-9a-fA-F]{2})$";
-	private static final String MAC_PATTERN3 = "^[0-9a-fA-F]{12}$";
+	private static final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})$";
+	private static final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]){5}([0-9a-fA-F]{2})$";
+	private static final String MAC_PATTERN3 = "^([0-9a-fA-F]{12})$";
 	
 	private static final String  MAC_VALID_ENTRY_MESSAGE = "valid entries: Alphanumerical (a-f) seperated with \":\" or \"-\"";
 	
 	private boolean isMac( String theInput){
-		if ( theInput.matches( MAC_PATTERN1) || theInput.matches( MAC_PATTERN2) || theInput.matches( MAC_PATTERN3)){
+		if(theInput.length() < 17){
 			return true;
-		}else{
-			return false;
+		}else {
+			System.out.println(theInput);	
+			return (theInput.matches( MAC_PATTERN1)) || (theInput.matches( MAC_PATTERN2)) || (theInput.matches( MAC_PATTERN3));
 		}
+		
 	}
 	@Override
 	public VerificationResult<String> verify(String theInput, Object... theParams) {

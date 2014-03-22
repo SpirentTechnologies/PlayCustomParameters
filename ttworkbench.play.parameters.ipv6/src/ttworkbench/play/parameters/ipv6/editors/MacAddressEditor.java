@@ -41,6 +41,7 @@ import ttworkbench.play.parameters.ipv6.editors.verification.MacPatternVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.MacRangeVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
+import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingCombo;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 import ttworkbench.play.parameters.ipv6.valueproviders.MacValueProvider;
 
@@ -65,7 +66,7 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 	
 	private IParameterValueProvider macValueProvider = new MacValueProvider();
 	
-	private IVerifyingControl<?,StringValue> inputWidget;
+	private IVerifyingControl<Combo,StringValue> inputControl;
 	
 	
 	
@@ -86,8 +87,6 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 		// TODO Auto-generated method stub
 		Object[] layoutData = this.getLookAndBehaviour().getLayoutDataOfControls();
 		
-		final boolean useTextField = false; 
-		
 		CLabel label = new CLabel(theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getDescription());
 		label.setLayoutData( layoutData[0]);
@@ -96,8 +95,8 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 	}
 	
 	private void createComboBox( Composite theComposite, Object theLayoutData){
-		inputWidget = new VerifyingText<StringValue>( getParameter(), theComposite, SWT.BORDER, macPatternVerifier, macRangeVerifier, macCharVerifier);
-		final Combo macCombo = new Combo(theComposite, SWT.DROP_DOWN);
+		inputControl = new VerifyingCombo<StringValue>( getParameter(), theComposite, SWT.BORDER, macCharVerifier, macRangeVerifier, macPatternVerifier);
+		final Combo macCombo = inputControl.getControl();
 		final Rectangle dimensions = new Rectangle(50, 50, 200, 65);
 		macCombo.setBounds( dimensions);
 		setWidthForText(macCombo, MAC_LENGTH);
@@ -115,17 +114,7 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 			System.out.println(value.getTheContent().toString());
 		}
 		
-		setVerifyListenerToControl( inputWidget);
-		
-		
-		macCombo.addListener( SWT.FocusOut, new Listener() {
-			
-			@Override
-			public void handleEvent(Event theArg0) {
-				if ( macCombo.getText().isEmpty())
-				  macCombo.setText( MAC_DEFAULT);
-			}
-		});
+		setVerifyListenerToControl( inputControl);
 	}
 	
 	private void setVerifyListenerToControl( final IVerifyingControl<?,StringValue> theInputControl) {
@@ -155,8 +144,6 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 				
 				theEvent.doit = true;
 			}
-			
-			
 		});
 	}
 
@@ -174,5 +161,10 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 			 ((RowData) layout).width = minWidth + 20;		
 		 else
 			 theTextControl.setSize( theTextControl.computeSize( minWidth + 20, SWT.DEFAULT));
+	}
+	
+	@Override
+	public void setFocus() {
+		inputControl.getControl().setFocus();
 	}
 }

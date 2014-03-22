@@ -201,7 +201,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	}
 	
 	/**
-	 * For performance and specificity reasons override this method is recommended.
+	 * For performance and specificity reasons overriding this method is recommended.
 	 */
 	public void setFocus() {
 		if ( componentState == ComponentState.CREATED) {	

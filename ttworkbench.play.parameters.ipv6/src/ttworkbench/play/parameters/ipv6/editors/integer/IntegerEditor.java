@@ -145,6 +145,8 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			public void afterVerificationStep(final VerificationEvent<String> theEvent) {
 				final List<VerificationResult<String>> results = theEvent.verificationResults;
 				final VerificationResult<String> lastResult = results.get( results.size() -1);
+				if(theEvent.inputToVerify.length() < 17)
+					theEvent.doit = true;
 				if ( !lastResult.verified) {
 					getMessageView().flashMessages( lastResult.messages);
 					theEvent.skipVerification = true;
