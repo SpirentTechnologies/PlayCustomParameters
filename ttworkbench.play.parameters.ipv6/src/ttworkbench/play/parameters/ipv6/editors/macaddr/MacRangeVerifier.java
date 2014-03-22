@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.editors.verification;
+package ttworkbench.play.parameters.ipv6.editors.macaddr;
 
 import java.util.List;
 import java.util.Arrays;

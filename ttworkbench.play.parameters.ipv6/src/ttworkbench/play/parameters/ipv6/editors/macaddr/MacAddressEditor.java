@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.editors;
+package ttworkbench.play.parameters.ipv6.editors.macaddr;
 
 
 import java.math.BigInteger;
@@ -34,11 +34,9 @@ import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehavi
 import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
-import ttworkbench.play.parameters.ipv6.editors.verification.MacCharVerifier;
-import ttworkbench.play.parameters.ipv6.editors.verification.MacPatternVerifier;
-import ttworkbench.play.parameters.ipv6.editors.verification.MacRangeVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingCombo;
