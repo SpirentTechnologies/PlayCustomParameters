@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.ParameterValueUtil;
+import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 
@@ -24,23 +24,19 @@ public class DefaultEditor extends AbstractEditor<Object> {
 	
 
 	@Override
-	public Composite createControl(Composite theTheParent) {
+	protected void designControl( Composite theControl) {
 		IParameter<Object> parameter = getParameter();
-
-		Composite composite = new Composite(theTheParent, SWT.NONE);
 		
 
-		composite.setLayout(new GridLayout(2, false));
-		Label label = new Label(composite, SWT.NONE);
+		theControl.setLayout(new GridLayout(2, false));
+		Label label = new Label(theControl, SWT.NONE);
 		label.setText( parameter.getName());
 		label.setToolTipText( parameter.getDescription());
 		
-		Text text = new Text(composite, SWT.READ_ONLY | SWT.BORDER);
+		Text text = new Text(theControl, SWT.READ_ONLY | SWT.BORDER);
 		text.setText( ParameterValueUtil.getValue( parameter));
 		
 		text.setToolTipText( parameter.getType());
-		
-		return composite;
 	}
 	
 	@Override

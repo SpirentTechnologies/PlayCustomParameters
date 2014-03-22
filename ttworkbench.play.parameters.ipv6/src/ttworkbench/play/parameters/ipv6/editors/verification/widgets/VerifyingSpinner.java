@@ -4,30 +4,32 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Spinner;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
 
-public class VerifyingSpinner extends VerifyingAdapter<Spinner> {
+public class VerifyingSpinner<P> extends VerifyingAdapter<Spinner,P> {
 
 	
-	public VerifyingSpinner( final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
-	  super( theParent, theStyle, theVerificators);
+	public VerifyingSpinner( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
+	  super( theParameter, theParent, theStyle, theVerificators);
   }
 
 	@Override
 	public void setText(String theText) {
-		getEncapsulatedWidget().setSelection( Integer.valueOf( theText));
+		getControl().setSelection( Integer.valueOf( theText));
 	}
 
 	@Override
 	public String getText() {
-		return getEncapsulatedWidget().getText();
+		return getControl().getText();
 	}
 
 	@Override
 	protected String getModifiedTextByEvent(Event theEvent) {
-		String currentText = getEncapsulatedWidget().getText();
+		String currentText = getControl().getText();
 		Character key = theEvent.character;
 		String insertion = (key == '\b') ? "" : theEvent.text; 
 		int beginIndex = theEvent.start;
@@ -43,16 +45,9 @@ public class VerifyingSpinner extends VerifyingAdapter<Spinner> {
 	}
 
 	@Override
-	protected Spinner createWidget(Composite theParent, int theStyle) {
+	protected Spinner createControl(Composite theParent, int theStyle) {
 		return new Spinner( theParent, theStyle);
 	}
-	
-	
-	@Override
-	public void setFocus() {
-		getEncapsulatedWidget().setFocus();
-	}
-	
 	
 
 }

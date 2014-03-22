@@ -6,6 +6,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
+import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePopup;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
@@ -15,14 +25,21 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 
 public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
-	private boolean enabled = true;
+	public enum ComponentState {
+		INSTANTIATED, CREATED, DESTROYED
+	}
+	
+	private ComponentState componentState = ComponentState.INSTANTIATED;
+	
 	private boolean visible = true;
+	private boolean enabled = true;
 	
 	private String title;
 	private String description;
 	private IParameter<T> parameter;
 	private IConfiguration configuration;
 	private Set<T> values = new TreeSet<T>();
+	private Composite control;
 	
 	private IEditorLookAndBehaviour lookAndBehaviour;
 	
@@ -41,22 +58,33 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	
 	@Override
 	public void setEnabled( boolean theEnabledState) {
-	  	this.enabled = theEnabledState;
+	  this.enabled = theEnabledState;
+	  applySettings();
+	}
+	
+	public void applySettings() {
+		if ( componentState == ComponentState.CREATED) {	
+		  if ( control.isVisible() != visible)
+		  	control.setVisible( visible);
+		  if ( control.isEnabled() != enabled)
+		  	control.setEnabled( enabled);
+	  }
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return enabled;
+	  return componentState == ComponentState.CREATED && enabled;
 	}
 
 	@Override
 	public void setVisible( boolean theVisibleState) {
 		this.visible = theVisibleState;
+	  applySettings();
 	}
 
 	@Override
 	public boolean isVisible() {
-		return visible;
+		return componentState == ComponentState.CREATED && visible;
 	}
 
 	
@@ -131,5 +159,58 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	protected abstract IEditorLookAndBehaviour getDefaultLookAndBehaviour();
 	
 	
+	@Override
+	public final Composite createControl( Composite theParent) {
+	  control = new Composite( theParent, SWT.None);
+		
+	  componentState = ComponentState.CREATED;
+		control.addDisposeListener( new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent theArg0) {
+				componentState = ComponentState.DESTROYED;
+			}
+		});
+		
+	  designControl( control); 
+	  applySettings();
+	  
+	  return control;
+	}
+	
+	protected abstract void designControl( final Composite theControl);
+	
 
+	public Composite getControl() {
+		return control;
+	}
+	
+	public ComponentState getState() {
+		return componentState;
+	}
+	
+	private boolean setFocusToSomeChild( final Composite theControl) {
+		for ( Control ctrl : theControl.getChildren()) {
+			ctrl.setFocus();
+			if ( ctrl.isFocusControl() && !(ctrl instanceof IMessageContainer))
+				return true;
+			if ( ctrl instanceof Composite)
+				if ( setFocusToSomeChild( (Composite) ctrl))
+				  return true;
+		}	
+		return false;
+	}
+	
+	/**
+	 * For performance and specificity reasons override this method is recommended.
+	 */
+	public void setFocus() {
+		if ( componentState == ComponentState.CREATED) {	
+			control.setFocus();
+			if ( !control.isFocusControl())
+				setFocusToSomeChild( control);
+		}
+	}
+	
 }
+
+

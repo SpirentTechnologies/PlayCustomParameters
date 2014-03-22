@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.common.IParameterControl;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
@@ -70,7 +71,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	 * @param theCauser 
 	 * @return
 	 */
-	protected List<ValidationResult> validate( final Object theCauser) {
+	protected List<ValidationResult> validate( final IParameterControl<?,T> theCauser) {
 		IConfiguration configuration = getConfiguration();
 		IParameter<?> parameter = getParameter();
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
@@ -92,7 +93,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
   /**
    * Validates the current parameter value delayed in another thread.
    */
-	protected void validateDelayed( final Object theCauser) {
+	protected void validateDelayed( final IParameterControl<?,T> theCauser) {
 		if ( validationTaskFuture != null) 
 			validationTaskFuture.cancel( true);
 		if ( validationMessageTaskFuture != null) 
@@ -149,28 +150,25 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		});
 	}
 	
-	
+
 	@Override
-	public final Composite createControl(Composite theParent) {
-	  Composite container = new Composite( theParent, SWT.None);
+	protected void designControl(Composite theControl) {
 	  GridLayout containerLayout = new GridLayout();
 	  containerLayout.marginHeight = 0;
 	  containerLayout.marginWidth = 0;
-	  container.setLayout( containerLayout);
+	  theControl.setLayout( containerLayout);
 	  // TODO check layout data. Is compatible? to Flowlayout or Filllayout 
-		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+	  theControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		
-		createMessageRow( container);
+		createMessageRow( theControl);
 
-		Composite editRowContainer = new Composite( container, SWT.None);
+		Composite editRowContainer = new Composite( theControl, SWT.None);
 		editRowContainer.setLayout( getLookAndBehaviour().getEditorLookAndBehaviour().getLayout());
 		createEditRow( editRowContainer);
 		getMessageView().setClientComponent( editRowContainer);
 		
-		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		container.layout();
-		
-		return container;
+		theControl.setSize( theControl.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		theControl.layout();
 	}
 	
 
@@ -182,13 +180,16 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				IMessageView<?> messageView = getMessageView();
 				if ( messageView != null) {
 					String senderId = String.valueOf( theValidator.getId());
-					// TODO
+
 					messageView.beginUpdateForSender( senderId);
+					
+					IParameterControl<?,?> validationCauser;
 					for (ValidationResult validationResult : theValidationResults) {
+						validationCauser = validationResult.getClient() instanceof IParameterControl<?,?> ? (IParameterControl<?,?>) validationResult.getClient() : null;
 						if ( validationResult.isTagged()) {
-							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind(), validationResult.getClient()));
+							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind(), validationCauser));
 						} else {
-							messageView.showMessage( new MessageRecord( null, validationResult.getErrorMessage(), validationResult.getErrorKind(), validationResult.getClient()));					
+							messageView.showMessage( new MessageRecord( null, validationResult.getErrorMessage(), validationResult.getErrorKind(), validationCauser));					
 						}
 					}
 					messageView.endUpdate();

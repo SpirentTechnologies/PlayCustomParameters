@@ -21,11 +21,19 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
+import ttworkbench.play.parameters.ipv6.common.Globals;
+import ttworkbench.play.parameters.ipv6.common.IParameterControl;
+import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
+import ttworkbench.play.parameters.ipv6.widgets.AbstractWidget;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MessageLabel extends Composite implements IMessageLabel {
@@ -106,36 +114,42 @@ public class MessageLabel extends Composite implements IMessageLabel {
 	public String getMessage() {
 		return messageRecord.message;
 	}
-	
+
 	public boolean hasTag() {
 		return messageRecord.hasTag();
 	}
-	
+
 	public int getMessageCode() {
 		return messageRecord.hashCode();
 	}
-	
+
 	public MessageRecord getMessageRecord() {
 		return messageRecord;
 	}
 
 	@Override
 	public void navigateToCauser() {
-		if ( messageRecord.causer != null) {
-			Method setFocusMethod;
-			try {
-				setFocusMethod = messageRecord.causer.getClass().getMethod( "setFocus");
-			} catch (Exception  e) {
-				return;
-			} 
-			try {
-				setFocusMethod.invoke( messageRecord.causer);
-			} catch (Exception e) {
-				return;
+		if ( messageRecord.causer != null)
+			focusEditorForParameter( messageRecord.causer);
+	}
+
+	private boolean focusEditorForParameter(IParameterControl<?,?> theParameterControl) {
+		if ( theParameterControl.getControl().isVisible()) {
+			theParameterControl.getControl().setFocus();
+			return true;
+		}
+		
+		// try to find a editor for this parameter on the current active widget
+		if ( Globals.hasConfiguration()) {
+			Set<IParameterEditor> editors = Globals.getConfiguration().getEditors( theParameterControl.getParameter());
+			for ( IParameterEditor editor : editors) {
+				if ( editor.isVisible() && editor instanceof AbstractEditor) {
+					((AbstractEditor)editor).setFocus();
+					return true;
+				}
 			}
 		}
-				
+		return false;
 	}
-	
 	
 }

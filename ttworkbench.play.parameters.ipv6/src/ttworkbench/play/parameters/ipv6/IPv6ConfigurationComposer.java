@@ -3,9 +3,11 @@ package ttworkbench.play.parameters.ipv6;
 import java.util.ArrayList;
 import java.util.List;
 
+import ttworkbench.play.parameters.ipv6.common.Globals;
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.IPv6WidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
 import ttworkbench.play.parameters.settings.Data;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
@@ -21,6 +23,8 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	// TODO refactor: rename method to "compose()" ?
 	
 	public void createWidgets(IConfigurator theConfigurator) {
+		Globals.setConfiguration( theConfigurator);
+		
 		ParameterMap parametersMap = new ParameterMap( theConfigurator);
 		if ( parametersMap.isEmpty())
 			return;
@@ -30,14 +34,14 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 		// default preset widgets
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
-	  //widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
+		// widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
 		// widgetComposers.add( new IPv6WidgetComposer( theConfigurator, parametersMap));
 
 		
 		// custom widget configuration
 		try {
 			for (Data.Widget widget : DataLoader.getInstance().getWidgets()) {
-				widgetComposers.add( new CustomWidgetComposer( theConfigurator, parametersMap, widget));
+		  	widgetComposers.add( new CustomWidgetComposer( theConfigurator, parametersMap, widget));
 			}
 		} catch (ParameterConfigurationException e) {
 			// TODO handle if needed

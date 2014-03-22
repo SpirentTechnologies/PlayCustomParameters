@@ -22,7 +22,7 @@ public class IPv6Editor extends AbstractEditor<String> {
 	}
 
 	@Override
-	public Composite createControl(Composite theParent) {
+	protected void designControl(Composite theControl) {
 		
 		// TODO solve problems with GridLayout: Width of each cell in a row has the width of the smallest cell. 
 		
@@ -30,16 +30,15 @@ public class IPv6Editor extends AbstractEditor<String> {
 		Layout layout = getLookAndBehaviour().getLayout(); 
 		
 		
-		Composite container = new Composite( theParent, SWT.None);
-		container.setLayout( layout);
+		theControl.setLayout( layout);
 		Color color = Display.getCurrent().getSystemColor( SWT.COLOR_DARK_MAGENTA);
-		container.setBackground( color);
+		theControl.setBackground( color);
 		
-        CLabel label = new CLabel( container, SWT.LEFT);
+        CLabel label = new CLabel( theControl, SWT.LEFT);
 		label.setText( this.getParameter().getName());
 		label.setLayoutData( layoutData);
 		
-		label = new CLabel( container, SWT.LEFT);
+		label = new CLabel( theControl, SWT.LEFT);
 		label.setText( this.getParameter().getValue());
 		label.setLayoutData( layoutData);
 		
@@ -49,14 +48,12 @@ public class IPv6Editor extends AbstractEditor<String> {
 		  valueString += value + ", ";	
 		}
 		
-		label = new CLabel( container, SWT.LEFT);
+		label = new CLabel( theControl, SWT.LEFT);
 		label.setText( valueString);
 		label.setLayoutData( layoutData);
 		
-		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		container.layout();
-		
-		return container;
+		theControl.setSize( theControl.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		theControl.layout();
 	}
 
 	@Override

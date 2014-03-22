@@ -1,39 +1,42 @@
 package ttworkbench.play.parameters.ipv6.editors.verification.widgets;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
+
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
 
-public class VerifyingText extends VerifyingAdapter<Text> {
+public class VerifyingText<P> extends VerifyingAdapter<Text,P> {
 	
 	
-  public VerifyingText( final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
-	  super( theParent, theStyle, theVerificators);
+  public VerifyingText( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
+	  super( theParameter, theParent, theStyle, theVerificators);
   }
 	
 	@Override
 	public void setText( final String theText) {
-		getEncapsulatedWidget().setText( theText);
+		getControl().setText( theText);
 	}
 
 	@Override
 	public String getText() {
-		return getEncapsulatedWidget().getText();
+		return getControl().getText();
 	}
 	
 	@Override
-	protected final Text createWidget(Composite theParent, int theStyle) {
+	protected final Text createControl(Composite theParent, int theStyle) {
 		return new Text( theParent, theStyle);
 	}
 	
 	
 	@Override
 	protected String getModifiedTextByEvent(Event theEvent) {
-		String currentText = getEncapsulatedWidget().getText();
+		String currentText = getControl().getText();
 		Character key = theEvent.character;
 		String insertion = (key == '\b') ? "" : theEvent.text; 
 		int beginIndex = theEvent.start;
@@ -48,9 +51,5 @@ public class VerifyingText extends VerifyingAdapter<Text> {
 		return modifiedText;		
 	}
 	
-	@Override
-	public void setFocus() {
-		getEncapsulatedWidget().setFocus();
-	}
 	
 }

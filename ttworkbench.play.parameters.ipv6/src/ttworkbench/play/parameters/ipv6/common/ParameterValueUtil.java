@@ -1,4 +1,7 @@
-package ttworkbench.play.parameters.ipv6;
+package ttworkbench.play.parameters.ipv6.common;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.etsi.ttcn.tci.UniversalCharValue;
 
@@ -99,6 +102,107 @@ public class ParameterValueUtil {
   	
   	// unknown
   	return value.toString();
+  }
+  
+  
+  /**
+   * Try to set the parameter value by given string.
+   * @param theParameter
+   * @param theValue
+   * @return true, if the parameter value was set, otherwise false. In case there is no setter for string values to this parameter type defined yet, false is always the return value.
+   */
+  public static boolean setValue( final IParameter<?> theParameter, final String theValue) {
+   	Object value = theParameter.getValue();
+
+   	if ( value instanceof BitStringValue) { // extends StringValue
+  		( (BitStringValue) value).setTheContent( theValue);  // untested
+   	  return true;
+   	}
+  		
+   	if ( value instanceof CallValue) // extends MessageValue
+  		return false; //( (CallValue) value).getTheProcedure().getTheName().toString();  // untested  	
+
+   	if ( value instanceof CharStringValue) { // extends StringValue
+   		( (CharStringValue) value).setTheContent( theValue);  // untested  	 	
+   		return true;
+   	}
+
+   	if ( value instanceof ConstantValue) // extends Attribute
+  		return false; // ( (ConstantValue) value).getTheName().toString();  // untested 
+   	
+   	if ( value instanceof Constraint) 
+  		return false; // ( (Constraint) value).getTheName().toString();  // untested 
+   	
+   	if ( value instanceof ExceptionValue) // extends MessageValue
+  		return false; // ( (ExceptionValue) value).getTheException().getTheName().toString();  // untested 
+
+   	if ( value instanceof FieldValue) // extends ValueExpression
+  		return false; // ( (FieldValue) value).getTheFieldAssignments().toString();  // untested 
+   	
+   	if ( value instanceof FloatValue) { // extends ttcn.tci.Value
+   		( (FloatValue) value).setTheNumber( new BigDecimal( theValue));  // untested 
+   		return true;
+   	}
+
+   	if ( value instanceof HexStringValue) { // extends StringValue
+   		( (HexStringValue) value).setTheContent( theValue);  // untested 
+   	  return true;
+   	}
+  		
+   		
+   	if ( value instanceof IntegerValue) { // extends ValueExpression
+   		( (IntegerValue) value).setTheNumber( new BigInteger( theValue)); 
+   		return true;
+   	}
+	
+  	if ( value instanceof ModuleValue) // extends ValueExpression
+   		return false; // ( (ModuleValue) value).getTheDeclarations().toString();  // untested 
+
+  	if ( value instanceof ObjidValue) // extends ValueExpression
+   		return false; // ( (ObjidValue) value).getTheObjIdFields().toString();  // untested 
+
+  	if ( value instanceof OctetStringValue) { // extends StringValue
+   		( (OctetStringValue) value).setTheContent( theValue);  // untested 
+   	  return true;
+   	}
+  		
+  	if ( value instanceof ReplyValue) // extends MessageValue
+   		return false; // ( (ReplyValue) value).getTheReply().toString();  // untested 
+  	
+  	if ( value instanceof MessageValue) // extends ValueExpression
+   		return false; // ( (MessageValue) value).getTheProcedure().getTheName().toString();  // untested 
+  	
+  	if ( value instanceof SequenceValue) // extends ValueExpression
+   		return false; // ( (SequenceValue) value).getTheElements().toString();  // untested 
+  	
+  	if ( value instanceof SignatureValue) // extends ValueExpression
+   		return false; // ( (SignatureValue) value).getTheReturnType() + " " + ( (SignatureValue) value).getTheName() + "(" + ( (SignatureValue) value).getTheParameters() + ")";  // untested
+  	
+  	if ( value instanceof StringValue) { // extends ValueExpression
+   		( (StringValue) value).setTheContent( theValue);  // untested
+   	  return true;
+   	}
+  		
+  	if ( value instanceof TimerValue) // extends ValueExpression
+   		return false; // ( (TimerValue) value).getTheDefaultDuration().toString();  // untested
+  	
+  	if ( value instanceof TupleValue) // extends ValueExpression
+   		return false; // ( (TupleValue) value).getTheComponents().toString();  // untested
+  	
+  	if ( value instanceof UniversalCharValue) { // extends ttcn.tci.Value
+  		try {
+  			( (UniversalCharValue) value).setUniversalChar( Integer.valueOf( theValue));  // untested
+  	    return true;
+  		} catch ( NumberFormatException e) {
+  			return false;  	
+  		}
+  	}
+
+  	if ( value instanceof ValueExpression) // extends kernel.Value
+   		return false; // ( (ValueExpression) value).toString();
+  	
+  	// default
+  	return false;
   }
 
 }

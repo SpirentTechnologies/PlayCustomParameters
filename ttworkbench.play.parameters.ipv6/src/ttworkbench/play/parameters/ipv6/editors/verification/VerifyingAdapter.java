@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWidget<T> {
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+
+public abstract class VerifyingAdapter<C extends Control,P> implements IVerifyingControl<C,P> {
 	
 	private class VerifyListener implements Listener {
 		
@@ -62,14 +65,17 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 		
 	}
 
-	private final T widget;
+	
+	private final C control;
+	private final IParameter<P> parameter;
 	private final Map<Integer, List<IVerificator<String>>> verificatorMap = new HashMap<Integer, List<IVerificator<String>>>();
 	private IVerificationListener<String> listener;
 	private final List<VerificationResult<String>> verificationResults = new ArrayList<VerificationResult<String>>();
 	
-	public VerifyingAdapter( final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
+	public VerifyingAdapter( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
 		super();
-		this.widget = createWidget( theParent, theStyle);
+		this.control = createControl( theParent, theStyle);
+		this.parameter = theParameter;
 		this.verificatorMap.put( SWT.Verify, new ArrayList( Arrays.asList( theVerificators)));
 		updateListener();
 	}
@@ -86,12 +92,12 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 	private void updateListener() {
 		Listener[] listeners;
 		eventTypeLoop: for ( Integer eventType : verificatorMap.keySet()) {
-			listeners = widget.getListeners( eventType);
+			listeners = control.getListeners( eventType);
 			for (int i = 0; i < listeners.length; i++) {
 				if ( listeners[i] instanceof VerifyingAdapter.VerifyListener)
 					continue eventTypeLoop;
 			}
-			widget.addListener( eventType, getVerifyListener());
+			control.addListener( eventType, getVerifyListener());
 		}
 	}
 	
@@ -101,7 +107,7 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 
 	protected abstract String getModifiedTextByEvent( final Event theEvent);
 	
-	protected abstract T createWidget( final Composite theParent, final int theStyle);
+	protected abstract C createControl( final Composite theParent, final int theStyle);
 	
 
 	@Override
@@ -115,8 +121,13 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 	}
 	
 	@Override
-	public final T getEncapsulatedWidget() {
-		return widget;
+	public C getControl() {
+		return control;
+	}
+
+	@Override
+	public IParameter<P> getParameter() {
+		return parameter;
 	}
 
 }
