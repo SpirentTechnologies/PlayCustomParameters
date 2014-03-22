@@ -35,10 +35,8 @@ public class DefaultEditor extends AbstractEditor<Object> {
 		label.setText( parameter.getName());
 		label.setToolTipText( parameter.getDescription());
 		
-		Text text = new Text(composite, SWT.READ_ONLY);
+		Text text = new Text(composite, SWT.READ_ONLY | SWT.BORDER);
 		text.setText( ParameterValueUtil.getValue( parameter));
-		System.out.println( String.valueOf( parameter.getValue()));
-		System.out.println( String.valueOf( parameter.getValue()));
 		
 		text.setToolTipText( parameter.getType());
 		
