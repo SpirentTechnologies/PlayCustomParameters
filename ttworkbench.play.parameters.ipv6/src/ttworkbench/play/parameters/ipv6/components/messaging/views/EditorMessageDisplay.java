@@ -154,6 +154,13 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 		}
 	}
 	
+	@Override
+	public void clearMessagesByTag( final String theTag) {
+		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
+		final MessageBlock messageBlock = messages.get( id);
+		messageBlock.clearTaggedMessage( theTag);
+	}
+	
 	private void putTaggedMessage( final MessageRecord theMessageRecord) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
