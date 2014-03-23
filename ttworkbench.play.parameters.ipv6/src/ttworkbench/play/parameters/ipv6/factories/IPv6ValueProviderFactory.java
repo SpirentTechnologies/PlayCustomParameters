@@ -1,16 +1,16 @@
 package ttworkbench.play.parameters.ipv6.factories;
 
+import java.net.Inet6Address;
 import java.util.List;
 
-import ttworkbench.play.parameters.ipv6.valueproviders.IPv6ValueProvider;
+import ttworkbench.play.parameters.ipv6.valueproviders.IPValueProvider;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProviderFactory;
 
-public class IPv6ValueProviderFactory implements
-		IParameterValueProviderFactory {
+public class IPv6ValueProviderFactory implements IParameterValueProviderFactory {
 
 	public IPv6ValueProviderFactory() {
 		// TODO Auto-generated constructor stub
@@ -54,8 +54,7 @@ public class IPv6ValueProviderFactory implements
 
 	@Override
 	public IParameterValueProvider create() {
-		// TODO Auto-generated method stub
-		return new IPv6ValueProvider();
+		return new IPValueProvider<Inet6Address>( Inet6Address.class);
 	}
 
 }
