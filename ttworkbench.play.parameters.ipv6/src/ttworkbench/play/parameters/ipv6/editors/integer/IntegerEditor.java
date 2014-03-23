@@ -1,7 +1,11 @@
 package ttworkbench.play.parameters.ipv6.editors.integer;
 
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -31,6 +35,8 @@ import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingTe
 import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
+import de.tu_berlin.cs.uebb.tools.util.Display;
+
 public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
 	private static final String TITLE = "Integer Editor";
@@ -39,10 +45,11 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
 	private boolean useOnlyTextField;
 	
-	private IntegerTypeVerificator integerTypeVerificator = new IntegerTypeVerificator();
-	private IntegerRangeVerificator integerRangeVerificator = null;
+	private IntegerTypeVerifier integerTypeVerifier = new IntegerTypeVerifier();
+	private IntegerRangeVerifier integerRangeVerifier = null;
 	
 	private IVerifyingControl<?,IntegerValue> inputControl;
+	
 	
 	public IntegerEditor() {
 		this( false);
@@ -67,7 +74,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	private void determineIntegerType() { 
 		String parameterType = getParameter().getType();
 		integerType = IntegerType.valueOfTypeName( parameterType);
-		integerRangeVerificator = new IntegerRangeVerificator( integerType);
+		integerRangeVerifier = new IntegerRangeVerifier( integerType);
 	}
 
 	
@@ -98,7 +105,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, integerTypeVerificator, integerRangeVerificator);
+		inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, integerTypeVerifier, integerRangeVerifier);
 		Text text = (Text) inputControl.getControl();
 		text.setText( getParameter().getValue().getTheNumber().toString());
 		text.setLayoutData( theLayoutData);
@@ -120,7 +127,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 	
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerificator, integerRangeVerificator);
+		inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerifier, integerRangeVerifier);
 		Spinner spinner = (Spinner) inputControl.getControl();
 		spinner.setMinimum( integerType.getMinValue().intValue());
 		spinner.setMaximum( integerType.getMaxValue().intValue());
@@ -130,9 +137,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		spinner.setTextLimit( integerType.getMaxValue().toString().length());
 		spinner.setLayoutData( theLayoutData);
 
-		setVerifyListenerToControl( inputControl);
-		
-	
+		setVerifyListenerToControl( inputControl);	
 	}
 
 	private void setVerifyListenerToControl( final IVerifyingControl<?,IntegerValue> theInputControl) {
@@ -157,7 +162,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			@Override
 			public void afterVerification(final VerificationEvent<String> theEvent) {
 				// verification passed, then write the value to parameter
-				ParameterValueUtil.setValue( inputControl.getParameter(), theEvent.inputToVerify);
+				setParameterValue( theEvent.inputToVerify);
 				// and start the validation process
 				validateDelayed( theInputControl);
 				theEvent.doit = true;
@@ -168,7 +173,6 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 
 
-	
 	@Override
 	protected void createEditRow(Composite theContainer) {
 		Object[] layoutData = this.getLookAndBehaviour().getLayoutDataOfControls();
@@ -213,7 +217,11 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 
 
-
+  @Override
+  protected void updateParameterValue() {
+  	String updatedValue = ParameterValueUtil.getValue( getParameter());
+  	inputControl.forceText( updatedValue);
+  }
 
 
 }

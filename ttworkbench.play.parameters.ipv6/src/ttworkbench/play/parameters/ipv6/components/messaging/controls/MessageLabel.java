@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
@@ -139,7 +140,7 @@ public class MessageLabel extends Composite implements IMessageLabel {
 			return true;
 		}
 		
-		// try to find a editor for this parameter on the current active widget
+		// try to find a editor for this parameter on the current active widget (tab)
 		if ( Globals.hasConfiguration()) {
 			Set<IParameterEditor> editors = Globals.getConfiguration().getEditors( theParameterControl.getParameter());
 			for ( IParameterEditor editor : editors) {

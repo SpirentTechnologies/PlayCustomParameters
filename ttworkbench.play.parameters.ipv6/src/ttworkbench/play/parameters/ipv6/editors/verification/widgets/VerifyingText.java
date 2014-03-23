@@ -7,15 +7,15 @@ import org.eclipse.swt.widgets.Text;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
 
 public class VerifyingText<P> extends VerifyingAdapter<Text,P> {
 	
 	
-  public VerifyingText( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
-	  super( theParameter, theParent, theStyle, theVerificators);
+  public VerifyingText( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<String> ... theVerifiers) {
+	  super( theParameter, theParent, theStyle, theVerifiers);
   }
 	
 	@Override

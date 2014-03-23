@@ -6,15 +6,15 @@ import org.eclipse.swt.widgets.Spinner;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
 
 public class VerifyingSpinner<P> extends VerifyingAdapter<Spinner,P> {
 
 	
-	public VerifyingSpinner( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
-	  super( theParameter, theParent, theStyle, theVerificators);
+	public VerifyingSpinner( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<String> ... theVerifiers) {
+	  super( theParameter, theParent, theStyle, theVerifiers);
   }
 
 	@Override

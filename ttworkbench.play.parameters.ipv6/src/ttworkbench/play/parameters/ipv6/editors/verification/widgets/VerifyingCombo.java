@@ -4,15 +4,15 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
+
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class VerifyingCombo<P> extends VerifyingAdapter<Combo,P>{
 
-	public VerifyingCombo( final IParameter<P> theParameter, Composite theParent, int theStyle, final IVerificator<String> ... theVerificators) {
-		super( theParameter, theParent, theStyle, theVerificators);
+	public VerifyingCombo( final IParameter<P> theParameter, Composite theParent, int theStyle, final IVerifier<String> ... theVerifiers) {
+		super( theParameter, theParent, theStyle, theVerifiers);
 	}
 
 	@Override
@@ -47,5 +47,6 @@ public class VerifyingCombo<P> extends VerifyingAdapter<Combo,P>{
 	protected Combo createControl(Composite theParent, int theStyle) {
 		return new Combo(theParent, theStyle);
 	}
+
 
 }

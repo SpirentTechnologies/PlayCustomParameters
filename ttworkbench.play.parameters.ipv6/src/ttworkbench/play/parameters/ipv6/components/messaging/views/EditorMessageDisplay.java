@@ -81,14 +81,14 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 			
 			@Override
 			public void handleDeregisterEvent(RegistryEvent theEvent) {
-				if ( !isDisposed()) {
+				if ( !isDisposed() && !messagePopup.isDisposed()) {
 					ErrorKind highestErrorKind = theEvent.registry.getHighestErrorKind();
 					int messageCount = theEvent.registry.getCountOfMessagesWithErrorKind( EnumSet.of( highestErrorKind));
 					Color messageColor = lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( highestErrorKind);
 					Color clearColor	=	getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 					Color frameColor = messageCount > 0 ? messageColor : clearColor;
-					EditorMessageDisplay.this.setBackground( frameColor);
-					EditorMessageDisplay.this.messagePopup.update();	
+					setBackground( frameColor);
+					messagePopup.update();	
 				}
 			}
 			

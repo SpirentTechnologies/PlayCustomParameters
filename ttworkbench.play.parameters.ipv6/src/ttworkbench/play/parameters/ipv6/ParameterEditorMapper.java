@@ -77,6 +77,7 @@ public class ParameterEditorMapper {
 	@SuppressWarnings("unchecked")
 	private Class<? extends IParameterEditor<?>> getEditorTypeByClassPath(Class<?> type) {
 		Class<? extends IParameterEditor<?>> editorType = null; 
+		// TODO handle case type == null
 		if(IParameterEditor.class.isAssignableFrom( type)) {
 			
 			boolean validConstructor = false;

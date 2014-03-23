@@ -8,7 +8,13 @@ import ttworkbench.play.parameters.ipv6.common.IParameterControl;
 
 public interface IVerifyingControl<C extends Control,P> extends IParameterControl<C,P> {
 
+	/**
+	 * Set the text after a successfully passed verification process under use of the given verifier.
+	 * @param theText
+	 */
   void setText( String theText);
+  
+  void forceText( String theText);
   
   String getText();
 	
@@ -16,6 +22,6 @@ public interface IVerifyingControl<C extends Control,P> extends IParameterContro
 
 	void setListener(IVerificationListener<String> theListener);
 
-	void addVerificatorToEvent(IVerificator<String> theVerificator, int theEventType);
+	void addVerifierToEvent(IVerifier<String> theVerifier, int theEventType);
 	
 }

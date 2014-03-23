@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MacPatternVerifier implements IVerificator<String>{
+public class MacPatternVerifier implements IVerifier<String>{
 
 	private static final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})$";
 	private static final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]){5}([0-9a-fA-F]{2})$";

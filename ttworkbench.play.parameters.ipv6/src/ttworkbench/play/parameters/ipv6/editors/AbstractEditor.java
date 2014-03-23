@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,9 +15,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePopup;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -44,6 +47,9 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	private IEditorLookAndBehaviour lookAndBehaviour;
 	
 	private Map<String,String> attributes = new HashMap<String, String>();
+	
+	private static Map<IParameter,Set<AbstractEditor>> parameterToEditorsMap = new HashMap<IParameter, Set<AbstractEditor>>();
+	
 	
 	public AbstractEditor( final String theTitle, final String theDescription) {
 		super();
@@ -73,7 +79,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	@Override
 	public boolean isEnabled() {
-	  return componentState == ComponentState.CREATED && enabled;
+	  return hasControl() && control.isEnabled();
 	}
 
 	@Override
@@ -84,7 +90,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	@Override
 	public boolean isVisible() {
-		return componentState == ComponentState.CREATED && visible;
+		return hasControl() && control.isVisible();
 	}
 
 	
@@ -112,7 +118,17 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	@Override
 	public void setParameter(IParameter<T> theParameter) {
+	  // remove old parameter from editorMap
+		if ( parameterToEditorsMap.containsKey( theParameter))
+			parameterToEditorsMap.get( theParameter).remove( this);
+		
+		// set new parameter
 		this.parameter = theParameter;
+		
+		// update parametermap
+		if ( !parameterToEditorsMap.containsKey( theParameter))
+			parameterToEditorsMap.put( theParameter, new HashSet<AbstractEditor>());
+		parameterToEditorsMap.get( theParameter).add( this);
 	}
 	
 	@Override
@@ -184,6 +200,10 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 		return control;
 	}
 	
+	public boolean hasControl() {
+		return componentState == ComponentState.CREATED;
+	}
+	
 	public ComponentState getState() {
 		return componentState;
 	}
@@ -208,6 +228,29 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 			control.setFocus();
 			if ( !control.isFocusControl())
 				setFocusToSomeChild( control);
+		}
+	}
+
+	/**
+	 * Called by setParameterValue to update the value.
+	 * Override this method in inherited classes where necessary. 
+	 */
+	protected void updateParameterValue() {
+	}
+	
+	protected void setParameterValue( String theValue) {
+		if ( parameter == null)
+			return;
+		
+		ParameterValueUtil.setValue( parameter, theValue);
+		
+		// update others
+		Set<AbstractEditor> parameterEditors = parameterToEditorsMap.get( parameter);
+		for ( AbstractEditor editor : parameterEditors) {
+			if ( editor == this)
+				continue;
+			if ( editor.hasControl())
+				editor.updateParameterValue();
 		}
 	}
 	

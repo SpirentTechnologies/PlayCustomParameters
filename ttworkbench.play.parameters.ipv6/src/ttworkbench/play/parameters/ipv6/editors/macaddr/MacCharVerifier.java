@@ -6,10 +6,10 @@ import java.util.List;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
-public class MacCharVerifier implements IVerificator<String> {
+public class MacCharVerifier implements IVerifier<String> {
 
 	private static final String VALID_CHAR_PATTERN = "^([0-9a-fA-F:-])*$";
 	

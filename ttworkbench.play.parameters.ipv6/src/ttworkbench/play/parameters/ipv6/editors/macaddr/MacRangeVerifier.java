@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Arrays;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MacRangeVerifier implements IVerificator<String> {
+public class MacRangeVerifier implements IVerifier<String> {
 
 	private static final int MAC_LENGTH = 17;
 	
