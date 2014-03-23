@@ -6,10 +6,12 @@ import java.util.Arrays;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 
 
 public class SimpleValidatorContext implements IValidatorContext {
 	private ArrayList<IParameter<?>> parameters = new ArrayList<IParameter<?>>();
+	private ArrayList<IWidget> widgets = new ArrayList<IWidget>();
 	private final IConfigurator configurator;
 
 	public SimpleValidatorContext() {
@@ -24,9 +26,18 @@ public class SimpleValidatorContext implements IValidatorContext {
 	public IParameter<?>[] getParameters() {
 		return parameters.toArray(new IParameter<?>[0]);
 	}
+
+	@Override
+	public IWidget[] getWidgets() {
+		return widgets.toArray(new IWidget[0]);
+	}
 	
 	public void addParameter(IParameter<?> parameter) {
 		parameters.add( parameter);
+	}
+	
+	public void addWidget(IWidget theWidget) {
+		widgets.add( theWidget);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -39,34 +50,6 @@ public class SimpleValidatorContext implements IValidatorContext {
 		return (IParameterEditor<T>[]) new IParameter<?>[0];
 	}
 	
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ( ( configurator == null) ? 0 : configurator.hashCode());
-		result = prime * result + ( ( parameters == null) ? 0 : parameters.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SimpleValidatorContext other = (SimpleValidatorContext) obj;
-		if (configurator == null) {
-			if (other.configurator != null)
-				return false;
-		} else if (!configurator.equals( other.configurator))
-			return false;
-		if (parameters == null) {
-			if (other.parameters != null)
-				return false;
-		} else if (!parameters.equals( other.parameters))
-			return false;
-		return true;
-	}
+
+
 }

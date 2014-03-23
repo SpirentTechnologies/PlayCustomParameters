@@ -1,24 +1,19 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
-import java.util.Set;
-
+import java.util.List;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 
@@ -57,8 +52,8 @@ public class IPv6Widget extends AbstractWidget {
 		//GridLayout gridLayout = new GridLayout( 1, false);
 		//gridLayout.makeColumnsEqualWidth = false;
 		if ( editorsContainer != null) {	
-			Set<IParameterEditor> editors = getEditors();
-			for ( IParameterEditor editor : editors) {
+			List<IParameterEditor<?>> editors = getEditors();
+			for ( IParameterEditor<?> editor : editors) {
 				Control editorControl = editor.createControl( editorsContainer/*, gridData, gridLayout*/);
 				editorControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 				

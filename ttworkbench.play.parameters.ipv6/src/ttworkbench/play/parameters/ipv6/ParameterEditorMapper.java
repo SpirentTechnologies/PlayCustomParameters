@@ -8,6 +8,7 @@ import ttworkbench.play.parameters.settings.Data.EditorTypeMapping;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
 import ttworkbench.play.parameters.settings.loader.DataLoader;
 
+import com.testingtech.ttworkbench.ttman.ManagementPlugin;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
@@ -52,7 +53,7 @@ public class ParameterEditorMapper {
 				}
 			}
 		} catch (ParameterConfigurationException e) {
-			logError( "Could not load editor type mappings: "+e.getMessage());
+			logError( "Could not load editor type mappings: "+e.getMessage(), e);
 		}
 
 		if(editor==null) {
@@ -66,9 +67,9 @@ public class ParameterEditorMapper {
 		try {
 			editor = theEditorType.newInstance();
 		} catch (InstantiationException e) {
-			logError( "Could not create an instance of type \""+theEditorType+"\": "+e.getMessage());
+			logError( "Could not create an instance of type \""+theEditorType+"\": "+e.getMessage(), e);
 		} catch (IllegalAccessException e) {
-			logError( "Could not create an instance of type \""+theEditorType+"\": "+e.getMessage());
+			logError( "Could not create an instance of type \""+theEditorType+"\": "+e.getMessage(), e);
 		}
 		return editor;
 	}
@@ -76,6 +77,7 @@ public class ParameterEditorMapper {
 	@SuppressWarnings("unchecked")
 	private Class<? extends IParameterEditor<?>> getEditorTypeByClassPath(Class<?> type) {
 		Class<? extends IParameterEditor<?>> editorType = null; 
+		// TODO handle case type == null
 		if(IParameterEditor.class.isAssignableFrom( type)) {
 			
 			boolean validConstructor = false;
@@ -89,18 +91,19 @@ public class ParameterEditorMapper {
 				editorType = (Class<? extends IParameterEditor<?>>) type;
 			}
 			else {
-				logError( "Class \""+type+"\" has no valid constructor without parameters.");
+				logError( "Class \""+type+"\" has no valid constructor without parameters.", null);
 			}
 		}
 		else {
-			logError( "Class \""+type+"\" is not extending \""+IParameterEditor.class+"\".");
+			logError( "Class \""+type+"\" is not extending \""+IParameterEditor.class+"\".", null);
 		}
 		return editorType;
 	}
 
-	private void logError(String msg) {
-		// TODO logger
-		System.err.println( msg);
+	private void logError(String msg, Exception e) {
+		ManagementPlugin
+		.getSharedInstance()
+		.eclipseLog(msg, e);
 	}
 
 }

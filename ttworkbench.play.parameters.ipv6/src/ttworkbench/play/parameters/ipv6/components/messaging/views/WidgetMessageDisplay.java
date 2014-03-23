@@ -19,9 +19,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
-
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock.RegisterDirective;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
@@ -54,7 +51,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 	
 	private static final ScheduledExecutorService messageWorker = Executors.newSingleThreadScheduledExecutor();
 	
-	private Map<String, ScheduledFuture> flashMessageFutures = new HashMap<String, ScheduledFuture>();
+	private Map<String, ScheduledFuture<?>> flashMessageFutures = new HashMap<String, ScheduledFuture<?>>();
 	
 	private Lock updateLock = new ReentrantLock();
 	
@@ -223,7 +220,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			}
 		};
 
-		ScheduledFuture flashMessageFuture = messageWorker.schedule( flashWarningTask, lookAndBehaviour.getFlashDuration(), TimeUnit.SECONDS);
+		ScheduledFuture<?> flashMessageFuture = messageWorker.schedule( flashWarningTask, lookAndBehaviour.getFlashDuration(), TimeUnit.SECONDS);
 		flashMessageFutures.put( msg.tag, flashMessageFuture);
 		
 		doOnChange();

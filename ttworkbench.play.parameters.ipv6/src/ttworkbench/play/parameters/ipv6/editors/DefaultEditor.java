@@ -3,12 +3,12 @@ package ttworkbench.play.parameters.ipv6.editors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
@@ -21,26 +21,24 @@ public class DefaultEditor extends AbstractEditor<Object> {
 	public DefaultEditor() {
 		super( TITLE, DESCRIPTION);
 	}
+	
 
 	@Override
-	public Composite createControl(Composite theTheParent) {
-		IParameter<Object> par = getParameter();
-		
-		Composite composite = new Group(theTheParent, SWT.NONE);
+	protected void designControl( Composite theControl) {
+		IParameter<Object> parameter = getParameter();
 		
 
-		composite.setLayout(new GridLayout(2, false));
-		Label label = new Label(composite, SWT.NONE);
-		label.setText( par.getName());
-		label.setToolTipText( par.getDescription());
+		theControl.setLayout(new GridLayout(2, false));
+		Label label = new Label(theControl, SWT.NONE);
+		label.setText( parameter.getName());
+		label.setToolTipText( parameter.getDescription());
 		
-		Text text = new Text(composite, SWT.READ_ONLY | SWT.BORDER);
-		text.setText( String.valueOf( par.getValue()));
-		text.setToolTipText( par.getType());
+		Text text = new Text(theControl, SWT.READ_ONLY | SWT.BORDER);
+		text.setText( ParameterValueUtil.getValue( parameter));
 		
-		return composite;
+		text.setToolTipText( parameter.getType());
 	}
-
+	
 	@Override
 	public void setConfiguration(IConfiguration theConfiguration) {
 		// TODO Auto-generated method stub
@@ -52,7 +50,6 @@ public class DefaultEditor extends AbstractEditor<Object> {
 		return new IntegerEditorLookAndBehaviour();
 	}
 
-
-
+	
 
 }

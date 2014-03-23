@@ -5,7 +5,6 @@ import ttworkbench.play.parameters.settings.Data.EditorTypeMapping;
 import ttworkbench.play.parameters.settings.Data.Parameter;
 import ttworkbench.play.parameters.settings.Data.Relation;
 import ttworkbench.play.parameters.settings.Data.RelationPartner;
-import ttworkbench.play.parameters.settings.Data.Validator;
 import ttworkbench.play.parameters.settings.Data.Widget;
 import ttworkbench.play.parameters.settings.loader.DataLoader;
 
@@ -36,23 +35,20 @@ public class DataLoaderTest {
 					for(Relation relation : parameter.getRelations()) {
 						System.out.println("     - Validator-Class: "+relation.getValidator().getType());
 						System.out.println("       Validator-Attributes: "+relation.getValidator().getAttributes());
-						System.out.println("       Validator-Notify: "+relation.getValidator().isWidgetNotified());
 						
-						System.out.println("       Related Parameters: "+relation.getRelationPartners().length);
+						System.out.println("       Relation-Partners: "+relation.getRelationPartners().length);
 						for(RelationPartner relationPartner : relation.getRelationPartners()) {
-							System.out.println("        - Widget: "+ relationPartner.getParameter().getId());
+
+							if(relationPartner.getPartner() instanceof Widget) {
+								System.out.println("        - Widget: \""+ ((Widget) relationPartner.getPartner()).getName()+"\"");
+							}
+							else if(relationPartner.getPartner() instanceof Parameter) {
+								System.out.println("        - Parameter: "+ ((Parameter) relationPartner.getPartner()).getId());
+							}
 							System.out.println("          Registered for Messages: "+relationPartner.isRegisteredForMessages());
 							System.out.println("          Registered for Actions: "+relationPartner.isRegisteredForActions());	
 						}
-					}
-
-					System.out.println("    Validators: "+parameter.getValidators().length);
-					for(Validator validator : parameter.getValidators()) {
-						System.out.println("     - Validator-Class: "+validator.getType());
-						System.out.println("       Validator-Attributes: "+validator.getAttributes());
-						System.out.println("       Validator-Notify: "+validator.isWidgetNotified());
-					}
-						
+					}						
 				}
 			}
 			

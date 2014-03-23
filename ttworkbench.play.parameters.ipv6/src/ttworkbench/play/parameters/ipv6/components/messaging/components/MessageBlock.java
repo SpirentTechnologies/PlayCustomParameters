@@ -9,15 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageLabel;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
-
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 /**
@@ -56,14 +51,16 @@ public class MessageBlock {
 	public synchronized void putTaggedMessage( final MessageRecord theMessageRecord, final RegisterDirective theRegisterDirective) {
 		MessageRecord msg = theMessageRecord;
 		MessageLabel oldMessageLine = taggedMessageElements.remove( msg.tag);
+		String oldMessageTag = (oldMessageLine != null) ? oldMessageLine.getMessageRecord().tag : null;
 		
 		// release old message control first
 		if ( oldMessageLine != null)
 			oldMessageLine.dispose();
 		
 		// add a success message only as an answer to a message of a prior cycle. 
-		if ( !agedMessageTags.contains( msg.tag) &&
-				msg.errorKind.equals( ErrorKind.success))
+		boolean answer = ( oldMessageTag != null && oldMessageTag.equals( msg.tag)) ||
+				               agedMessageTags.contains( msg.tag);
+		if ( !answer && msg.errorKind.equals( ErrorKind.success))
 			return;
 		
 		MessageLabel newMessageElement = new MessageLabel( messageContainer, msg);

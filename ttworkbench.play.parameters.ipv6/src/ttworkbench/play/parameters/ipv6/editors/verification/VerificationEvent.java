@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors.verification;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class VerificationEvent<T> {
@@ -15,7 +14,7 @@ public class VerificationEvent<T> {
 	
 	public boolean doit = true;
 	
-	public Object[] verificatorParams = {};
+	public Object[] verifierParams = {};
 	
 	public VerificationEvent( int theEventType, T theInputToVerify, List<VerificationResult<T>> theVerificationResults) {
 		this.eventType = theEventType;

@@ -9,20 +9,18 @@ public class ParameterImpl implements Data.Parameter {
 
 	private boolean descriptionVisible;
 	private Data.Relation[] relations;
-	private Data.Validator[] validators;
 	private String id;
 	private String description;
 	private String defaultValue;
 	private Map<String, String> attributes;
 
 	public ParameterImpl(boolean thisDescriptionVisible,
-			Data.Relation[] thisRelations, Data.Validator[] thisValidators,
+			Data.Relation[] thisRelations,
 			String thisId, String thisDescription, String thisDefaultValue,
 			Map<String, String> thisAttributes) {
 		
 		this.descriptionVisible = thisDescriptionVisible;
 		this.relations = thisRelations;
-		this.validators = thisValidators;
 		this.id = thisId;
 		this.description = thisDescription;
 		this.defaultValue = thisDefaultValue;
@@ -35,10 +33,6 @@ public class ParameterImpl implements Data.Parameter {
 	
 	public Data.Relation[] getRelations() {
 		return relations;
-	}
-	
-	public Data.Validator[] getValidators() {
-		return validators;
 	}
 	
 	public String getId() {
@@ -74,7 +68,6 @@ public class ParameterImpl implements Data.Parameter {
 		result = prime * result + (descriptionVisible ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + Arrays.hashCode(relations);
-		result = prime * result + Arrays.hashCode(validators);
 		return result;
 	}
 
@@ -110,8 +103,6 @@ public class ParameterImpl implements Data.Parameter {
 		} else if (!id.equals(other.id))
 			return false;
 		if (!Arrays.equals(relations, other.relations))
-			return false;
-		if (!Arrays.equals(validators, other.validators))
 			return false;
 		return true;
 	}

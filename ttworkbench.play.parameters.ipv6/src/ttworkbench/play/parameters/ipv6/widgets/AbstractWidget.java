@@ -1,27 +1,13 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-
-import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
-
 import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
-import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
@@ -36,7 +22,7 @@ public abstract class AbstractWidget implements IWidget {
 	private String description;
 	private Image image;
 	private Set<IAttribute> attributes;
-	private Set<IParameterEditor> editors = new HashSet<IParameterEditor>();
+	private List<IParameterEditor<?>> editors = new LinkedList<IParameterEditor<?>>();
 	private Set<IParameterValidator> validators;
 	private Set<IParameterValueProvider> valueProvider;
 	
@@ -51,17 +37,17 @@ public abstract class AbstractWidget implements IWidget {
 	public void setEnabled( boolean theEnabledState) {
 	  	this.enabled = theEnabledState;
 	}
-
+	
 	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
-
+	
 	@Override
 	public void setVisible( boolean theVisibleState) {
 		this.visible = theVisibleState;
 	}
-
+	
 	@Override
 	public boolean isVisible() {
 		return visible;
@@ -71,48 +57,50 @@ public abstract class AbstractWidget implements IWidget {
 	public String getTitle() {
 		return title;
 	}
-
+	
 	@Override
 	public String getDescription() {
 		return description;
 	}
-
+	
 	@Override
 	public Image getImage() {
 		return image;
 	}
-
 	
 	@Override
 	public void setAttributes(Set<IAttribute> theAttributes) {
 		this.attributes = theAttributes;
 	}
 	
-	protected Set<IAttribute> getAttributes() {
-		return attributes;
-	}
-
 	@Override
 	public void addEditor( IParameterEditor theEditors) {
 		editors.add( theEditors);	
 	}
 	
-	protected Set<IParameterEditor> getEditors() {
-		return editors;
-	}
-
 	@Override
 	public void setValidators(Set<IParameterValidator> theValidator) {
 		validators = theValidator;
 	}
 	
-	protected Set<IParameterValidator> getValidators() {
-		return validators;
-	}
-
 	@Override
 	public void setValueProviders(Set<IParameterValueProvider> theValueProvider) {
 		valueProvider = theValueProvider;
+	}
+
+	
+	
+	
+	protected Set<IAttribute> getAttributes() {
+		return attributes;
+	}	
+	
+	protected List<IParameterEditor<?>> getEditors() {
+		return editors;
+	}
+
+	protected Set<IParameterValidator> getValidators() {
+		return validators;
 	}
 
 	protected Set<IParameterValueProvider> getValueProvider() {
@@ -121,7 +109,5 @@ public abstract class AbstractWidget implements IWidget {
 	
 	@Override
 	public abstract Control createControl(Composite theParent);
-
-
 
 }

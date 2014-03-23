@@ -1,6 +1,6 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.data;
 
-import org.eclipse.swt.widgets.Control;
+import ttworkbench.play.parameters.ipv6.common.IParameterControl;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
@@ -12,9 +12,9 @@ public class MessageRecord {
 	
 	public ErrorKind errorKind;
 	
-	public final Object causer;
+	public final IParameterControl<?,?> causer;
 	
-	public MessageRecord( final String theTag, final String theMessage, final ErrorKind theErrorKind, final Object theCauser) {
+	public MessageRecord( final String theTag, final String theMessage, final ErrorKind theErrorKind, final IParameterControl<?,?> theCauser) {
 		super();
 		this.tag = theTag;
 		this.message = theMessage;
@@ -38,7 +38,7 @@ public class MessageRecord {
 	@Override
 	public int hashCode() {
 	  int hash = 1;
-    hash = hash * 17 + tag.hashCode();
+    hash = hash * 17 + (tag == null ? 0 : tag.hashCode());
     hash = hash * 31 + message.hashCode();
     hash = hash * 13 + errorKind.hashCode();
     hash = hash * 23 + (causer == null ? 0 : causer.hashCode()); 

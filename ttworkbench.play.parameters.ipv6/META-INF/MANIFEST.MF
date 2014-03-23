@@ -22,4 +22,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: parameters.ipv6.jar,
  swing2swt.jar,
- lib/ttworkbench.play.parameters.settings-0.3.jar
+ lib/ttworkbench.play.parameters.settings-0.4.jar

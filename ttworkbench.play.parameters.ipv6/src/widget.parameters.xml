@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<settings xmlns="https://github.com/TestingTechnologies/PlayCustomParameters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/TestingTechnologies/PlayCustomParameters widget.parameters.03.xsd ">
+<settings xmlns="https://github.com/TestingTechnologies/PlayCustomParameters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/TestingTechnologies/PlayCustomParameters widget.parameters.04.xsd ">
 
 	<types>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor">	
@@ -7,7 +7,7 @@
 			<expression>^Int\d{0,2}$</expression>
 			<attribute name="attr1">value1</attribute>
 		</editor>
-		<editor classpath="ttworkbench.play.parameters.ipv6.editors.MacAddressEditor">	
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.macaddr.MacAddressEditor">	
 			<expression>^PC_MAC_UCA_HS01$</expression>
 			<expression>^MacAddress$</expression>
 		</editor>
@@ -21,11 +21,11 @@
 			<editor parameterId="PX_UDP_PORT_HS02" />
 			<editor parameterId="PX_IUT_ROLE" />
 			<editor parameterId="PX_CONFIGURATION_ID" />
-			<!-- TODO
+
 			<editor parameterId="PX_N" />
 			<editor parameterId="PX_FIB_NUMBER" />
 			<editor parameterId="PX_FIB_SUCC_NUMBER" />
-			-->
+
 			<editor parameterId="PX_BIG_NUMBER" />
 			<editor parameterId="PX_IPv4_ADDR_IUT" />
 			<editor parameterId="PX_NET_DEVICE_ID_1" />
@@ -41,7 +41,7 @@
 		
 		
 
-		<widget name="Custom Fibonacci">
+		<widget name="Fibonacci">
 			<description>Fibonacci editor</description>
 			<editor parameterId="PX_N" />
 			<editor parameterId="PX_FIB_NUMBER" />
@@ -53,7 +53,7 @@
 	
 	<parameters>
 	
-		<parameter id="PX_MAC_LAYER">
+		<parameter id="PC_MAC_UCA_HS01">
 			<validator id="vMAC" />
 		</parameter>
 		
@@ -61,18 +61,22 @@
 		<parameter id="PX_N">
 			<description visible="true">Beschreibung</description>
 			<validator id="fibSeqValidator">
-				<relation parameterId="PX_N" />
+				<relation parameterId="PX_N" message="true" />
 				<relation parameterId="PX_FIB_NUMBER" message="true" />
-			</validator>	
+			</validator>
 		</parameter>
+		
 		
 		<parameter id="PX_FIB_NUMBER">
 			<description visible="true">Beschreibung</description>
-			<validator id="fibValidator_PX_FIB_NUMBER" notify="true" />
+			<validator id="fibValidator_PX_FIB_NUMBER">
+			</validator>
+
 			<validator id="fibSeqValidator">
 				<relation parameterId="PX_N" />
 				<relation parameterId="PX_FIB_NUMBER" message="true" />
-			</validator>
+			</validator> 
+
 			<validator id="fibSuccValidator">
 				<relation parameterId="PX_N" />
 				<relation parameterId="PX_FIB_NUMBER" />
@@ -82,7 +86,8 @@
 		
 		<parameter id="PX_FIB_SUCC_NUMBER">
 			<description visible="true">Beschreibung</description>
-			<validator id="fibValidator_PX_FIB_NUMBER" notify="true" />
+			<validator id="fibValidator_PX_FIB_NUMBER">
+			</validator>
 			<validator id="fibSuccValidator">
 				<relation parameterId="PX_N" />
 				<relation parameterId="PX_FIB_NUMBER" />
