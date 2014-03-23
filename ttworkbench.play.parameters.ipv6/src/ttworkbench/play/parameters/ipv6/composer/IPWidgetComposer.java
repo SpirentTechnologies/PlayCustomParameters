@@ -1,10 +1,10 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
-import ttworkbench.play.parameters.ipv6.editors.ip.HostnameVerificator;
-import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Verificator;
-import ttworkbench.play.parameters.ipv6.editors.ip.IPv6Verificator;
-import ttworkbench.play.parameters.ipv6.editors.ip.VerifyingIPEditor;
+import ttworkbench.play.parameters.ipv6.editors.ip.HostnameVerifier;
+import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Verifier;
+import ttworkbench.play.parameters.ipv6.editors.ip.IPv6Verifier;
+import ttworkbench.play.parameters.ipv6.editors.ip.IPEditor;
 import ttworkbench.play.parameters.ipv6.widgets.IPWidget;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
@@ -54,11 +54,11 @@ public class IPWidgetComposer extends WidgetComposer {
 		// };
 
 		// assign each parameter to the corresponding editor in this widget
-		getConfigurator().assign( new VerifyingIPEditor( new IPv4Verificator()), ipWidget, ipv4Parameter);
-		getConfigurator().assign( new VerifyingIPEditor( new IPv4Verificator(), new IPv6Verificator()), ipWidget,
+		getConfigurator().assign( new IPEditor( new IPv4Verifier()), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new IPEditor( new IPv4Verifier(), new IPv6Verifier()), ipWidget,
 				ipv4Parameter);
-		getConfigurator().assign( new VerifyingIPEditor( new IPv6Verificator()), ipWidget, ipv4Parameter);
-		getConfigurator().assign( new VerifyingIPEditor( new HostnameVerificator()), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new IPEditor( new IPv6Verifier()), ipWidget, ipv4Parameter);
+		getConfigurator().assign( new IPEditor( new HostnameVerifier()), ipWidget, ipv4Parameter);
 
 		// //Register the mac validator to the editor
 		// macValidator.registerForMessages( editor_MacAddress);

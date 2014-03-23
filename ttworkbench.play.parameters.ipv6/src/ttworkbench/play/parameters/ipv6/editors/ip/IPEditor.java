@@ -21,28 +21,27 @@ import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
-import ttworkbench.play.parameters.ipv6.editors.verification.Verificators;
 
-public class VerifyingIPEditor extends ValidatingEditor<String> {
+public class IPEditor extends ValidatingEditor<String> {
 
 	private static final String TITLE = "Host Editor";
 	private static final String DESCRIPTION = "";
 
 	final Display display = Display.getCurrent();
 
-	private List<IVerificator<String>> verificators = Arrays.asList( Verificators.getVerificator( IPv4Verificator.class),
-			Verificators.getVerificator( IPv6Verificator.class), Verificators.getVerificator( HostnameVerificator.class));
+	private List<IVerifier<String>> verificators = Arrays.asList( new IPv4Verifier(), new IPv6Verifier(),
+			new HostnameVerifier());
 
 	private CLabel label;
 	private Text text;
 
-	public VerifyingIPEditor() {
+	public IPEditor() {
 		super( TITLE, DESCRIPTION);
 	}
 
-	public VerifyingIPEditor( final IVerificator<String>... verificators) {
+	public IPEditor( final IVerifier<String>... verificators) {
 		this();
 		this.verificators = Arrays.asList( verificators);
 
@@ -86,7 +85,7 @@ public class VerifyingIPEditor extends ValidatingEditor<String> {
 			super();
 			StringBuffer buffer = new StringBuffer();
 			boolean first = true;
-			for (IVerificator<String> v : verificators) {
+			for (IVerifier<String> v : verificators) {
 				if (!first) {
 					buffer.append( " or ");
 				}
@@ -146,7 +145,7 @@ public class VerifyingIPEditor extends ValidatingEditor<String> {
 			List<MessageRecord> messages = new LinkedList<MessageRecord>();
 			boolean verified = false;
 
-			for (IVerificator<String> v : verificators) {
+			for (IVerifier<String> v : verificators) {
 				VerificationResult<String> result = v.verify( theText);
 				verified |= result.verified;
 				if (verified) {

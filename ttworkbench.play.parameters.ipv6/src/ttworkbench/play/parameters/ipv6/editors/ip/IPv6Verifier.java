@@ -6,12 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class IPv6Verificator implements IVerificator<String> {
+public class IPv6Verifier implements IVerifier<String> {
 
 	/* alternativer Ansatz */
 	/* source: http://stackoverflow.com/questions/46146 */

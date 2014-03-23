@@ -6,19 +6,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class IPv4Verificator implements IVerificator<String> {
+public class HostnameVerifier implements IVerifier<String> {
 
-	/**
-	 * TODO Nur vollständige IP-Adressen werden als korrekt angezeigt. Kann man
-	 * dies noch verbessern?
-	 */
-
-	final String REGEX = "\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z";
+	final String REGEX = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
 	final Pattern pattern = Pattern.compile( REGEX);
 
 	@Override
@@ -29,18 +24,19 @@ public class IPv4Verificator implements IVerificator<String> {
 
 		Matcher matcher = pattern.matcher( theInput);
 		verified = matcher.lookingAt();
+
 		if (verified) {
-			messages = Arrays.asList( new MessageRecord( "not_valid", "valid IPv4-Address.", ErrorKind.success));
+			messages = Arrays.asList( new MessageRecord( "invalid_input_warning",
+					String.format( "valid hostname.", theInput), ErrorKind.success));
 		} else {
-			messages = Arrays.asList( new MessageRecord( "not_valid", String.format( "\"%s\" is not a valid IPv4-Address.",
-					theInput), ErrorKind.warning));
+			messages = Arrays.asList( new MessageRecord( "invalid_input_warning", String.format(
+					"\"%s\" is not a valid hostname.", theInput), ErrorKind.warning));
 		}
 
 		return new VerificationResult<String>( theInput, verified, messages);
 	}
 
 	public String toString() {
-		return "IPv4-Address";
+		return "hostname";
 	}
-
 }
