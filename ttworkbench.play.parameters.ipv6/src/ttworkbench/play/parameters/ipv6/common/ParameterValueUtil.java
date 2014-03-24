@@ -117,98 +117,104 @@ public class ParameterValueUtil {
    * @param theValue
    * @return true, if the parameter value was set, otherwise false. In case there is no setter for string values to this parameter type defined yet, false is always the return value.
    */
-  public static boolean setValue( final IParameter<?> theParameter, final String theValue) {
+  @SuppressWarnings("unchecked")
+	public static <T> boolean setValue( final IParameter<T> theParameter, final String theValue) {
    	Object value = theParameter.getValue();
-   	
+   	boolean success = false;
+
    	if ( value instanceof BitStringValue) { // extends StringValue
   		( (BitStringValue) value).setTheContent( theValue);  // untested
-   	  return true;
+   	  success=true;
    	}
   		
-   	if ( value instanceof CallValue) // extends MessageValue
-  		return false; //( (CallValue) value).getTheProcedure().getTheName().toString();  // untested  	
+   	else if ( value instanceof CallValue) // extends MessageValue
+  		success=false; //( (CallValue) value).getTheProcedure().getTheName().toString();  // untested  	
 
-   	if ( value instanceof CharStringValue) { // extends StringValue
+   	else if ( value instanceof CharStringValue) { // extends StringValue
    		( (CharStringValue) value).setTheContent( theValue);  // untested  	 	
-   		return true;
+   		success=true;
    	}
 
-   	if ( value instanceof ConstantValue) // extends Attribute
-  		return false; // ( (ConstantValue) value).getTheName().toString();  // untested 
+   	else if ( value instanceof ConstantValue) // extends Attribute
+  		success=false; // ( (ConstantValue) value).getTheName().toString();  // untested 
    	
-   	if ( value instanceof Constraint) 
-  		return false; // ( (Constraint) value).getTheName().toString();  // untested 
+   	else if ( value instanceof Constraint) 
+  		success=false; // ( (Constraint) value).getTheName().toString();  // untested 
    	
-   	if ( value instanceof ExceptionValue) // extends MessageValue
-  		return false; // ( (ExceptionValue) value).getTheException().getTheName().toString();  // untested 
+   	else if ( value instanceof ExceptionValue) // extends MessageValue
+  		success=false; // ( (ExceptionValue) value).getTheException().getTheName().toString();  // untested 
 
-   	if ( value instanceof FieldValue) // extends ValueExpression
-  		return false; // ( (FieldValue) value).getTheFieldAssignments().toString();  // untested 
+   	else if ( value instanceof FieldValue) // extends ValueExpression
+  		success=false; // ( (FieldValue) value).getTheFieldAssignments().toString();  // untested 
    	
-   	if ( value instanceof FloatValue) { // extends ttcn.tci.Value
+   	else if ( value instanceof FloatValue) { // extends ttcn.tci.Value
    		( (FloatValue) value).setTheNumber( new BigDecimal( theValue));  // untested 
-   		return true;
+   		success=true;
    	}
 
-   	if ( value instanceof HexStringValue) { // extends StringValue
+   	else if ( value instanceof HexStringValue) { // extends StringValue
    		( (HexStringValue) value).setTheContent( theValue);  // untested 
-   	  return true;
+   	  success=true;
    	}
   		
    		
-   	if ( value instanceof IntegerValue) { // extends ValueExpression
-   		( (IntegerValue) value).setTheNumber( new BigInteger( theValue)); 
-   		return true;
+   	else if ( value instanceof IntegerValue) { // extends ValueExpression
+   		( (IntegerValue) value).setTheNumber( new BigInteger( theValue));
+   		success=true;
    	}
 	
-  	if ( value instanceof ModuleValue) // extends ValueExpression
-   		return false; // ( (ModuleValue) value).getTheDeclarations().toString();  // untested 
+   	else if ( value instanceof ModuleValue) // extends ValueExpression
+   		success=false; // ( (ModuleValue) value).getTheDeclarations().toString();  // untested 
 
-  	if ( value instanceof ObjidValue) // extends ValueExpression
-   		return false; // ( (ObjidValue) value).getTheObjIdFields().toString();  // untested 
+  	else if ( value instanceof ObjidValue) // extends ValueExpression
+   		success=false; // ( (ObjidValue) value).getTheObjIdFields().toString();  // untested 
 
-  	if ( value instanceof OctetStringValue) { // extends StringValue
+  	else if ( value instanceof OctetStringValue) { // extends StringValue
    		( (OctetStringValue) value).setTheContent( theValue);  // untested 
-   	  return true;
+   	  success=true;
    	}
   		
-  	if ( value instanceof ReplyValue) // extends MessageValue
-   		return false; // ( (ReplyValue) value).getTheReply().toString();  // untested 
+  	else if ( value instanceof ReplyValue) // extends MessageValue
+  		success= false; // ( (ReplyValue) value).getTheReply().toString();  // untested 
   	
-  	if ( value instanceof MessageValue) // extends ValueExpression
-   		return false; // ( (MessageValue) value).getTheProcedure().getTheName().toString();  // untested 
+  	else if ( value instanceof MessageValue) // extends ValueExpression
+  		success= false; // ( (MessageValue) value).getTheProcedure().getTheName().toString();  // untested 
   	
-  	if ( value instanceof SequenceValue) // extends ValueExpression
-   		return false; // ( (SequenceValue) value).getTheElements().toString();  // untested 
+  	else if ( value instanceof SequenceValue) // extends ValueExpression
+  		success= false; // ( (SequenceValue) value).getTheElements().toString();  // untested 
   	
-  	if ( value instanceof SignatureValue) // extends ValueExpression
-   		return false; // ( (SignatureValue) value).getTheReturnType() + " " + ( (SignatureValue) value).getTheName() + "(" + ( (SignatureValue) value).getTheParameters() + ")";  // untested
+  	else if ( value instanceof SignatureValue) // extends ValueExpression
+  		success= false; // ( (SignatureValue) value).getTheReturnType() + " " + ( (SignatureValue) value).getTheName() + "(" + ( (SignatureValue) value).getTheParameters() + ")";  // untested
   	
-  	if ( value instanceof StringValue) { // extends ValueExpression
+  	else if ( value instanceof StringValue) { // extends ValueExpression
    		( (StringValue) value).setTheContent( theValue);  // untested
-   	  return true;
+   		success= true;
    	}
   		
-  	if ( value instanceof TimerValue) // extends ValueExpression
-   		return false; // ( (TimerValue) value).getTheDefaultDuration().toString();  // untested
+  	else if ( value instanceof TimerValue) // extends ValueExpression
+  		success= false; // ( (TimerValue) value).getTheDefaultDuration().toString();  // untested
   	
-  	if ( value instanceof TupleValue) // extends ValueExpression
-   		return false; // ( (TupleValue) value).getTheComponents().toString();  // untested
+  	else if ( value instanceof TupleValue) // extends ValueExpression
+  		success= false; // ( (TupleValue) value).getTheComponents().toString();  // untested
   	
-  	if ( value instanceof UniversalCharValue) { // extends ttcn.tci.Value
+  	else if ( value instanceof UniversalCharValue) { // extends ttcn.tci.Value
   		try {
   			( (UniversalCharValue) value).setUniversalChar( Integer.valueOf( theValue));  // untested
-  	    return true;
+  			success= true;
   		} catch ( NumberFormatException e) {
-  			return false;  	
+  			success= false;  	
   		}
   	}
 
   	if ( value instanceof ValueExpression) // extends kernel.Value
-   		return false; // ( (ValueExpression) value).toString();
-  	
-  	// default
-  	return false;
+  		success= false; // ( (ValueExpression) value).toString();
+	
+  	// IMPORTANT!
+  	//  setValue needs to be called to trigger modify handlers
+  	if(success)
+	 		theParameter.setValue( (T) value);
+   	
+  	return success;
   }
 
 }
