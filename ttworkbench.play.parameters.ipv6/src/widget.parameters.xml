@@ -277,6 +277,9 @@
 		<validator id="visibility">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.VisibilityToggleValidator</classpath>
 		</validator>
+		<validator id="disjunction">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.DisjunctionValidator</classpath>
+		</validator>
 		
 		<validator id="fibValidator_PX_FIB_NUMBER">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_NUMBER</classpath>
