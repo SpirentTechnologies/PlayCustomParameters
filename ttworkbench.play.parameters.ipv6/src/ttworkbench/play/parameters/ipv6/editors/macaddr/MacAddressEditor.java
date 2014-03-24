@@ -56,7 +56,6 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 	private static final String DESCRIPTION = "";
 	
 	private static final int MAC_LENGTH = 17;
-	private static final String MAC_DEFAULT = "00:00:00:00:00:00";
 	
 	private  MacPatternVerifier macPatternVerifier = new MacPatternVerifier();
 	private  MacRangeVerifier macRangeVerifier = new MacRangeVerifier();
@@ -99,15 +98,12 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 		macCombo.setBounds( dimensions);
 		setWidthForText(macCombo, MAC_LENGTH);
 		macCombo.setTextLimit( MAC_LENGTH);
-		String items[] = {"item1", "item2", "item3"};
 		
 		Set<StringValue> availableValues = macValueProvider.getAvailableValues( this.getParameter());
-		
-		macCombo.setItems( items);
-		
+
 		int index = 0;
 		for(StringValue value : availableValues){
-			macCombo.setItem( index, value.getTheContent().toString());
+			macCombo.add(value.getTheContent().toString(), index);
 			index++;
 			System.out.println(value.getTheContent().toString());
 		}

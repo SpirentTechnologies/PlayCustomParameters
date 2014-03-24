@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.EnumWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IPWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
@@ -38,6 +39,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new IPWidgetComposer( theConfigurator, parametersMap));
+		widgetComposers.add( new EnumWidgetComposer( theConfigurator, parametersMap));
 		
 		
 		// custom widget configuration
