@@ -24,7 +24,9 @@ import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
-public class IPEditor extends ValidatingEditor<String> {
+import com.testingtech.muttcn.values.StringValue;
+
+public class IPEditor extends ValidatingEditor<StringValue> {
 
 	private static final String TITLE = "Host Editor";
 	private static final String DESCRIPTION = "";
