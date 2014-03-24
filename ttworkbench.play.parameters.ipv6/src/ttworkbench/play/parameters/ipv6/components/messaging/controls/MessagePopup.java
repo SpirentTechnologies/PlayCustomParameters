@@ -139,12 +139,10 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	private void showPopup( final Point theMousePosition) {
 		// TODO: handle case if popup is shown out of or intersect with getDisplay.getClientArea()
 		popupShell.setLocation( label.toDisplay( new Point( theMousePosition.x -12, theMousePosition.y -12)));
-		Point computedSize = popupShell.computeSize( SWT.DEFAULT, SWT.DEFAULT);
-		popupShell.setSize( computedSize.x, Math.min( computedSize.y, 100));
 		for ( Control control : messageContainer.getChildren()) {
 			control.setEnabled( false);
 		}
-		popupShell.layout();
+		updatePopup();
 		popupShell.open();
 		
 		// register handler in display to get mouse moves outside the clientarea too. To close the popup later. 
@@ -203,10 +201,13 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	private void updatePopup() {
 		messageContainer.pack( true);
 		messageContainer.layout( true);
-		scrolledComposite.layout( true, true);
-		scrolledComposite.setMinSize( scrolledComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		Point computedSize = popupShell.computeSize( SWT.DEFAULT, scrolledComposite.getSize().y +2);
-		popupShell.setSize( computedSize.x, Math.min( computedSize.y, 100));
+		
+		Point computedScrollSize = scrolledComposite.computeSize( SWT.DEFAULT, messageContainer.getSize().y);
+		scrolledComposite.setMinSize( computedScrollSize);
+		
+		Point computedPopupSize = popupShell.computeSize( SWT.DEFAULT, messageContainer.getSize().y +2);
+		popupShell.setSize( computedPopupSize.x, Math.min( computedPopupSize.y, 100));
+		
 		popupShell.update();
 		if ( messageView.getMessageInformation().getTotalCount() == 0)
 		  hidePopup();
