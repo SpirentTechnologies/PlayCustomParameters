@@ -237,7 +237,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 		LinkedHashMap<String, String> result = new LinkedHashMap<String,String>();
 		
 		for(HierarchicalConfiguration val : config.configurationsAt("attribute")) {
-			String value = val.getString("");
+			String value = val.getString("", "");
 			String key = val.getString("[@name]");
 			result.put(key, value);
 		}
