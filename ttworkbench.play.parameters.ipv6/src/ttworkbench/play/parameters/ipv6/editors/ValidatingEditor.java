@@ -203,7 +203,13 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	@Override
 	public void trigger(final IParameterValidator theValidator, final List<ValidationResultAction> theValidationActions, IParameter<?> theParameter) {
-		// TODO
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {				
+				for (ValidationResultAction validationResultAction : theValidationActions) {
+					validationResultAction.triggerEditor( ValidatingEditor.this);
+				}
+			}
+		});
 	}
 	
 	

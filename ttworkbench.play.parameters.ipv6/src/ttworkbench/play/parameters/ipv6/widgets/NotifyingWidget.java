@@ -8,13 +8,15 @@ import org.eclipse.swt.widgets.Display;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
-public abstract class NotifyingWidget extends AbstractWidget implements IMessageHandler {
+public abstract class NotifyingWidget extends AbstractWidget implements IMessageHandler, IActionHandler {
 
 	public NotifyingWidget( String theTitle, String theDescription, Image theImage) {
 		super( theTitle, theDescription, theImage);
@@ -27,8 +29,7 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 	
 
 	@Override
-	public void report( final IParameterValidator theValidator, final List<ValidationResultMessage> theValidationResults,
-			final IParameter<?> theParameter) {
+	public void report( final IParameterValidator theValidator, final List<ValidationResultMessage> theValidationResults, final IParameter<?> theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				IMessageView<?> messageView = getMessageView();
@@ -46,4 +47,15 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 	}
 
 
+	@Override
+	public void trigger(final IParameterValidator theValidator, final List<ValidationResultAction> theActions, IParameter<?> theParameter) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				for (ValidationResultAction action : theActions) {
+					action.triggerWidget( NotifyingWidget.this);
+				}
+			}
+		});
+	}
+	
 }

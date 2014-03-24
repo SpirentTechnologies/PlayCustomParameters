@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class VisibilityToggleValidator extends ContextualValidator {
@@ -22,14 +25,23 @@ public class VisibilityToggleValidator extends ContextualValidator {
 
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 		
-		boolean visible = value.matches( pattern);
-		String tag = "tag_visible_hint";
+		final boolean visible = value.matches( pattern);
+		String tag = "tag_visible_hint_"+visible;
 		
-		if(visible) {
-			validationResults.add( new ValidationResultMessage(  String.format( "%s: visibility=true", this.getTitle()), ErrorKind.info, theClient, tag));
-		} else {
-			validationResults.add( new ValidationResultMessage(  String.format( "%s: visibitly=false.", this.getTitle()), ErrorKind.info, theClient, tag));
-		}
+		validationResults.add( new ValidationResultAction( String.format( "%s: visibility="+visible, this.getTitle()), ErrorKind.info, theClient, tag) {
+
+			@Override
+			public void triggerEditor(IParameterEditor<?> theEditor) {
+				theEditor.setVisible( visible);
+			}
+
+			@Override
+			public void triggerWidget(IWidget theWidget) {
+				theWidget.setVisible( visible);
+			}
+			
+		});
+
 		return validationResults;
 	}	
 

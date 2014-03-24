@@ -8,6 +8,7 @@ import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class FibValidator_SUCC extends FibValidator {
 

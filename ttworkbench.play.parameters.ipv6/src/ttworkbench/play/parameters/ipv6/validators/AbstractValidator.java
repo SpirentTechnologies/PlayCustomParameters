@@ -94,8 +94,6 @@ public abstract class AbstractValidator implements IParameterValidator {
 			messageHandler.report( this, theResults, theParameter);
 		} 
 	}
-
-	protected abstract List<ValidationResult> validateParameter(IParameter<?> theParameter, Object theClient);
 	private void notifyActionHandlers(AbstractValidator theAbstractValidator,
 			List<ValidationResultAction> theResults, IParameter<?> theParameter) {
 		for ( IActionHandler actionHandler : actionHandlers) {
@@ -103,6 +101,10 @@ public abstract class AbstractValidator implements IParameterValidator {
 		} 
 	}
 
+
+	protected abstract List<ValidationResult> validateParameter(IParameter<?> theParameter, Object theClient);
+	
+	
 	@Override
 	public void registerForMessages(IMessageHandler theMessageHandler) {
 		messageHandlers.add( theMessageHandler);

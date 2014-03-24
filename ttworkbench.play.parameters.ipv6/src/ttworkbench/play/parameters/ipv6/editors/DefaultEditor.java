@@ -10,7 +10,6 @@ import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class DefaultEditor extends AbstractEditor<Object> {
@@ -39,11 +38,6 @@ public class DefaultEditor extends AbstractEditor<Object> {
 		text.setToolTipText( parameter.getType());
 	}
 	
-	@Override
-	public void setConfiguration(IConfiguration theConfiguration) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	protected IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
