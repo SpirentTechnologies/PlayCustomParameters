@@ -158,6 +158,13 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		}
 	}
 	
+	@Override
+	public void clearMessagesByTag( final String theTag) {
+		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
+		final MessageBlock messageBlock = messages.get( id);
+		messageBlock.clearTaggedMessage( theTag);
+	}
+	
 	private void putTaggedMessage( final MessageRecord theMessageRecord) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 

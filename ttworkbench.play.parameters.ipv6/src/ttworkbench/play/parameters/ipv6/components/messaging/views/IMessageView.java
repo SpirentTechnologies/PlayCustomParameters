@@ -34,6 +34,12 @@ public interface IMessageView<ClientComponent> {
 	void showMessage( MessageRecord theMessageRecord);
 	void showMessages( Collection<MessageRecord> theMessageRecords);
 
+	/**
+	 * Forces removal of the message specified by the given tag.  
+	 * @param theTag
+	 */
+	void clearMessagesByTag(String theTag);
+	
 		/**
 	 * Fetches all messages on this panel of specified error kind.
 	 * 
@@ -51,5 +57,6 @@ public interface IMessageView<ClientComponent> {
 	IMessageInformation getMessageInformation();
 
 	void setSuperiorView(IMessageView<?> theMessageView);
+
 
 }
