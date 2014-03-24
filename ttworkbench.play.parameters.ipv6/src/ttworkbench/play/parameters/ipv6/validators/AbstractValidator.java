@@ -2,23 +2,27 @@ package ttworkbench.play.parameters.ipv6.validators;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
-import com.testingtech.ttworkbench.ttman.parameters.api.IAttribute;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public abstract class AbstractValidator implements IParameterValidator {
 
 	private final String title;
 	private final String description;
 	
-	private final Set<IAttribute> attributes = new HashSet<IAttribute>();
+	// TODO use this? why? private final Set<IAttribute> attributes = new HashSet<IAttribute>();
+	private final Map<String, String> attributes = new LinkedHashMap<String, String>();
 	
 	private final Set<IMessageHandler> messageHandlers = new HashSet<IMessageHandler>();
 	private final Set<IActionHandler> actionHandlers = new HashSet<IActionHandler>();
@@ -28,9 +32,20 @@ public abstract class AbstractValidator implements IParameterValidator {
 		this.description = theDescription;
 	}
 	
+
+  /**
+   * Get the attribute for current actor.
+   * @param name the attribute name
+   * @return value of the attribute
+   */
+  String getAttribute(String name) {
+  	return attributes.get(name);
+  }
+  
+  
 	@Override
 	public void setAttribute(String theName, String theValue) {
-		// TODO Auto-generated method stub	
+		attributes.put(theName, theValue);	
 	}
 
 	@Override
@@ -52,20 +67,38 @@ public abstract class AbstractValidator implements IParameterValidator {
 	@Override
 	public synchronized final List<ValidationResult> validate( IParameter theParameter, Object theClient) {
 		List<ValidationResult> results = validateParameter( theParameter, theClient);
-		
-		if ( results == null)
-			results = new ArrayList<ValidationResult>();
-			
-		if ( !results.isEmpty())
-		  notifyMessageHandlers( this, results, theParameter);
+
+		List<ValidationResultMessage> resultsMessages = new LinkedList<ValidationResultMessage>();
+		List<ValidationResultAction> resultsActions = new LinkedList<ValidationResultAction>();
+
+		if ( results != null) {
+			for(ValidationResult result : results) {
+				if(result instanceof ValidationResultMessage) {
+					resultsMessages.add( (ValidationResultMessage) result);
+				}
+				else if(result instanceof ValidationResultAction) {
+					resultsActions.add( (ValidationResultAction) result);
+				}
+			}
+		}
+
+		notifyMessageHandlers( this, resultsMessages, theParameter);
+		notifyActionHandlers( this, resultsActions, theParameter);
 		
 		return results;
 	}
 
 	private void notifyMessageHandlers(AbstractValidator theAbstractValidator,
-			List<ValidationResult> theResults, IParameter theParameter) {
+			List<ValidationResultMessage> theResults, IParameter<?> theParameter) {
 		for ( IMessageHandler messageHandler : messageHandlers) {
 			messageHandler.report( this, theResults, theParameter);
+		} 
+	}
+
+	private void notifyActionHandlers(AbstractValidator theAbstractValidator,
+			List<ValidationResultAction> theResults, IParameter<?> theParameter) {
+		for ( IActionHandler actionHandler : actionHandlers) {
+			actionHandler.trigger( this, theResults, theParameter);
 		} 
 	}
 

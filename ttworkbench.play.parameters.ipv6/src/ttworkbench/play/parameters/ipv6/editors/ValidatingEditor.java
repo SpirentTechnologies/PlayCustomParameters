@@ -35,8 +35,9 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationAction;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
@@ -183,16 +184,15 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 
 	@Override
-	public synchronized void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
-			final IParameter theParameter) {
+	public synchronized void report( final IParameterValidator theValidator, final List<ValidationResultMessage> theValidationMessages, final IParameter<?> theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {				
-				IMessageView messageView = getMessageView();
+				IMessageView<?> messageView = getMessageView();
 				if ( messageView != null) {
 					String senderId = String.valueOf( theValidator.getId());
 					// TODO
 					messageView.beginUpdateForSender( senderId);
-					for (ValidationResult validationResult : theValidationResults) {
+					for (ValidationResult validationResult : theValidationMessages) {
 						if ( validationResult.isTagged()) {
 							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind(), validationResult.getClient()));
 						} else {
@@ -207,9 +207,8 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	
 	@Override
-	public void trigger(IParameterValidator theValidator, List<ValidationAction> theValidationActions,
-			IParameter theParameter) {
-		// TODO Auto-generated method stub
+	public void trigger(final IParameterValidator theValidator, final List<ValidationResultAction> theValidationActions, IParameter<?> theParameter) {
+		// TODO
 	}
 	
 

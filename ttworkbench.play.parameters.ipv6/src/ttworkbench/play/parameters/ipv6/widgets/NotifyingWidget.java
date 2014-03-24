@@ -12,6 +12,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public abstract class NotifyingWidget extends AbstractWidget implements IMessageHandler {
 
@@ -26,11 +27,11 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 	
 
 	@Override
-	public void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
-			final IParameter theParameter) {
+	public void report( final IParameterValidator theValidator, final List<ValidationResultMessage> theValidationResults,
+			final IParameter<?> theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				IMessageView messageView = getMessageView();
+				IMessageView<?> messageView = getMessageView();
 				String senderId = String.valueOf( theValidator.getId());
 				messageView.beginUpdateForSender( senderId);
 				MessageRecord messageRecord;
