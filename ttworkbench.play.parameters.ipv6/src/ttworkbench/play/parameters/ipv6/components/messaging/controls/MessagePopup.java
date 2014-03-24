@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackListener;
@@ -33,6 +34,8 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	private final IMessageView messageView;
 	private CLabel label;
 	private Shell popupShell;
+	private Composite messageContainer;
+	private ScrolledComposite scrolledComposite;
 	private Listener mouseMoveListener = createMouseMoveListener();
 	private String labelTextFormat = "%d %s.";  //were %d is replaced by the count and %s by the mesage kind.
 	
@@ -72,15 +75,40 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	private void createPopupShell() {
 		// TODO: if necessary lay a scrolled composite below the message lines
 		popupShell = new Shell( getShell(),  SWT.NO_TRIM | SWT.TOOL | SWT.NO_FOCUS);
-		GridLayout popupLayout = new GridLayout(1, true);
+		// layout of popup shell
+		GridLayout popupLayout = new GridLayout();
 		popupLayout.horizontalSpacing = 0;
 		popupLayout.verticalSpacing = 0;
 		popupLayout.marginWidth = 1;
 		popupLayout.marginHeight = 1;
 		popupShell.setLayout( popupLayout);
+		// set frame color
 		popupShell.setBackground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_NORMAL_SHADOW));
+	
+		// insert a scrollbox
+	  scrolledComposite = new ScrolledComposite( popupShell, SWT.H_SCROLL | SWT.V_SCROLL);
+	  scrolledComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 0, 0));
+		scrolledComposite.setLayout( new FillLayout());
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(false);
 		
-    popupShell.addListener( SWT.MouseDown, new Listener() {
+		// insert message container into scrollbox
+		messageContainer = new Composite( scrolledComposite, SWT.None);
+		//messageContainer.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false, 0, 0));
+		
+		// layout of message container shell
+		GridLayout messageContainerLayout = new GridLayout();
+		messageContainerLayout.horizontalSpacing = 0;
+		messageContainerLayout.verticalSpacing = 0;
+		messageContainerLayout.marginWidth = 0;
+		messageContainerLayout.marginHeight = 0;
+		messageContainer.setLayout( messageContainerLayout);
+		messageContainer.setBackground( getDisplay().getSystemColor( SWT.COLOR_CYAN));
+		
+		scrolledComposite.setContent( messageContainer);
+		scrolledComposite.setMinSize( messageContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		
+		messageContainer.addListener( SWT.MouseDown, new Listener() {
 			
 			@Override
 			public void handleEvent(Event theEvent) {
@@ -90,13 +118,14 @@ public class MessagePopup extends Composite implements IMessageContainer {
 					Control underlayingControl = getUnterlayingControl( theEvent);
 					if ( underlayingControl instanceof MessageLabel) {
 						MessageLabel messageLabel = (MessageLabel) underlayingControl;
+						System.out.println( messageLabel.getMessage());
 						messageLabel.navigateToCauser();
 					}
 				}
 			}
 
 			private Control getUnterlayingControl( Event theEvent) {
-				for ( Control control : popupShell.getChildren()) {
+				for ( Control control : messageContainer.getChildren()) {
 					if ( control.getBounds().contains( theEvent.x,theEvent.y))
 						return control;
 				}
@@ -110,8 +139,9 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	private void showPopup( final Point theMousePosition) {
 		// TODO: handle case if popup is shown out of or intersect with getDisplay.getClientArea()
 		popupShell.setLocation( label.toDisplay( new Point( theMousePosition.x -12, theMousePosition.y -12)));
-		popupShell.setSize( popupShell.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		for ( Control control : popupShell.getChildren()) {
+		Point computedSize = popupShell.computeSize( SWT.DEFAULT, SWT.DEFAULT);
+		popupShell.setSize( computedSize.x, Math.min( computedSize.y, 100));
+		for ( Control control : messageContainer.getChildren()) {
 			control.setEnabled( false);
 		}
 		popupShell.layout();
@@ -171,8 +201,12 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	}
 	
 	private void updatePopup() {
-		popupShell.layout( true);
-		popupShell.setSize( popupShell.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		messageContainer.pack( true);
+		messageContainer.layout( true);
+		scrolledComposite.layout( true, true);
+		scrolledComposite.setMinSize( scrolledComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		Point computedSize = popupShell.computeSize( SWT.DEFAULT, scrolledComposite.getSize().y +2);
+		popupShell.setSize( computedSize.x, Math.min( computedSize.y, 100));
 		popupShell.update();
 		if ( messageView.getMessageInformation().getTotalCount() == 0)
 		  hidePopup();
@@ -222,7 +256,7 @@ public class MessagePopup extends Composite implements IMessageContainer {
 
 	@Override
 	public Composite getMessageComposite() {
-		return popupShell;
+		return messageContainer;
 	}
 
 
