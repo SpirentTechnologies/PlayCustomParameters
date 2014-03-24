@@ -2,7 +2,6 @@ package ttworkbench.play.parameters.ipv6.editors.ip;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
@@ -71,8 +70,7 @@ public class IPv6Verifier implements IVerifier<String> {
 		List<MessageRecord> messages;
 		boolean verified;
 
-		Matcher matcher = pattern.matcher( theInput);
-		verified = matcher.lookingAt();
+		verified = theInput.matches( REGEX);
 		if (verified) {
 			messages = Arrays.asList( new MessageRecord( "invalid_input_warning", "valid IPv6-Address.", ErrorKind.success));
 		} else {
