@@ -2,9 +2,10 @@ package ttworkbench.play.parameters.ipv6.composer;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
 import ttworkbench.play.parameters.ipv6.editors.ip.HostnameVerifier;
+import ttworkbench.play.parameters.ipv6.editors.ip.IPEditor;
 import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Verifier;
 import ttworkbench.play.parameters.ipv6.editors.ip.IPv6Verifier;
-import ttworkbench.play.parameters.ipv6.editors.ip.IPEditor;
+import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
 import ttworkbench.play.parameters.ipv6.widgets.IPWidget;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
@@ -55,7 +56,7 @@ public class IPWidgetComposer extends WidgetComposer {
 
 		// assign each parameter to the corresponding editor in this widget
 		getConfigurator().assign( new IPEditor( new IPv4Verifier()), ipWidget, ipv4Parameter);
-		getConfigurator().assign( new IPEditor( new IPv4Verifier(), new IPv6Verifier()), ipWidget,
+		getConfigurator().assign( new IPEditor( new OrVerifier( new IPv4Verifier(), new IPv6Verifier())), ipWidget,
 				ipv4Parameter);
 		getConfigurator().assign( new IPEditor( new IPv6Verifier()), ipWidget, ipv4Parameter);
 		getConfigurator().assign( new IPEditor( new HostnameVerifier()), ipWidget, ipv4Parameter);

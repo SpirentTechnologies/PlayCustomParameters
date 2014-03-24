@@ -2,8 +2,6 @@ package ttworkbench.play.parameters.ipv6.editors.ip;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
@@ -14,7 +12,6 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 public class HostnameVerifier implements IVerifier<String> {
 
 	final String REGEX = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
-	final Pattern pattern = Pattern.compile( REGEX);
 
 	@Override
 	public VerificationResult<String> verify(String theInput, Object... theParams) {
@@ -22,8 +19,7 @@ public class HostnameVerifier implements IVerifier<String> {
 		List<MessageRecord> messages;
 		boolean verified;
 
-		Matcher matcher = pattern.matcher( theInput);
-		verified = matcher.lookingAt();
+		verified = theInput.matches( REGEX);
 
 		if (verified) {
 			messages = Arrays.asList( new MessageRecord( "invalid_input_warning",

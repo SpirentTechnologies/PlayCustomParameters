@@ -1,9 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors.ip;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.FocusEvent;
@@ -17,22 +13,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
+import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
-public class IPEditor extends ValidatingEditor<String> {
+import com.testingtech.muttcn.values.StringValue;
+
+public class IPEditor extends ValidatingEditor<StringValue> {
 
 	private static final String TITLE = "Host Editor";
 	private static final String DESCRIPTION = "";
 
 	final Display display = Display.getCurrent();
 
-	private List<IVerifier<String>> verificators = Arrays.asList( new IPv4Verifier(), new IPv6Verifier(),
-			new HostnameVerifier());
+	private IVerifier<String> verifier = new OrVerifier( new IPv4Verifier(), new IPv6Verifier(), new HostnameVerifier());
 
 	private CLabel label;
 	private Text text;
@@ -41,9 +38,9 @@ public class IPEditor extends ValidatingEditor<String> {
 		super( TITLE, DESCRIPTION);
 	}
 
-	public IPEditor( final IVerifier<String>... verificators) {
+	public IPEditor( final IVerifier<String> verifier) {
 		this();
-		this.verificators = Arrays.asList( verificators);
+		this.verifier = verifier;
 
 	}
 
@@ -58,7 +55,7 @@ public class IPEditor extends ValidatingEditor<String> {
 		theContainer.setBackground( display.getSystemColor( SWT.COLOR_GREEN));
 
 		label = new CLabel( theContainer, SWT.LEFT);
-		label.setText( this.getParameter().getName() + "_ADDRESS");
+		label.setText( this.getParameter().getName());
 
 		text = new Text( theContainer, SWT.BORDER | SWT.SINGLE);
 		EventHandler handler = new EventHandler();
@@ -83,16 +80,7 @@ public class IPEditor extends ValidatingEditor<String> {
 
 		public EventHandler() {
 			super();
-			StringBuffer buffer = new StringBuffer();
-			boolean first = true;
-			for (IVerifier<String> v : verificators) {
-				if (!first) {
-					buffer.append( " or ");
-				}
-				buffer.append( v.toString());
-				first = false;
-			}
-			this.HELPVALUE = buffer.toString();
+			this.HELPVALUE = verifier.toString();
 			/* Fill with DefaultHelpText */
 			focusLost( null);
 		}
@@ -141,21 +129,13 @@ public class IPEditor extends ValidatingEditor<String> {
 			ignore = false;
 		}
 
-		private boolean verifyText(final String theText) {
-			List<MessageRecord> messages = new LinkedList<MessageRecord>();
-			boolean verified = false;
+		protected boolean verifyText(final String theText) {
 
-			for (IVerifier<String> v : verificators) {
-				VerificationResult<String> result = v.verify( theText);
-				verified |= result.verified;
-				if (verified) {
-					getMessageView().flashMessages( result.messages);
-					return verified;
-				}
-				messages.addAll( result.messages);
-			}
-			getMessageView().flashMessages( messages);
-			return verified;
+			VerificationResult<String> result = verifier.verify( theText);
+			// successMessages will not be shown, but this is not a Problem
+			getMessageView().flashMessages( result.messages);
+
+			return result.verified;
 		}
 	}
 

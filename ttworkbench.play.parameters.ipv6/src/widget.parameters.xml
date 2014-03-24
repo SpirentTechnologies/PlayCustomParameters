@@ -55,11 +55,21 @@
 		</widget>
 		
 		<widget name="General Test">
-			<editor parameterId="PX_TDONE"/> <!-- A -->
-			<editor parameterId="PX_TAC"/> <!-- A -->
-			<editor parameterId="PX_TNOAC"/> <!-- A -->
-			<editor parameterId="PX_TWAIT"/> <!-- A -->
-			<editor parameterId="PX_LOOP"/> <!-- A -->
+			<editor parameterId="PX_TDONE" >
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_TAC">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_TNOAC">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_TWAIT">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_LOOP">
+				<attribute name="advanced"/>
+			</editor>
 			<editor parameterId="PX_CONFIGURATION_ID"/>
 			<editor parameterId="PX_TEST_CAMPAIGN"/>
 			<editor parameterId="PX_TIMING_TEST"/>
@@ -67,27 +77,55 @@
 			<editor parameterId="PX_TEST_EAP"/>
 			<editor parameterId="PX_TEST_IPCOCMP"/>
 			<editor parameterId="PX_TEST_IKE_AUTH_CFGPL"/>
-			<editor parameterId="PX_DAD_DUP_ADDR_DETECT_TRANSMITS_IUT"/> <!-- A -->
-			<editor parameterId="PX_MAX_MULTICAST_SOLICIT_IUT"/> <!-- A -->
-			<editor parameterId="PX_FBU_RETRIES"/> <!-- A -->
+			<editor parameterId="PX_DAD_DUP_ADDR_DETECT_TRANSMITS_IUT">			
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_MAX_MULTICAST_SOLICIT_IUT">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_FBU_RETRIES">
+				<attribute name="advanced"/>
+			</editor>
 			<editor parameterId="PX_MAC_LAYER"/>
 			<editor parameterId="PX_NET_DEVICE_ID_1"/>
-			<editor parameterId="PX_NET_DEVICE_ID_2"/> <!-- A -->
-			<editor parameterId="PX_PREFIX_LENGTH"/> <!-- A -->
-			<editor parameterId="PX_IPSEC_CONTROL"/> <!-- A -->
-			<editor parameterId="PX_IPSEC_PROTOCOL_MODE"/> <!-- A -->
-			<editor parameterId="PX_ENCRYPTION_ALGO"/> <!-- A -->
-			<editor parameterId="PX_INTEGRITY_ALGO"/> <!-- A -->
-			<editor parameterId="PX_INTEGRITY_KEY"/> <!-- A -->
-			<editor parameterId="PX_ESP_ENCR_KEY"/> <!-- A -->
-			<editor parameterId="PX_SA_OUT_SPI"/> <!-- A -->
-			<editor parameterId="PX_SA_IN_SPI"/> <!-- A -->
+			<editor parameterId="PX_NET_DEVICE_ID_2">
+				<attribute name="advanced"/>
+				</editor>
+			<editor parameterId="PX_PREFIX_LENGTH">			
+				<attribute name="advanced"/>
+				</editor>
+			<editor parameterId="PX_IPSEC_CONTROL">
+				<attribute name="advanced"/>
+				</editor>
+			<editor parameterId="PX_IPSEC_PROTOCOL_MODE">
+				<attribute name="advanced"/>
+				</editor>
+			<editor parameterId="PX_ENCRYPTION_ALGO">
+				<attribute name="advanced"/>
+ 			</editor>
+			<editor parameterId="PX_INTEGRITY_ALGO">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_INTEGRITY_KEY">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_ESP_ENCR_KEY">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_SA_OUT_SPI">
+				<attribute name="advanced"/>
+			</editor>
+			<editor parameterId="PX_SA_IN_SPI">
+				<attribute name="advanced"/>
+			</editor>
 		</widget>
 				
 		<widget name="e_cfCore01">
 			<editor parameterId="PX_MAC_UCA_HS01"/>
 			<editor parameterId="PX_MAC_UCA_RT01_A"/>
-			<editor parameterId="PX_IPV4_ADDR_RT01"/> <!-- A -->	
+			<editor parameterId="PX_IPV4_ADDR_RT01">
+				<attribute name="advanced"/>
+			</editor>	
 		</widget>
 		
 		<widget name="e_cfCore02">
@@ -99,7 +137,9 @@
 			<editor parameterId="PX_MAC_UCA_HS02"/>
 			<editor parameterId="PX_MAC_UCA_HS03"/>
 			<editor parameterId="PX_MAC_UCA_RT01_A"/>
-			<editor parameterId="PX_IPV4_ADDR_RT01"/> <!-- A -->
+			<editor parameterId="PX_IPV4_ADDR_RT01">
+				<attribute name="advanced"/>
+			</editor>
 			<editor parameterId="PX_MAC_UCA_RT03_A"/>
 		</widget>
 		
@@ -160,103 +200,70 @@
 		</parameter>
 		
 		<parameter id="PX_TDONE">
-			<description visible="true">Beschreibung</description>
 		</parameter>
 		<parameter id="PX_TAC">
-			<description visible="true">Beschreibung</description>
 		</parameter>
 		<parameter id="PX_TNOAC">
-			<description visible="true">Beschreibung</description>
 		</parameter>
 		<parameter id="PX_TWAIT">
-			<description visible="true">Beschreibung</description>
 		</parameter>
 		<parameter id="PX_LOOP">
-			<description visible="true">Beschreibung</description>
 		</parameter>
-		<parameter id="PX_CONFIGURATION_ID">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_CONFIGURATION_ID">			
 		</parameter>
-		<parameter id="PX_TEST_CAMPAIGN">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_TEST_CAMPAIGN">			
 		</parameter>
-		<parameter id="PX_TIMING_TEST">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_TIMING_TEST">			
 		</parameter>
-		<parameter id="PX_UTS_AVAILABLE">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_UTS_AVAILABLE">			
 		</parameter>
-		<parameter id="PX_TEST_EAP">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_TEST_EAP">			
 		</parameter>
-		<parameter id="PX_TEST_IPCOCMP">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_TEST_IPCOCMP">			
 		</parameter>
-		<parameter id="PX_TEST_IKE_AUTH_CFGPL">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_TEST_IKE_AUTH_CFGPL">			
 		</parameter>
-		<parameter id="PX_DAD_DUP_ADDR_DETECT_TRANSMITS_IUT">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_DAD_DUP_ADDR_DETECT_TRANSMITS_IUT">			
 		</parameter>
-		<parameter id="PX_MAX_MULTICAST_SOLICIT_IUT">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_MAX_MULTICAST_SOLICIT_IUT">			
 		</parameter>
-		<parameter id="PX_FBU_RETRIES">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_FBU_RETRIES">			
 		</parameter>
-		<parameter id="PX_MAC_LAYER">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_MAC_LAYER">			
 		</parameter>
-		<parameter id="PX_NET_DEVICE_ID_1">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_NET_DEVICE_ID_1">			
 		</parameter>
-		<parameter id="PX_NET_DEVICE_ID_2">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_NET_DEVICE_ID_2">			
 		</parameter>
-		<parameter id="PX_PREFIX_LENGTH">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_PREFIX_LENGTH">			
 		</parameter>
-		<parameter id="PX_MAC_UCA_HS01">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_MAC_UCA_HS01">			
 		</parameter>
-		<parameter id="PX_MAC_UCA_HS02">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_MAC_UCA_HS02">			
 		</parameter>
-		<parameter id="PX_MAC_UCA_HS03">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_MAC_UCA_HS03">			
 		</parameter>
-		<parameter id="PX_MAC_UCA_RT01_A">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_MAC_UCA_RT01_A">			
 		</parameter>
-		<parameter id="PX_IPV4_ADDR_RT01">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_IPV4_ADDR_RT01">			
 		</parameter>
-		<parameter id="PX_MAC_UCA_RT03_A">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_MAC_UCA_RT03_A">			
 		</parameter>
-		<parameter id="PX_IPSEC_CONTROL">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_IPSEC_CONTROL">			
 		</parameter>
-		<parameter id="PX_IPSEC_PROTOCOL_MODE">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_IPSEC_PROTOCOL_MODE">			
 		</parameter>
-		<parameter id="PX_ENCRYPTION_ALGO">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_ENCRYPTION_ALGO">			
 		</parameter>
-		<parameter id="PX_INTEGRITY_ALGO">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_INTEGRITY_ALGO">			
 		</parameter>
-		<parameter id="PX_INTEGRITY_KEY">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_INTEGRITY_KEY">			
 		</parameter>
-		<parameter id="PX_ESP_ENCR_KEY">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_ESP_ENCR_KEY">			
 		</parameter>
-		<parameter id="PX_SA_OUT_SPI">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_SA_OUT_SPI">			
 		</parameter>
-		<parameter id="PX_SA_IN_SPI">
-			<description visible="true">Beschreibung</description>
+		<parameter id="PX_SA_IN_SPI">			
 		</parameter>		
 	</parameters>
 	

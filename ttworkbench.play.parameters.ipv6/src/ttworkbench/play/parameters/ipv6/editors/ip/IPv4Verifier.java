@@ -28,7 +28,8 @@ public class IPv4Verifier implements IVerifier<String> {
 		boolean verified;
 
 		Matcher matcher = pattern.matcher( theInput);
-		verified = matcher.lookingAt();
+		/* change to Stringmatch */
+		verified = theInput.matches( REGEX);
 		if (verified) {
 			messages = Arrays.asList( new MessageRecord( "not_valid", "valid IPv4-Address.", ErrorKind.success));
 		} else {
