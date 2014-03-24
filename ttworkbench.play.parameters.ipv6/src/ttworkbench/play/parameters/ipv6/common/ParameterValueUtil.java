@@ -2,7 +2,6 @@ package ttworkbench.play.parameters.ipv6.common;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 import org.etsi.ttcn.tci.UniversalCharValue;
 
@@ -28,14 +27,19 @@ import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.muttcn.values.TimerValue;
 import com.testingtech.muttcn.values.TupleValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 public class ParameterValueUtil {
 	
 
   public static String getValue( final IParameter<?> theParameter) {
-   	Object value = theParameter.getValue();
-
+  	return getValue( theParameter.getValue());
+  }
+  public static String getDefault( final IParameter<?> theParameter) {
+  	return getValue( theParameter.getDefaultValue());
+  }
+  
+  private static String getValue( final Object value) {
+  	
    	if ( value instanceof BitStringValue) // extends StringValue
   		return ( (BitStringValue) value).getTheContent();  // untested
    	

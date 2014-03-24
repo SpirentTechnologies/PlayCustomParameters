@@ -53,10 +53,20 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {
-			widgetComposer.compose();
+			try {
+				widgetComposer.compose();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		for (IWidgetComposer widgetComposer : widgetComposers) {
-			widgetComposer.resolve();
+			try {
+				widgetComposer.resolve();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		theConfigurator.endConfigure();
 	}

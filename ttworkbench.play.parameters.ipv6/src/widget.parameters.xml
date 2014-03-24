@@ -5,6 +5,7 @@
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor">	
 			<expression>^UInt\d{0,2}$</expression>
 			<expression>^Int\d{0,2}$</expression>
+			<expression>^integer$</expression>
 			<attribute name="attr1">value1</attribute>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.macaddr.MacAddressEditor">	
@@ -114,13 +115,14 @@
 		<parameter id="PX_N">
 			<description visible="true">Beschreibung</description>
 			
-			<!-- example for action validators -->
+			<!-- example for action validators ->
 			<validator id="visibility">
 				<relation parameterId="PX_FIB_NUMBER" action="true" />
 				<relation parameterId="PX_FIB_SUCC_NUMBER" action="true" />
-				<!-- <relation widgetName="Custom Widget 1" action="true" /> -->
+				<!- <relation widgetName="Custom Widget 1" action="true" /> ->
 				<attribute name="pattern">^.*: 5\)$</attribute>
 			</validator>
+			-->
 			
 			<validator id="fibSeqValidator">
 				<relation parameterId="PX_N" message="true" />

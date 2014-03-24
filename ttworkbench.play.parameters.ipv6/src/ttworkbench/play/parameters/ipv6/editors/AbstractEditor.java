@@ -120,6 +120,10 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	@Override
 	public void setParameter(IParameter<T> theParameter) {
+		if(theParameter == null) {
+			throw new IllegalArgumentException( "Parameter provided is null.");
+		}
+		
 	  // remove old parameter from editorMap
 		if ( parameterToEditorsMap.containsKey( theParameter))
 			parameterToEditorsMap.get( theParameter).remove( this);

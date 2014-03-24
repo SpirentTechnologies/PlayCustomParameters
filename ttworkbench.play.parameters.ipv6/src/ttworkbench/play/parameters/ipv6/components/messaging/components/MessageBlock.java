@@ -62,12 +62,14 @@ public class MessageBlock {
 				               agedMessageTags.contains( msg.tag);
 		if ( !answer && msg.errorKind.equals( ErrorKind.success))
 			return;
-		
-		MessageLabel newMessageElement = new MessageLabel( messageContainer, msg);
-		taggedMessageElements.put( theMessageRecord.tag, newMessageElement);
-		
-		if ( theRegisterDirective == RegisterDirective.REGISTER)
-			tryRegister( newMessageElement);
+
+		if(!messageContainer.getMessageComposite().isDisposed()) {
+			MessageLabel newMessageElement = new MessageLabel( messageContainer, msg);
+			taggedMessageElements.put( theMessageRecord.tag, newMessageElement);
+			
+			if ( theRegisterDirective == RegisterDirective.REGISTER)
+				tryRegister( newMessageElement);
+		}
 	}
 
 	public synchronized void clearTaggedSuccessMessage( final String theTag) {
