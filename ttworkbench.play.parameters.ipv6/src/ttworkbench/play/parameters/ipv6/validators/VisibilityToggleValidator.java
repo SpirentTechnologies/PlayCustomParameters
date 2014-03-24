@@ -9,7 +9,6 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class VisibilityToggleValidator extends ContextualValidator {
 

@@ -34,7 +34,6 @@ public class CustomWidgetComposer extends WidgetComposer {
 	private HashMap<Data.Relation, IParameterValidator> relations = new HashMap<Data.Relation, IParameterValidator>();
 
 	
-	
 	public CustomWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap, Data.Widget theWidget) {
 		super( theConfigurator, theParametersMap);
 		this.widget = theWidget;
@@ -48,17 +47,13 @@ public class CustomWidgetComposer extends WidgetComposer {
 		Image widgetImage = getImage(widget.getImage());
 
 		IWidget defaultWidget = new CustomWidget(widgetName, widgetDescription, widgetImage) {
-			
 			@Override
 			protected IWidgetLookAndBehaviour getDefaultLookAndBehaviour() {
 				return new DefaultWidgetLookAndBehaviour();
 			}
 		};
 		
-		
 		getConfigurator().addWidget( defaultWidget);
-
-
 		
 		for(Data.Parameter dataParameter : widget.getParameters()) {
 			String theId = dataParameter.getId();
@@ -67,9 +62,6 @@ public class CustomWidgetComposer extends WidgetComposer {
 			if(parameter!=null) {
 				IParameterEditor<?> editor = ParameterEditorMapper.getInstance().getEditor(parameter);
 				getConfigurator().assign( editor, defaultWidget, parameter);
-				
-				
-				
 				
 				/*
 				 * related validation
@@ -92,15 +84,13 @@ public class CustomWidgetComposer extends WidgetComposer {
 				logError("The parameter could not be found: \""+theId+"\".", null);
 			}
 		}
-		
-		triggerRelations();
-		
-		
-		
 	}
 
 	
-	private void triggerRelations() {
+	@Override
+	public void resolve() {
+		super.resolve();
+		
 		for(Entry<Data.Relation, IParameterValidator> triggerEntry : relations.entrySet()) {
 			Data.Relation relation = triggerEntry.getKey();
 			IParameterValidator validator = triggerEntry.getValue();
@@ -130,11 +120,13 @@ public class CustomWidgetComposer extends WidgetComposer {
 							
 							// register for messages
 							if(msg && editor instanceof IMessageHandler) {
+								System.out.println("[editorMsg] registered \""+editor.getParameter().getId()+"\" to \""+validator.getTitle()+"\".");
 								validator.registerForMessages( (IMessageHandler) editor);
 							}
 							
 							// register for actions
 							if(act && editor instanceof IActionHandler) {
+								System.out.println("[editorAct] registered \""+editor.getParameter().getId()+"\" to \""+validator.getTitle()+"\".");
 								validator.registerForActions( (IActionHandler) editor);
 							}
 						}
@@ -148,14 +140,14 @@ public class CustomWidgetComposer extends WidgetComposer {
 						}
 						
 						if(msg && widget instanceof IMessageHandler) {
+							System.out.println("[widgetMsg] registered \""+widget.getTitle()+"\" to \""+validator.getTitle()+"\".");
 							validator.registerForMessages( (IMessageHandler) widget);
 						}
 						if(act && widget instanceof IActionHandler) {
+							System.out.println("[widgetAct] registered \""+widget.getTitle()+"\" to \""+validator.getTitle()+"\".");
 							validator.registerForActions( (IActionHandler) widget);
 						}
 					}
-				
-				
 			}
 		}
 	}

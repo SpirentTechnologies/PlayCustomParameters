@@ -111,6 +111,13 @@
 
 		<parameter id="PX_N">
 			<description visible="true">Beschreibung</description>
+			<validator id="visibility">
+				<relation parameterId="PX_FIB_NUMBER" action="true" />
+				<relation parameterId="PX_FIB_SUCC_NUMBER" action="true" />
+				<relation widgetName="Custom Widget 1" action="true" />
+				<attribute name="pattern">^.*: 5\)$</attribute>
+			</validator>
+			
 			<validator id="fibSeqValidator">
 				<relation parameterId="PX_N" message="true" />
 				<relation parameterId="PX_FIB_NUMBER" message="true" />
@@ -252,6 +259,10 @@
 		<validator id="vMAC">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.MacAddressValidator</classpath>
 			<attribute name="attr1">value1</attribute>
+		</validator>
+		
+		<validator id="visibility">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.VisibilityToggleValidator</classpath>
 		</validator>
 		
 		<validator id="fibValidator_PX_FIB_NUMBER">

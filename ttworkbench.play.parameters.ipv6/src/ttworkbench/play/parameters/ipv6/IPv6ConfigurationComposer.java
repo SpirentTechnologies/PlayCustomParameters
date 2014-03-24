@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.ipv6;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
@@ -32,22 +33,47 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		widgetComposers.add( new DefaultWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
-		widgetComposers.add( new IPWidgetComposer( theConfigurator, parametersMap));	
+		widgetComposers.add( new IPWidgetComposer( theConfigurator, parametersMap));
+		
+		
 		// custom widget configuration
-		try {
-			for (Data.Widget widget : DataLoader.getInstance().getWidgets()) {
-				widgetComposers.add( new CustomWidgetComposer( theConfigurator, parametersMap, widget));
-			}
-		} catch (ParameterConfigurationException e) {
-			// TODO handle if needed
-			e.printStackTrace();
-		}
+		widgetComposers.addAll( getCustomWidgetComposers(theConfigurator, parametersMap));
+
 
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {
 			widgetComposer.compose();
 		}
-
+		for (IWidgetComposer widgetComposer : widgetComposers) {
+			widgetComposer.resolve();
+		}
 		theConfigurator.endConfigure();
+	}
+
+	
+	
+	
+	private LinkedList<IWidgetComposer> getCustomWidgetComposers(IConfigurator theConfigurator, ParameterMap theParametersMap) {
+		LinkedList<IWidgetComposer> customs = new LinkedList<IWidgetComposer>();
+		try {
+			Data.Widget[] widgets = DataLoader.getInstance().getWidgets();
+			for (Data.Widget widget : widgets) {
+				customs.add( new CustomWidgetComposer( theConfigurator, theParametersMap, widget));
+			}
+			
+			if(widgets.length<1) {
+				throw new ParameterConfigurationException("No widgets have been found.");
+			}
+		} catch (ParameterConfigurationException e) {
+			// TODO Messagebox
+			e.printStackTrace();
+			int i=0;
+			for(Exception e1 : DataLoader.getErrors()) {
+				System.out.println();
+				System.out.print(" ["+(++i)+"] ");
+				e1.printStackTrace();
+			}
+		}
+		return customs;
 	}
 }
