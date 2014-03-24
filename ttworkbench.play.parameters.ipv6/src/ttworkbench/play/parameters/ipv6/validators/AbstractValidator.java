@@ -1,12 +1,13 @@
 package ttworkbench.play.parameters.ipv6.validators;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import ttworkbench.play.parameters.ipv6.validators.exceptions.ValidationException;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
@@ -66,24 +67,35 @@ public abstract class AbstractValidator implements IParameterValidator {
 	
 	@Override
 	public synchronized final List<ValidationResult> validate( IParameter theParameter, Object theClient) {
-		List<ValidationResult> results = validateParameter( theParameter, theClient);
-
-		List<ValidationResultMessage> resultsMessages = new LinkedList<ValidationResultMessage>();
-		List<ValidationResultAction> resultsActions = new LinkedList<ValidationResultAction>();
-
-		if ( results != null) {
-			for(ValidationResult result : results) {
-				if(result instanceof ValidationResultMessage) {
-					resultsMessages.add( (ValidationResultMessage) result);
-				}
-				else if(result instanceof ValidationResultAction) {
-					resultsActions.add( (ValidationResultAction) result);
+		List<ValidationResult> results = new LinkedList<ValidationResult>();
+		try {
+			results.addAll( validateParameter( theParameter, theClient));
+	
+			List<ValidationResultMessage> resultsMessages = new LinkedList<ValidationResultMessage>();
+			List<ValidationResultAction> resultsActions = new LinkedList<ValidationResultAction>();
+	
+			if ( results != null) {
+				for(ValidationResult result : results) {
+					if(result instanceof ValidationResultMessage) {
+						resultsMessages.add( (ValidationResultMessage) result);
+					}
+					else if(result instanceof ValidationResultAction) {
+						resultsActions.add( (ValidationResultAction) result);
+					}
 				}
 			}
+	
+			notifyMessageHandlers( this, resultsMessages, theParameter);
+			notifyActionHandlers( this, resultsActions, theParameter);
 		}
-
-		notifyMessageHandlers( this, resultsMessages, theParameter);
-		notifyActionHandlers( this, resultsActions, theParameter);
+		catch(ValidationException e) {
+			// TODO
+			e.printStackTrace();
+		}
+		catch(Exception e) {
+			// TODO 
+			e.printStackTrace();
+		}
 		
 		return results;
 	}
@@ -102,7 +114,7 @@ public abstract class AbstractValidator implements IParameterValidator {
 	}
 
 
-	protected abstract List<ValidationResult> validateParameter(IParameter<?> theParameter, Object theClient);
+	protected abstract List<ValidationResult> validateParameter(IParameter<?> theParameter, Object theClient) throws ValidationException;
 	
 	
 	@Override
