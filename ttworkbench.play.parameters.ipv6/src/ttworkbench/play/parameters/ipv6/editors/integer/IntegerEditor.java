@@ -109,10 +109,11 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		Text text = (Text) inputControl.getControl();
 		text.setText( getParameter().getValue().getTheNumber().toString());
 		text.setLayoutData( theLayoutData);
-		int maxNeededChars = integerType.getMaxValue().toString().length();
-		if ( integerType.getMaxValue() != null)
+		if ( integerType.getMaxValue() != null) {
+			int maxNeededChars = integerType.getMaxValue().toString().length();
 		  text.setTextLimit( maxNeededChars);
-		setWidthForText( text, maxNeededChars);
+		  setWidthForText( text, maxNeededChars);
+		}
 		
 		setVerifyListenerToControl( inputControl);
 		
