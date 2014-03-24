@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Control;
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -26,68 +27,67 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	public enum ComponentState {
 		INSTANTIATED, CREATED, DESTROYED
 	}
-	
+
 	private ComponentState componentState = ComponentState.INSTANTIATED;
-	
+
 	private boolean visible = true;
 	private boolean enabled = true;
-	
+
 	private String title;
 	private String description;
 	private IParameter<T> parameter;
 	private IConfiguration configuration;
 	private Set<T> values = new TreeSet<T>();
 	private Composite control;
-	
+
 	private IEditorLookAndBehaviour lookAndBehaviour;
-	
-	private Map<String,String> attributes = new HashMap<String, String>();
-	
-	private static Map<IParameter,Set<AbstractEditor>> parameterToEditorsMap = new HashMap<IParameter, Set<AbstractEditor>>();
-	
-	
+
+	private Map<String, String> attributes = new HashMap<String, String>();
+
+	private static Map<IParameter, Set<AbstractEditor>> parameterToEditorsMap = new HashMap<IParameter, Set<AbstractEditor>>();
+
 	public AbstractEditor( final String theTitle, final String theDescription) {
 		super();
 		this.title = theTitle;
 		this.description = theDescription;
 		setLookAndBehaviour( getDefaultLookAndBehaviour());
 	}
-	
+
 	protected Set<T> getValues() {
 		return values;
 	}
-	
-	@Override
-	public void setEnabled( boolean theEnabledState) {
-	  this.enabled = theEnabledState;
-	  applySettings();
-	}
-	
-	public void applySettings() {
-		if ( componentState == ComponentState.CREATED) {
-			
-			// Composite.isVisible() behaves strange:
-			//  when the parent object is currently not shown, it'll return false.
-			//  this is why flag-checking here returns wrong answers.
-			
-		  // if ( control.isVisible() != visible)
-		  	control.setVisible( visible);
 
-		  if ( control.isEnabled() != enabled)
-		  	control.setEnabled( enabled);
-		  
-	  }
+	@Override
+	public void setEnabled(boolean theEnabledState) {
+		this.enabled = theEnabledState;
+		applySettings();
+	}
+
+	public void applySettings() {
+		if (componentState == ComponentState.CREATED) {
+
+			// Composite.isVisible() behaves strange:
+			// when the parent object is currently not shown, it'll return false.
+			// this is why flag-checking here returns wrong answers.
+
+			// if ( control.isVisible() != visible)
+			control.setVisible( visible);
+
+			if (control.isEnabled() != enabled)
+				control.setEnabled( enabled);
+
+		}
 	}
 
 	@Override
 	public boolean isEnabled() {
-	  return hasControl() && control.isEnabled();
+		return hasControl() && control.isEnabled();
 	}
 
 	@Override
-	public void setVisible( boolean theVisibleState) {
+	public void setVisible(boolean theVisibleState) {
 		this.visible = theVisibleState;
-	  applySettings();
+		applySettings();
 	}
 
 	@Override
@@ -95,7 +95,6 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 		return hasControl() && control.isVisible();
 	}
 
-	
 	@Override
 	public String getTitle() {
 		return title;
@@ -114,41 +113,40 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	@Override
 	public void parametersChanged(List<IParameter<?>> theParameters) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
 
 	@Override
 	public void setParameter(IParameter<T> theParameter) {
-	  // remove old parameter from editorMap
-		if ( parameterToEditorsMap.containsKey( theParameter))
+		// remove old parameter from editorMap
+		if (parameterToEditorsMap.containsKey( theParameter))
 			parameterToEditorsMap.get( theParameter).remove( this);
-		
+
 		// set new parameter
 		this.parameter = theParameter;
-		
+
 		// update parametermap
-		if ( !parameterToEditorsMap.containsKey( theParameter))
+		if (!parameterToEditorsMap.containsKey( theParameter))
 			parameterToEditorsMap.put( theParameter, new HashSet<AbstractEditor>());
 		parameterToEditorsMap.get( theParameter).add( this);
 	}
-	
+
 	@Override
 	public IParameter<T> getParameter() {
 		return parameter;
 	}
-	
+
 	@Override
 	public void setConfiguration(IConfiguration theConfiguration) {
-	  this.configuration = theConfiguration;
+		this.configuration = theConfiguration;
 	}
-	
+
 	protected IConfiguration getConfiguration() {
 		return configuration;
 	}
 
 	protected void loadProvidedValues() {
-		if ( configuration != null) {
+		if (configuration != null) {
 			Set<IParameterValueProvider> competentValueProviders = configuration.getValueProviders( parameter);
 			for (IParameterValueProvider competentValueProvider : competentValueProviders) {
 				values.addAll( competentValueProvider.getAvailableValues( parameter));
@@ -158,110 +156,106 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	@Override
 	public void updateConfig() {
-      loadProvidedValues();
-      // validate();
+		loadProvidedValues();
+		// validate();
 	}
-	
+
 	public void updateControl() {
 		lookAndBehaviour.doOnChange();
 	}
-	
+
 	protected void setLookAndBehaviour(IEditorLookAndBehaviour theLookAndBehaviour) {
 		this.lookAndBehaviour = theLookAndBehaviour;
 	}
-	
+
 	public IEditorLookAndBehaviour getLookAndBehaviour() {
 		return lookAndBehaviour;
 	}
-	
+
 	protected abstract IEditorLookAndBehaviour getDefaultLookAndBehaviour();
-	
-	
+
 	@Override
-	public final Composite createControl( Composite theParent) {
-	  control = new Composite( theParent, SWT.None);
-		
-	  componentState = ComponentState.CREATED;
+	public final Composite createControl(Composite theParent) {
+		control = new Composite( theParent, SWT.None);
+
+		componentState = ComponentState.CREATED;
 		control.addDisposeListener( new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent theArg0) {
 				componentState = ComponentState.DESTROYED;
 			}
 		});
-		
-	  designControl( control); 
-	  applySettings();
-	  
-	  return control;
+
+		designControl( control);
+		applySettings();
+
+		return control;
 	}
-	
-	protected abstract void designControl( final Composite theControl);
-	
+
+	protected abstract void designControl(final Composite theControl);
 
 	public Composite getControl() {
 		return control;
 	}
-	
+
 	public boolean hasControl() {
 		return componentState == ComponentState.CREATED;
 	}
-	
+
 	public ComponentState getState() {
 		return componentState;
 	}
-	
-	private boolean setFocusToSomeChild( final Composite theControl) {
-		for ( Control ctrl : theControl.getChildren()) {
+
+	private boolean setFocusToSomeChild(final Composite theControl) {
+		for (Control ctrl : theControl.getChildren()) {
 			ctrl.setFocus();
-			if ( ctrl.isFocusControl() && !(ctrl instanceof IMessageContainer))
+			if (ctrl.isFocusControl() && !( ctrl instanceof IMessageContainer))
 				return true;
-			if ( ctrl instanceof Composite)
-				if ( setFocusToSomeChild( (Composite) ctrl))
-				  return true;
-		}	
+			if (ctrl instanceof Composite)
+				if (setFocusToSomeChild( (Composite) ctrl))
+					return true;
+		}
 		return false;
 	}
-	
+
 	/**
-	 * For performance and specificity reasons overriding this method is recommended.
+	 * For performance and specificity reasons overriding this method is
+	 * recommended.
 	 */
 	public void setFocus() {
-		if ( componentState == ComponentState.CREATED) {	
+		if (componentState == ComponentState.CREATED) {
 			control.setFocus();
-			if ( !control.isFocusControl())
+			if (!control.isFocusControl())
 				setFocusToSomeChild( control);
 		}
 	}
 
 	/**
-	 * Called by setParameterValue to update the value.
-	 * Override this method in inherited classes where necessary. 
+	 * Called by setParameterValue to update the value. While setting a text in an
+	 * input composite, no validation or verification should be triggered, because
+	 * of an update loop between different editors for one Parameter.
 	 */
-	protected void updateParameterValue() {
-	}
-	
-	protected void setParameterValue( String theValue) {
-		if ( parameter == null)
+	protected abstract void updateParameterValue();
+
+	protected void setParameterValue(String theValue) {
+		if (parameter == null)
 			return;
-		
+
 		ParameterValueUtil.setValue( parameter, theValue);
-		
+
 		// update others
 		Set<AbstractEditor> parameterEditors = parameterToEditorsMap.get( parameter);
-		for ( AbstractEditor editor : parameterEditors) {
-			if ( editor == this)
+		for (AbstractEditor editor : parameterEditors) {
+			if (editor == this)
 				continue;
-			if ( editor.hasControl())
+			if (editor.hasControl())
 				editor.updateParameterValue();
 		}
 	}
-	
-	
+
 	@Override
 	public String toString() {
-		return "\""+getParameter().getId()+"\"@"+hashCode();
+		return "\"" + getParameter().getId() + "\"@" + hashCode();
 	}
-	
+
 }
-
-
