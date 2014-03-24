@@ -73,7 +73,7 @@ public enum ParameterEditorColumnType {
 					@Override
 					public Object get(IParameterEditor<?> editor) {
 						IParameter<?> parameter = editor.getParameter();
-						String value = ParameterValueUtil.getDefault( parameter);
+						String value = ParameterValueUtil.getDefaultValue( parameter);
 						return value;
 					}
 				});

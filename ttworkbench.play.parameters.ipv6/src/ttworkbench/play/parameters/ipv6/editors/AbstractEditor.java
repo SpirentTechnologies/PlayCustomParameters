@@ -162,9 +162,9 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
 	@Override
 	public void updateConfig() {
-      loadProvidedValues();
-      // validate();
+    loadProvidedValues();
 	}
+	
 	
 	public void updateControl() {
 		lookAndBehaviour.doOnChange();
@@ -234,29 +234,6 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 			control.setFocus();
 			if ( !control.isFocusControl())
 				setFocusToSomeChild( control);
-		}
-	}
-
-	/**
-	 * Called by setParameterValue to update the value.
-	 * Override this method in inherited classes where necessary. 
-	 */
-	protected void updateParameterValue() {
-	}
-	
-	protected void setParameterValue( String theValue) {
-		if ( parameter == null)
-			return;
-		
-		ParameterValueUtil.setValue( parameter, theValue);
-		
-		// update others
-		Set<AbstractEditor> parameterEditors = parameterToEditorsMap.get( parameter);
-		for ( AbstractEditor editor : parameterEditors) {
-			if ( editor == this)
-				continue;
-			if ( editor.hasControl())
-				editor.updateParameterValue();
 		}
 	}
 	

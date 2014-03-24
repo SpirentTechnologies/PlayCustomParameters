@@ -17,6 +17,8 @@ public class DefaultEditor extends AbstractEditor<Object> {
 	private static final String TITLE = "Default Editor";
 	private static final String DESCRIPTION = "";
 	
+	private Text text; 
+	
 	public DefaultEditor() {
 		super( TITLE, DESCRIPTION);
 	}
@@ -42,6 +44,12 @@ public class DefaultEditor extends AbstractEditor<Object> {
 	@Override
 	protected IEditorLookAndBehaviour getDefaultLookAndBehaviour() {
 		return new IntegerEditorLookAndBehaviour();
+	}
+
+
+	@Override
+	public void reloadParameter() {
+		text.setText( ParameterValueUtil.getValue( getParameter()));
 	}
 
 	
