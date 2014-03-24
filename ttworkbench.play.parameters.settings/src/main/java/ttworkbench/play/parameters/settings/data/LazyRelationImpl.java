@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import ttworkbench.play.parameters.settings.Data;
-import ttworkbench.play.parameters.settings.Data.RelationPartner;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
 import ttworkbench.play.parameters.settings.exceptions.ParameterDefinitionNotFoundException;
 import ttworkbench.play.parameters.settings.loader.DataLoaderAbstract;
@@ -58,7 +57,7 @@ public class LazyRelationImpl implements Data.Relation {
 					final boolean thisRegisteredForActions = rel.act;
 					final Data.Partner thisPartner = (rel instanceof RelParameter ? dataLoader.getParameter(rel.id) : dataLoader.getWidget(rel.id));
 
-					partnersList.add(new RelationPartner() {
+					partnersList.add(new Data.RelationPartner() {
 						
 						public boolean isRegisteredForMessages() {
 							return thisRegisteredForMessages;

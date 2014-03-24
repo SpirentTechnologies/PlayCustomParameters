@@ -28,8 +28,9 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationAction;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
@@ -173,8 +174,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 
 	@Override
-	public synchronized void report( final IParameterValidator theValidator, final List<ValidationResult> theValidationResults,
-			final IParameter theParameter) {
+	public synchronized void report( final IParameterValidator theValidator, final List<ValidationResultMessage> theValidationMessages, final IParameter<?> theParameter) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {				
 				IMessageView<?> messageView = getMessageView();
@@ -184,13 +184,15 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 					messageView.beginUpdateForSender( senderId);
 					
 					IParameterControl<?,?> validationCauser;
-					for (ValidationResult validationResult : theValidationResults) {
-						validationCauser = validationResult.getClient() instanceof IParameterControl<?,?> ? (IParameterControl<?,?>) validationResult.getClient() : null;
-						if ( validationResult.isTagged()) {
-							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind(), validationCauser));
-						} else {
-							messageView.showMessage( new MessageRecord( null, validationResult.getErrorMessage(), validationResult.getErrorKind(), validationCauser));					
-						}
+					for (ValidationResultMessage validationResultMessage : theValidationMessages) {
+						validationCauser = validationResultMessage.getClient() instanceof IParameterControl<?,?> ? (IParameterControl<?,?>) validationResultMessage.getClient() : null;
+
+						messageView.showMessage(
+								new MessageRecord(
+										validationResultMessage.isTagged() ? validationResultMessage.getTag() : null,
+										validationResultMessage.getErrorMessage(),
+										validationResultMessage.getErrorKind(),
+										validationCauser));
 					}
 					messageView.endUpdate();
 				}
@@ -200,9 +202,14 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	
 	
 	@Override
-	public void trigger(IParameterValidator theValidator, List<ValidationAction> theValidationActions,
-			IParameter theParameter) {
-		// TODO Auto-generated method stub
+	public void trigger(final IParameterValidator theValidator, final List<ValidationResultAction> theValidationActions, IParameter<?> theParameter) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {				
+				for (ValidationResultAction validationResultAction : theValidationActions) {
+					validationResultAction.triggerEditor( ValidatingEditor.this);
+				}
+			}
+		});
 	}
 	
 	

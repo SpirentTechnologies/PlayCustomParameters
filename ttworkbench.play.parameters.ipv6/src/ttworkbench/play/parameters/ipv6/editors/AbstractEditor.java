@@ -10,17 +10,12 @@ import java.util.TreeSet;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
-import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePopup;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
-
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -69,11 +64,18 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	}
 	
 	public void applySettings() {
-		if ( componentState == ComponentState.CREATED) {	
-		  if ( control.isVisible() != visible)
+		if ( componentState == ComponentState.CREATED) {
+			
+			// Composite.isVisible() behaves strange:
+			//  when the parent object is currently not shown, it'll return false.
+			//  this is why flag-checking here returns wrong answers.
+			
+		  // if ( control.isVisible() != visible)
 		  	control.setVisible( visible);
+
 		  if ( control.isEnabled() != enabled)
 		  	control.setEnabled( enabled);
+		  
 	  }
 	}
 
@@ -252,6 +254,12 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 			if ( editor.hasControl())
 				editor.updateParameterValue();
 		}
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "\""+getParameter().getId()+"\"@"+hashCode();
 	}
 	
 }

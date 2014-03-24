@@ -19,6 +19,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class IPv6WidgetComposer extends WidgetComposer {
 
@@ -38,7 +39,7 @@ public class IPv6WidgetComposer extends WidgetComposer {
 			@Override
 			protected List<ValidationResult> validateParameter(IParameter parameter, Object theClient) {
 				List<ValidationResult> l = new ArrayList<ValidationResult>();
-				l.add( new ValidationResult( "nay-sayer", ErrorKind.error, theClient));
+				l.add( new ValidationResultMessage( "nay-sayer", ErrorKind.error, theClient));
 				return l;
 			}
 
@@ -49,8 +50,8 @@ public class IPv6WidgetComposer extends WidgetComposer {
 			@Override
 			protected List<ValidationResult> validateParameter(IParameter parameter, Object theClient) {
 				List<ValidationResult> l = new ArrayList<ValidationResult>();
-				l.add( new ValidationResult( "yea-sayer", ErrorKind.success, theClient));
-				l.add( new ValidationResult( "gasbag", ErrorKind.info, theClient));
+				l.add( new ValidationResultMessage( "yea-sayer", ErrorKind.success, theClient));
+				l.add( new ValidationResultMessage( "gasbag", ErrorKind.info, theClient));
 				return l;
 			}
 
