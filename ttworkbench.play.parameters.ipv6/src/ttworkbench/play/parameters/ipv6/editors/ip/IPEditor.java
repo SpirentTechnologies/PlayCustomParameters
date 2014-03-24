@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors.ip;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehavi
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
+import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.muttcn.values.StringValue;
@@ -33,8 +33,7 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 
 	final Display display = Display.getCurrent();
 
-	private List<IVerifier<String>> verificators = Arrays.asList( new IPv4Verifier(), new IPv6Verifier(),
-			new HostnameVerifier());
+	private IVerifier<String> verifier = new OrVerifier( new IPv4Verifier(), new IPv6Verifier(), new HostnameVerifier());
 
 	private CLabel label;
 	private Text text;
@@ -43,9 +42,9 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 		super( TITLE, DESCRIPTION);
 	}
 
-	public IPEditor( final IVerifier<String>... verificators) {
+	public IPEditor( final IVerifier<String> verifier) {
 		this();
-		this.verificators = Arrays.asList( verificators);
+		this.verifier = verifier;
 
 	}
 
@@ -85,16 +84,7 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 
 		public EventHandler() {
 			super();
-			StringBuffer buffer = new StringBuffer();
-			boolean first = true;
-			for (IVerifier<String> v : verificators) {
-				if (!first) {
-					buffer.append( " or ");
-				}
-				buffer.append( v.toString());
-				first = false;
-			}
-			this.HELPVALUE = buffer.toString();
+			this.HELPVALUE = verifier.toString();
 			/* Fill with DefaultHelpText */
 			focusLost( null);
 		}
@@ -143,21 +133,13 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 			ignore = false;
 		}
 
-		private boolean verifyText(final String theText) {
+		protected boolean verifyText(final String theText) {
 			List<MessageRecord> messages = new LinkedList<MessageRecord>();
-			boolean verified = false;
 
-			for (IVerifier<String> v : verificators) {
-				VerificationResult<String> result = v.verify( theText);
-				verified |= result.verified;
-				if (verified) {
-					getMessageView().showMessages( result.messages);
-					return verified;
-				}
-				messages.addAll( result.messages);
-			}
-			getMessageView().showMessages( messages);
-			return verified;
+			VerificationResult<String> result = verifier.verify( theText);
+			getMessageView().showMessages( result.messages);
+
+			return result.verified;
 		}
 	}
 
