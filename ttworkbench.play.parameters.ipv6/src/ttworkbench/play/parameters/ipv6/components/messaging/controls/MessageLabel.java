@@ -1,40 +1,26 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.controls;
 
 import java.awt.Toolkit;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Widget;
 
 import ttworkbench.play.parameters.ipv6.common.Globals;
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
-import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
-import ttworkbench.play.parameters.ipv6.widgets.AbstractWidget;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
-import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MessageLabel extends Composite implements IMessageLabel {
@@ -130,17 +116,18 @@ public class MessageLabel extends Composite implements IMessageLabel {
 
 	@Override
 	public void navigateToCauser() {
+		System.out.println( "Causer: " + messageRecord.causer);
 		if ( messageRecord.causer != null)
-			focusEditorForParameter( messageRecord.causer);
+			focusEditorForParameter( messageRecord.causer, true);
 	}
 
-	private boolean focusEditorForParameter(IParameterControl<?,?> theParameterControl) {
+	private boolean focusEditorForParameter(IParameterControl<? extends Control,?> theParameterControl, boolean tryJumpToItem) {
 		if ( theParameterControl.getControl().isVisible()) {
 			theParameterControl.getControl().setFocus();
 			return true;
 		}
 		
-		// try to find a editor for this parameter on the current active widget (tab)
+		// try to find an editor for this parameter on the current active widget (tab)
 		if ( Globals.hasConfiguration()) {
 			Set<IParameterEditor> editors = Globals.getConfiguration().getEditors( theParameterControl.getParameter());
 			for ( IParameterEditor editor : editors) {
@@ -150,7 +137,37 @@ public class MessageLabel extends Composite implements IMessageLabel {
 				}
 			}
 		}
+		
+		// if there was no suitable editor, we try to activate the tab 
+		// where the causer control is placed on.
+		if ( tryJumpToItem && selectNextParentTabOfControl( theParameterControl.getControl()))
+		  // try again
+		  focusEditorForParameter( theParameterControl, false);
 		return false;
+	}
+
+	private boolean selectNextParentTabOfControl(Control theControl) {
+		Control currentControl = theControl;
+		Control lastControl = null;
+		while ( currentControl != null &&
+				    !(currentControl instanceof CTabFolder)) {
+			lastControl = currentControl;
+			currentControl = currentControl.getParent();
+		}
+		
+	  if ( currentControl != null &&
+	  		 currentControl instanceof CTabFolder) {
+	    CTabFolder tabFolder = (CTabFolder) currentControl;
+	    CTabItem[] items = tabFolder.getItems();
+	    for (CTabItem item : items) {
+	    	if ( item.getControl() == lastControl) {
+	    		tabFolder.setSelection( item);
+	    		return true;
+	    	}
+	    }
+	  }
+	  
+	  return false;
 	}
 	
 }
