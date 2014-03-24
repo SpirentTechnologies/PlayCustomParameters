@@ -3,6 +3,8 @@ package ttworkbench.play.parameters.ipv6;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
@@ -11,11 +13,13 @@ import ttworkbench.play.parameters.ipv6.composer.IPWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.MacWidgetComposer;
 import ttworkbench.play.parameters.settings.Data;
+import ttworkbench.play.parameters.settings.Data.Relation;
 import ttworkbench.play.parameters.settings.exceptions.ParameterConfigurationException;
 import ttworkbench.play.parameters.settings.loader.DataLoader;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurationComposer;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 
 public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
@@ -57,8 +61,9 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		LinkedList<IWidgetComposer> customs = new LinkedList<IWidgetComposer>();
 		try {
 			Data.Widget[] widgets = DataLoader.getInstance().getWidgets();
+			Map<Relation, IParameterValidator> validatorMap = new ConcurrentHashMap<Data.Relation, IParameterValidator>();
 			for (Data.Widget widget : widgets) {
-				customs.add( new CustomWidgetComposer( theConfigurator, theParametersMap, widget));
+				customs.add( new CustomWidgetComposer( theConfigurator, theParametersMap, widget, validatorMap));
 			}
 			
 			if(widgets.length<1) {
