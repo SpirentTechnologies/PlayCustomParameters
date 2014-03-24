@@ -2,7 +2,6 @@ package ttworkbench.play.parameters.settings.loader;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -180,9 +179,16 @@ public class DataLoaderXML extends DataLoaderAbstract {
 
 		for(HierarchicalConfiguration val : config.configurationsAt("widgets.widget")) {
 			List<Data.Parameter> paras = new LinkedList<Data.Parameter>();
-			for(Object parameterId : val.getList("editor[@parameterId]")) {
-				Data.Parameter parameter = getParameter(parameterId.toString());
+			
+			for(HierarchicalConfiguration confEditor : val.configurationsAt("editor")) {
+				String parameterId = confEditor.getString("[@parameterId]");
+				Map<String, String> attrs = getAttributesFromConfig(confEditor);
+				Data.Parameter parameter = getParameter(parameterId);
 				if(parameter!=null) {
+					if(!attrs.isEmpty()) {
+						parameter = new ParameterImpl(parameter);
+						parameter.getAttributes().putAll(attrs);
+					}
 					paras.add(parameter);
 				}
 			}

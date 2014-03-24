@@ -1,22 +1,23 @@
 package ttworkbench.play.parameters.settings.data;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import ttworkbench.play.parameters.settings.Data;
 
 public class ParameterImpl implements Data.Parameter {
 
-	private boolean descriptionVisible;
-	private Data.Relation[] relations;
-	private String id;
-	private String description;
-	private String defaultValue;
-	private Map<String, String> attributes;
+	private final boolean descriptionVisible;
+	private final Data.Relation[] relations;
+	private final String id;
+	private final String description;
+	private final Object defaultValue;
+	private final Map<String, String> attributes;
 
 	public ParameterImpl(boolean thisDescriptionVisible,
 			Data.Relation[] thisRelations,
-			String thisId, String thisDescription, String thisDefaultValue,
+			String thisId, String thisDescription, Object thisDefaultValue,
 			Map<String, String> thisAttributes) {
 		
 		this.descriptionVisible = thisDescriptionVisible;
@@ -25,6 +26,18 @@ public class ParameterImpl implements Data.Parameter {
 		this.description = thisDescription;
 		this.defaultValue = thisDefaultValue;
 		this.attributes = thisAttributes;
+	}
+	
+	
+	public ParameterImpl(Data.Parameter parameter) {
+		this(
+			parameter.isDescriptionVisible(),
+			parameter.getRelations(),
+			parameter.getId(),
+			parameter.getDescription(),
+			parameter.getDefaultValue(),
+			new LinkedHashMap<String, String>(parameter.getAttributes())
+		);
 	}
 
 	public boolean isDescriptionVisible() {
