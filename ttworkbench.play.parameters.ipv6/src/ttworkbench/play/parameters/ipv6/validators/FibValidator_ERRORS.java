@@ -11,6 +11,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class FibValidator_ERRORS extends FibValidator {
 
@@ -40,15 +41,15 @@ public class FibValidator_ERRORS extends FibValidator {
 	  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
 	  
 		if ( totalErrors > 0) {
-			validationResults.add( new ValidationResult(  String.format( "%s: %s errors.", this.getTitle(), totalErrors), ErrorKind.error, theClient, "tag_total_errors"));
+			validationResults.add( new ValidationResultMessage(  String.format( "%s: %s errors.", this.getTitle(), totalErrors), ErrorKind.error, theClient, "tag_total_errors"));
 		} else {
-			validationResults.add( new ValidationResult(  String.format( "%s: No more errors.", this.getTitle()), ErrorKind.success, theClient, "tag_total_errors"));
+			validationResults.add( new ValidationResultMessage(  String.format( "%s: No more errors.", this.getTitle()), ErrorKind.success, theClient, "tag_total_errors"));
 		}
 		
 		if ( totalWarnings > 0) {
-			validationResults.add( new ValidationResult(  String.format( "%s: %s warnings.", this.getTitle(), totalErrors), ErrorKind.warning, theClient, "tag_total_warnings"));
+			validationResults.add( new ValidationResultMessage(  String.format( "%s: %s warnings.", this.getTitle(), totalErrors), ErrorKind.warning, theClient, "tag_total_warnings"));
 		} else {
-			validationResults.add( new ValidationResult(  String.format( "%s: No more warnings.", this.getTitle()), ErrorKind.success, theClient, "tag_total_warnings"));
+			validationResults.add( new ValidationResultMessage(  String.format( "%s: No more warnings.", this.getTitle()), ErrorKind.success, theClient, "tag_total_warnings"));
 		}
 		
 		return validationResults;

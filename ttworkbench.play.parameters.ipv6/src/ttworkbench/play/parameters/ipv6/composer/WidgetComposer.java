@@ -25,4 +25,8 @@ public abstract class WidgetComposer implements IWidgetComposer {
 	
 	public abstract void compose();
 	
+	public void resolve() {
+		// nothing to resolve
+	}
+	
 }

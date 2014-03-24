@@ -8,6 +8,7 @@ import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class FibValidator_SEQ extends FibValidator {
 	public FibValidator_SEQ() {
@@ -23,10 +24,10 @@ public class FibValidator_SEQ extends FibValidator {
 		BigInteger fibValue = getFibonacciNumber( inputSeqenceNumber);
 
     if ( inputFibValue.compareTo( fibValue) != 0) {
-    	validationResults.add( new ValidationResult( String.format( "%s: %s is NOT the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.error, theClient, "tag_is_not_fib_of_n"));		
-      validationResults.add( new ValidationResult(  String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), fibValue, inputSeqenceNumber), ErrorKind.info, theClient, "tag_is_fib_of_hint")); 
+    	validationResults.add( new ValidationResultMessage( String.format( "%s: %s is NOT the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.error, theClient, "tag_is_not_fib_of_n"));		
+      validationResults.add( new ValidationResultMessage(  String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), fibValue, inputSeqenceNumber), ErrorKind.info, theClient, "tag_is_fib_of_hint")); 
     } else {
-    	validationResults.add( new ValidationResult( String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.success, theClient, "tag_is_not_fib_of_n"));		
+    	validationResults.add( new ValidationResultMessage( String.format( "%s: %s is the fibonacci number of %s.", this.getTitle(), inputFibValue, inputSeqenceNumber), ErrorKind.success, theClient, "tag_is_not_fib_of_n"));		
     }
     	
     return validationResults;

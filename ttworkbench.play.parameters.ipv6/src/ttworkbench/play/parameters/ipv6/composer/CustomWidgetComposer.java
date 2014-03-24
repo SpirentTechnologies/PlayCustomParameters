@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ import ttworkbench.play.parameters.ipv6.validators.IWithValidatorContext;
 import ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
+import ttworkbench.play.parameters.settings.Data.Relation;
 
 import com.testingtech.ttworkbench.ttman.ManagementPlugin;
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
@@ -29,15 +31,15 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 
 public class CustomWidgetComposer extends WidgetComposer {
 	
-	private Data.Widget widget;
-	
-	private HashMap<Data.Relation, IParameterValidator> relations = new HashMap<Data.Relation, IParameterValidator>();
+	private final Data.Widget widget;
+	private final Map<Relation, IParameterValidator> availableValidatorsMap;
+	private final LinkedList<Relation> triggerableRelations = new LinkedList<Data.Relation>();
 
 	
-	
-	public CustomWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap, Data.Widget theWidget) {
+	public CustomWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap, Data.Widget theWidget, Map<Data.Relation, IParameterValidator> validatorMap) {
 		super( theConfigurator, theParametersMap);
 		this.widget = theWidget;
+		this.availableValidatorsMap = validatorMap;
 	}
 	
 	@Override
@@ -48,17 +50,13 @@ public class CustomWidgetComposer extends WidgetComposer {
 		Image widgetImage = getImage(widget.getImage());
 
 		IWidget defaultWidget = new CustomWidget(widgetName, widgetDescription, widgetImage) {
-			
 			@Override
 			protected IWidgetLookAndBehaviour getDefaultLookAndBehaviour() {
 				return new DefaultWidgetLookAndBehaviour();
 			}
 		};
 		
-		
 		getConfigurator().addWidget( defaultWidget);
-
-
 		
 		for(Data.Parameter dataParameter : widget.getParameters()) {
 			String theId = dataParameter.getId();
@@ -68,9 +66,6 @@ public class CustomWidgetComposer extends WidgetComposer {
 				IParameterEditor<?> editor = ParameterEditorMapper.getInstance().getEditor(parameter);
 				getConfigurator().assign( editor, defaultWidget, parameter);
 				
-				
-				
-				
 				/*
 				 * related validation
 				 */
@@ -78,7 +73,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 					IParameterValidator validator = getValidator(dataRelation);
 					if(validator!=null) {
 						
-						triggerRelations(dataRelation, validator);
+						triggerableRelations.add(dataRelation);
 						
 						// assign the validator to the parameter
 						getConfigurator().assign( validator, defaultWidget, parameter);
@@ -92,29 +87,27 @@ public class CustomWidgetComposer extends WidgetComposer {
 				logError("The parameter could not be found: \""+theId+"\".", null);
 			}
 		}
-		
-		triggerRelations();
-		
-		
-		
 	}
 
 	
-	private void triggerRelations() {
-		for(Entry<Data.Relation, IParameterValidator> triggerEntry : relations.entrySet()) {
-			Data.Relation relation = triggerEntry.getKey();
-			IParameterValidator validator = triggerEntry.getValue();
-			SimpleValidatorContext context = getValidatorContext(validator);
-			Data.RelationPartner[] relationPartners = relation.getRelationPartners();
-			
-			for(Data.RelationPartner relationPartner : relationPartners) {
-
-				Data.Partner partner = relationPartner.getPartner();
+	@Override
+	public void resolve() {
+		super.resolve();
+		
+		for(Data.Relation relation : triggerableRelations) {
+			IParameterValidator validator = availableValidatorsMap.remove( relation);
+			if(validator!=null) {
+				SimpleValidatorContext context = getValidatorContext(validator);
+				Data.RelationPartner[] relationPartners = relation.getRelationPartners();
 				
-				boolean msg = relationPartner.isRegisteredForMessages();
-				boolean act = relationPartner.isRegisteredForActions();
-				
-				// set related parameter instance
+				for(Data.RelationPartner relationPartner : relationPartners) {
+	
+					Data.Partner partner = relationPartner.getPartner();
+					
+					boolean msg = relationPartner.isRegisteredForMessages();
+					boolean act = relationPartner.isRegisteredForActions();
+					
+					// set related parameter instance
 					if(partner instanceof Data.Parameter) {
 						String id = ((Data.Parameter) partner).getId();
 						IParameter<?> relatedParameter = getParametersMap().getParameterById( id);
@@ -130,11 +123,13 @@ public class CustomWidgetComposer extends WidgetComposer {
 							
 							// register for messages
 							if(msg && editor instanceof IMessageHandler) {
+								System.out.println("[editorMsg] registered \""+editor.getParameter().getId()+"\" to \""+validator.getTitle()+"\".");
 								validator.registerForMessages( (IMessageHandler) editor);
 							}
 							
 							// register for actions
 							if(act && editor instanceof IActionHandler) {
+								System.out.println("[editorAct] registered \""+editor.getParameter().getId()+"\" to \""+validator.getTitle()+"\".");
 								validator.registerForActions( (IActionHandler) editor);
 							}
 						}
@@ -148,13 +143,15 @@ public class CustomWidgetComposer extends WidgetComposer {
 						}
 						
 						if(msg && widget instanceof IMessageHandler) {
+							System.out.println("[widgetMsg] registered \""+widget.getTitle()+"\" to \""+validator.getTitle()+"\".");
 							validator.registerForMessages( (IMessageHandler) widget);
 						}
 						if(act && widget instanceof IActionHandler) {
+							System.out.println("[widgetAct] registered \""+widget.getTitle()+"\" to \""+validator.getTitle()+"\".");
 							validator.registerForActions( (IActionHandler) widget);
 						}
 					}
-				
+				}
 				
 			}
 		}
@@ -171,12 +168,9 @@ public class CustomWidgetComposer extends WidgetComposer {
 		return context;
 	}
 
-	private synchronized void triggerRelations(Data.Relation theRelation, IParameterValidator theValidator) {
-			relations.put( theRelation, theValidator);
-	}
-	
+
 	private IParameterValidator getValidator(Data.Relation theDataRelation) {
-		IParameterValidator validator = relations.get( theDataRelation);
+		IParameterValidator validator = availableValidatorsMap.get( theDataRelation);
 		if(validator==null) {
 			Class<?> validatorType = theDataRelation.getValidator().getType();
 			if(validatorType!=null) {
@@ -198,7 +192,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 							validator.setAttribute( attribute.getKey(), attribute.getValue());
 						}
 						
-						relations.put( theDataRelation, validator);
+						availableValidatorsMap.put( theDataRelation, validator);
 					}
 					else {
 						logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.", null);

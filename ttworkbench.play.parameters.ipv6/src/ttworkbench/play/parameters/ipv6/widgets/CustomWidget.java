@@ -65,7 +65,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 			}
 		});
 	}
-		
+	
 	
 	@Override
 	public Control createControl(Composite theParent) {
@@ -124,9 +124,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 	protected void createFreshEditors() {
 		List<IParameterEditor<?>> freshEditors = getEditors();
 		freshEditors.removeAll( editorControls.keySet());
-		int i=0;
 		for (IParameterEditor<?> freshEditor : freshEditors) {
-			i++;
 			createParameterEditor( freshEditor);
 			if ( freshEditor instanceof ValidatingEditor<?>) {
 				ValidatingEditor<?> validatingEditor = (ValidatingEditor<?>) freshEditor;
@@ -182,6 +180,19 @@ public abstract class CustomWidget extends NotifyingWidget {
 	
 	protected abstract IWidgetLookAndBehaviour getDefaultLookAndBehaviour();
 	
-
+	
+	
+	@Override
+	public void setVisible(boolean theVisibleState) {
+		super.setVisible( theVisibleState);
+		// cannot hide a tab item, therefore just disable it
+		setEnabled( theVisibleState);
+	}
+	
+	@Override
+	public void setEnabled(boolean theEnabledState) {
+		super.setEnabled( theEnabledState);
+		mainContainer.setEnabled( theEnabledState);
+	}
 
 }
