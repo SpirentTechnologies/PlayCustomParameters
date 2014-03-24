@@ -5,16 +5,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificator;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class IntegerRangeVerificator implements IVerificator<String> {
+public class IntegerRangeVerifier implements IVerifier<String> {
 
 	final IntegerType integerType;
 	
-	public IntegerRangeVerificator( final IntegerType theIntegerType) {
+	public IntegerRangeVerifier( final IntegerType theIntegerType) {
 		super();
 		this.integerType = theIntegerType;
 	}

@@ -9,24 +9,17 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.common.IParameterControl;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.MessagePanel;
-import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.ILookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
@@ -79,7 +72,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	 * @param theCauser 
 	 * @return
 	 */
-	protected List<ValidationResult> validate( final Object theCauser) {
+	protected List<ValidationResult> validate( final IParameterControl<?,T> theCauser) {
 		IConfiguration configuration = getConfiguration();
 		IParameter<?> parameter = getParameter();
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
@@ -101,7 +94,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
   /**
    * Validates the current parameter value delayed in another thread.
    */
-	protected void validateDelayed( final Object theCauser) {
+	protected void validateDelayed( final IParameterControl<?,T> theCauser) {
 		if ( validationTaskFuture != null) 
 			validationTaskFuture.cancel( true);
 		if ( validationMessageTaskFuture != null) 
@@ -158,28 +151,25 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		});
 	}
 	
-	
+
 	@Override
-	public final Composite createControl(Composite theParent) {
-	  Composite container = new Composite( theParent, SWT.None);
+	protected void designControl(Composite theControl) {
 	  GridLayout containerLayout = new GridLayout();
 	  containerLayout.marginHeight = 0;
 	  containerLayout.marginWidth = 0;
-	  container.setLayout( containerLayout);
+	  theControl.setLayout( containerLayout);
 	  // TODO check layout data. Is compatible? to Flowlayout or Filllayout 
-		container.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
+	  theControl.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, false, 0, 0));
 		
-		createMessageRow( container);
+		createMessageRow( theControl);
 
-		Composite editRowContainer = new Composite( container, SWT.None);
+		Composite editRowContainer = new Composite( theControl, SWT.None);
 		editRowContainer.setLayout( getLookAndBehaviour().getEditorLookAndBehaviour().getLayout());
 		createEditRow( editRowContainer);
 		getMessageView().setClientComponent( editRowContainer);
 		
-		container.setSize( container.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		container.layout();
-		
-		return container;
+		theControl.setSize( theControl.computeSize( SWT.DEFAULT, SWT.DEFAULT));
+		theControl.layout();
 	}
 	
 
@@ -190,14 +180,19 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 				IMessageView<?> messageView = getMessageView();
 				if ( messageView != null) {
 					String senderId = String.valueOf( theValidator.getId());
-					// TODO
+
 					messageView.beginUpdateForSender( senderId);
-					for (ValidationResult validationResult : theValidationMessages) {
-						if ( validationResult.isTagged()) {
-							messageView.showMessage( new MessageRecord( validationResult.getTag(), validationResult.getErrorMessage(), validationResult.getErrorKind(), validationResult.getClient()));
-						} else {
-							messageView.showMessage( new MessageRecord( null, validationResult.getErrorMessage(), validationResult.getErrorKind(), validationResult.getClient()));					
-						}
+					
+					IParameterControl<?,?> validationCauser;
+					for (ValidationResultMessage validationResultMessage : theValidationMessages) {
+						validationCauser = validationResultMessage.getClient() instanceof IParameterControl<?,?> ? (IParameterControl<?,?>) validationResultMessage.getClient() : null;
+
+						messageView.showMessage(
+								new MessageRecord(
+										validationResultMessage.isTagged() ? validationResultMessage.getTag() : null,
+										validationResultMessage.getErrorMessage(),
+										validationResultMessage.getErrorKind(),
+										validationCauser));
 					}
 					messageView.endUpdate();
 				}
@@ -210,6 +205,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	public void trigger(final IParameterValidator theValidator, final List<ValidationResultAction> theValidationActions, IParameter<?> theParameter) {
 		// TODO
 	}
+	
 	
 
 }

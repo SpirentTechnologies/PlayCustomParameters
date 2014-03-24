@@ -20,9 +20,9 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 public class FibWidgetComposer extends WidgetComposer {
 	
 	// get relevant parameters
-	final IParameter<IntegerValue> parameter_PX_N = getParametersMap().getParameterById( "PX_N");
-	final IParameter<IntegerValue> parameter_PX_FIB_NUMBER = getParametersMap().getParameterById( "PX_FIB_NUMBER");
-	final IParameter<IntegerValue> parameter_PX_FIB_SUCC_NUMBER = getParametersMap().getParameterById( "PX_FIB_SUCC_NUMBER");
+	final IParameter<IntegerValue> parameter_PX_N = getParametersMap().<IntegerValue>getParameterById( "PX_N");
+	final IParameter<IntegerValue> parameter_PX_FIB_NUMBER = getParametersMap().<IntegerValue>getParameterById( "PX_FIB_NUMBER");
+	final IParameter<IntegerValue> parameter_PX_FIB_SUCC_NUMBER = getParametersMap().<IntegerValue>getParameterById( "PX_FIB_SUCC_NUMBER");
 
 	public FibWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 		super( theConfigurator, theParametersMap);

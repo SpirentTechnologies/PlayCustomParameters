@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
@@ -259,6 +260,13 @@ public class MessagePanel extends Composite implements IMessageView<Composite> {
 		for (MessageRecord messageRecord : theMessageRecords) {
 			showMessage( messageRecord);
 		}
+	}
+	
+	@Override
+	public void clearMessagesByTag( final String theTag) {
+		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
+		final MessageBlock messageBlock = messages.get( id);
+		messageBlock.clearTaggedMessage( theTag);
 	}
 	
 	private void putTaggedMessage( final String theTag, final String theMessage, final ErrorKind theErrorKind) {

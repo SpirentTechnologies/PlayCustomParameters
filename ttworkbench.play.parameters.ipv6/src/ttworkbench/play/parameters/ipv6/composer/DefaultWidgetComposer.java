@@ -27,9 +27,9 @@ public class DefaultWidgetComposer extends WidgetComposer {
 		getConfigurator().addWidget( defaultWidget);
 
 		// TODO: replace demo composition 
-		Collection<IParameter> parameters = getParametersMap().getAllParameters();
-		for (IParameter parameter : parameters) {
-			IParameterEditor editor = new DefaultEditor();
+		Collection<IParameter<?>> parameters = getParametersMap().getAllParameters();
+		for (IParameter<?> parameter : parameters) {
+			IParameterEditor<?> editor = new DefaultEditor();
 			if(parameter.getType().matches( TYPE_MATCH_INTEGER)) {
 				editor = new IntegerEditor();
 			}

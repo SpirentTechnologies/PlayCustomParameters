@@ -29,13 +29,13 @@ public class FibValidator_ERRORS extends FibValidator {
 		
 		int totalErrors = 0;
 		int totalWarnings = 0;
-		IMessageView messagePanel_PX_N = ((ValidatingEditor<?>) editor_PX_N).getMessageView();
+		IMessageView<?> messagePanel_PX_N = ((ValidatingEditor<?>) editor_PX_N).getMessageView();
 	  totalErrors += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.error)).size();
 	  totalWarnings += messagePanel_PX_N.getMessages( EnumSet.of( ErrorKind.warning)).size();
-	  IMessageView messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editor_PX_FIB_NUMBER).getMessageView();
+	  IMessageView<?> messagePanel_PX_FIB_NUMBER = ((ValidatingEditor<?>) editor_PX_FIB_NUMBER).getMessageView();
 	  totalErrors += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 	  totalWarnings += messagePanel_PX_FIB_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
-	  IMessageView messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editor_PX_FIB_SUCC_NUMBER).getMessageView();
+	  IMessageView<?> messagePanel_PX_FIB_SUCC_NUMBER = ((ValidatingEditor<?>) editor_PX_FIB_SUCC_NUMBER).getMessageView();
 	  totalErrors += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.error)).size();
 	  totalWarnings += messagePanel_PX_FIB_SUCC_NUMBER.getMessages( EnumSet.of( ErrorKind.warning)).size();
 	  

@@ -3,23 +3,32 @@ package ttworkbench.play.parameters.ipv6.editors.verification;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWidget<T> {
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
+
+public abstract class VerifyingAdapter<C extends Control,P> implements IVerifyingControl<C,P> {
 	
 	private class VerifyListener implements Listener {
 		
 		@Override
 		public void handleEvent( final Event theOriginalEvent) {
+			
+			if ( !isVerificationEnabled()) {
+				theOriginalEvent.doit = true;
+				return;
+			}
+				
+			
 			verificationResults.clear();
 
 			String modifiedText = getModifiedTextByEvent( theOriginalEvent);
@@ -31,9 +40,9 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 				if ( verificationEvent.skipVerification)
 					return;
 
-				List<IVerificator<String>> verificators = verificatorMap.get( theOriginalEvent.type);
-				for ( IVerificator<String> verificator : verificators) {
-					VerificationResult<String> verificationResult = verificator.verify( modifiedText, verificationEvent.verificatorParams);
+				List<IVerifier<String>> verifiers = verifierMap.get( theOriginalEvent.type);
+				for ( IVerifier<String> verifier : verifiers) {
+					VerificationResult<String> verificationResult = verifier.verify( modifiedText, verificationEvent.verifierParams);
 					verificationResults.add( verificationResult);
 
 					afterVerificationStep( verificationEvent);
@@ -65,36 +74,44 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 		
 	}
 
-	private final T widget;
-	private final Map<Integer, List<IVerificator<String>>> verificatorMap = new HashMap<Integer, List<IVerificator<String>>>();
+	private ReentrantLock lock = new ReentrantLock();
+	private final C control;
+	private final IParameter<P> parameter;
+	private final Map<Integer, List<IVerifier<String>>> verifierMap = new HashMap<Integer, List<IVerifier<String>>>();
 	private IVerificationListener<String> listener;
 	private final List<VerificationResult<String>> verificationResults = new ArrayList<VerificationResult<String>>();
+	private boolean verificationEnabled = true;
 	
-	public VerifyingAdapter( final Composite theParent, final int theStyle, final IVerificator<String> ... theVerificators) {
+	public VerifyingAdapter( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<String> ... theVerifiers) {
 		super();
-		this.widget = createWidget( theParent, theStyle);
-		this.verificatorMap.put( SWT.Verify, new ArrayList( Arrays.asList( theVerificators)));
+		this.control = createControl( theParent, theStyle);
+		this.parameter = theParameter;
+		this.verifierMap.put( SWT.Verify, new ArrayList( Arrays.asList( theVerifiers)));
 		updateListener();
 	}
 	
+	public boolean isVerificationEnabled() {
+		return verificationEnabled ;
+	}
+
 	@Override
-	public void addVerificatorToEvent( final IVerificator<String> theVerificator, final int theEventType) {
-		if ( !verificatorMap.containsKey( theEventType))
-			verificatorMap.put( theEventType, new ArrayList( Arrays.asList( theVerificator)));
+	public void addVerifierToEvent( final IVerifier<String> theVerifier, final int theEventType) {
+		if ( !verifierMap.containsKey( theEventType))
+			verifierMap.put( theEventType, new ArrayList( Arrays.asList( theVerifier)));
 		else
-			verificatorMap.get( theEventType).add( theVerificator);
+			verifierMap.get( theEventType).add( theVerifier);
 		updateListener();
 	}
 
 	private void updateListener() {
 		Listener[] listeners;
-		eventTypeLoop: for ( Integer eventType : verificatorMap.keySet()) {
-			listeners = widget.getListeners( eventType);
+		eventTypeLoop: for ( Integer eventType : verifierMap.keySet()) {
+			listeners = control.getListeners( eventType);
 			for (int i = 0; i < listeners.length; i++) {
 				if ( listeners[i] instanceof VerifyingAdapter.VerifyListener)
 					continue eventTypeLoop;
 			}
-			widget.addListener( eventType, getVerifyListener());
+			control.addListener( eventType, getVerifyListener());
 		}
 	}
 	
@@ -104,7 +121,7 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 
 	protected abstract String getModifiedTextByEvent( final Event theEvent);
 	
-	protected abstract T createWidget( final Composite theParent, final int theStyle);
+	protected abstract C createControl( final Composite theParent, final int theStyle);
 	
 
 	@Override
@@ -118,8 +135,30 @@ public abstract class VerifyingAdapter<T extends Widget> implements IVerifyingWi
 	}
 	
 	@Override
-	public final T getEncapsulatedWidget() {
-		return widget;
+	public C getControl() {
+		return control;
 	}
 
+	@Override
+	public IParameter<P> getParameter() {
+		return parameter;
+	}
+	
+	public void enableVerification() {
+		verificationEnabled = true;
+	}
+
+	public void disableVerification() {
+		verificationEnabled = false;
+	}
+	
+	@Override
+	public final void forceText(String theText) {
+		boolean verificationWasEnabled = verificationEnabled;
+		disableVerification();
+		setText( theText);
+		if ( verificationWasEnabled)
+			enableVerification();
+	}
+	
 }

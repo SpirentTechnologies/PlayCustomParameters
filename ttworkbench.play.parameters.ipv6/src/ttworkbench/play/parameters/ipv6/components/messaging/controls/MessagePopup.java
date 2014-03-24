@@ -4,6 +4,9 @@ import java.util.EnumSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -68,38 +71,56 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	
 	private void createPopupShell() {
 		// TODO: if necessary lay a scrolled composite below the message lines
-		popupShell = new Shell( getShell(), SWT.TOOL);
+		popupShell = new Shell( getShell(),  SWT.NO_TRIM | SWT.TOOL | SWT.NO_FOCUS);
 		GridLayout popupLayout = new GridLayout(1, true);
 		popupLayout.horizontalSpacing = 0;
 		popupLayout.verticalSpacing = 0;
-		popupLayout.marginWidth = 0;
-		popupLayout.marginHeight = 0;
+		popupLayout.marginWidth = 1;
+		popupLayout.marginHeight = 1;
 		popupShell.setLayout( popupLayout);
+		popupShell.setBackground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_NORMAL_SHADOW));
 		
     popupShell.addListener( SWT.MouseDown, new Listener() {
 			
 			@Override
-			public void handleEvent(Event theArg0) {
+			public void handleEvent(Event theEvent) {
 				hidePopup();
+
+				if ( theEvent.button == 1) {  
+					Control underlayingControl = getUnterlayingControl( theEvent);
+					if ( underlayingControl instanceof MessageLabel) {
+						MessageLabel messageLabel = (MessageLabel) underlayingControl;
+						messageLabel.navigateToCauser();
+					}
+				}
+			}
+
+			private Control getUnterlayingControl( Event theEvent) {
+				for ( Control control : popupShell.getChildren()) {
+					if ( control.getBounds().contains( theEvent.x,theEvent.y))
+						return control;
+				}
+				return null;
 			}
 		});
-    
-		
-	
+  
 	}
+		
 	
 	private void showPopup( final Point theMousePosition) {
 		// TODO: handle case if popup is shown out of or intersect with getDisplay.getClientArea()
-		popupShell.setLocation( label.toDisplay( new Point( theMousePosition.x -25, theMousePosition.y -25)));
+		popupShell.setLocation( label.toDisplay( new Point( theMousePosition.x -12, theMousePosition.y -12)));
 		popupShell.setSize( popupShell.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		for ( Control control : popupShell.getChildren()) {
 			control.setEnabled( false);
 		}
 		popupShell.layout();
 		popupShell.open();
-	  
+		
 		// register handler in display to get mouse moves outside the clientarea too. To close the popup later. 
 		getDisplay().addFilter( SWT.MouseMove, mouseMoveListener);
+		
+		
 				
 	}
 	
@@ -108,6 +129,8 @@ public class MessagePopup extends Composite implements IMessageContainer {
 		popupShell.setVisible( false);
 	}
 	
+  
+  
 
 	private Listener createMouseMoveListener() {
 		return new Listener() {
@@ -122,8 +145,19 @@ public class MessagePopup extends Composite implements IMessageContainer {
 					Point displayCursorPosition = ((Control) theEvent.widget).toDisplay( theEvent.x, theEvent.y);
 					Point popupCursorPosition = popupShell.toControl( displayCursorPosition);
 					boolean visible = popupShell.getClientArea().contains( popupCursorPosition);
-				  if ( !visible) 
-            hidePopup();
+				  if ( !visible) {
+				  	Point labelCursorPosition = label.toControl( displayCursorPosition);
+				  	if (label.getClientArea().contains( labelCursorPosition)) {
+				  	  Point popupLocation = popupShell.getLocation();
+				  	  Point newPopupPosition = new Point( popupLocation.x, popupLocation.y);
+				  	  if ( displayCursorPosition.x - popupLocation.x < 0)
+				  	  	newPopupPosition.x = displayCursorPosition.x;
+				  	  if ( displayCursorPosition.y - popupLocation.y < 0)
+				  	  	newPopupPosition.y = displayCursorPosition.y;
+				  	  popupShell.setLocation( newPopupPosition);
+				  	} else
+				  	  hidePopup();
+				  }
 				}
 			}
 		};

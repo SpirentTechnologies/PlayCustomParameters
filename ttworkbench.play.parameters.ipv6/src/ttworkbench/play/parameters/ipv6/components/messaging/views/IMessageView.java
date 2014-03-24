@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.eclipse.swt.widgets.Composite;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
@@ -35,6 +34,12 @@ public interface IMessageView<ClientComponent> {
 	void showMessage( MessageRecord theMessageRecord);
 	void showMessages( Collection<MessageRecord> theMessageRecords);
 
+	/**
+	 * Forces removal of the message specified by the given tag.  
+	 * @param theTag
+	 */
+	void clearMessagesByTag(String theTag);
+	
 		/**
 	 * Fetches all messages on this panel of specified error kind.
 	 * 
@@ -52,5 +57,6 @@ public interface IMessageView<ClientComponent> {
 	IMessageInformation getMessageInformation();
 
 	void setSuperiorView(IMessageView<?> theMessageView);
+
 
 }

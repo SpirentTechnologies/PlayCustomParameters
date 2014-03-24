@@ -16,6 +16,8 @@ import ttworkbench.play.parameters.ipv6.validators.IWithValidatorContext;
 import ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext;
 import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 import ttworkbench.play.parameters.settings.Data;
+
+import com.testingtech.ttworkbench.ttman.ManagementPlugin;
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
@@ -29,8 +31,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 	
 	private Data.Widget widget;
 	
-	private HashMap<IParameterValidator, Data.Relation> triggeredRelations = new HashMap<IParameterValidator, Data.Relation>();
-	private HashMap<Data.Validator, IParameterValidator> validatorMapping = new HashMap<Data.Validator, IParameterValidator>();
+	private HashMap<Data.Relation, IParameterValidator> relations = new HashMap<Data.Relation, IParameterValidator>();
 
 	
 	
@@ -74,21 +75,21 @@ public class CustomWidgetComposer extends WidgetComposer {
 				 * related validation
 				 */
 				for(Data.Relation dataRelation : dataParameter.getRelations()) {
-					IParameterValidator validator = getValidator(dataRelation.getValidator());
+					IParameterValidator validator = getValidator(dataRelation);
 					if(validator!=null) {
 						
-						triggerRelations(validator, dataRelation);
+						triggerRelations(dataRelation, validator);
 						
 						// assign the validator to the parameter
 						getConfigurator().assign( validator, defaultWidget, parameter);
 					}
 					else {
-						logError( "A validator for \""+theId+"\" could not be resolved: \""+dataRelation.getValidator().getType()+"\"");
+						logError( "A validator for \""+theId+"\" could not be resolved: \""+dataRelation.getValidator().getType()+"\"", null);
 					}
 				}
 			}
 			else {
-				logError("The parameter could not be found: \""+theId+"\".");
+				logError("The parameter could not be found: \""+theId+"\".", null);
 			}
 		}
 		
@@ -100,10 +101,10 @@ public class CustomWidgetComposer extends WidgetComposer {
 
 	
 	private void triggerRelations() {
-		for(Entry<IParameterValidator, Data.Relation> triggerEntry : triggeredRelations.entrySet()) {
-			IParameterValidator validator = triggerEntry.getKey();
+		for(Entry<Data.Relation, IParameterValidator> triggerEntry : relations.entrySet()) {
+			Data.Relation relation = triggerEntry.getKey();
+			IParameterValidator validator = triggerEntry.getValue();
 			SimpleValidatorContext context = getValidatorContext(validator);
-			Data.Relation relation = triggerEntry.getValue();
 			Data.RelationPartner[] relationPartners = relation.getRelationPartners();
 			
 			for(Data.RelationPartner relationPartner : relationPartners) {
@@ -170,14 +171,14 @@ public class CustomWidgetComposer extends WidgetComposer {
 		return context;
 	}
 
-	private synchronized void triggerRelations(IParameterValidator theValidator, Data.Relation theRelation) {
-			triggeredRelations.put( theValidator, theRelation);
+	private synchronized void triggerRelations(Data.Relation theRelation, IParameterValidator theValidator) {
+			relations.put( theRelation, theValidator);
 	}
 	
-	private IParameterValidator getValidator(Data.Validator theDataValidator) {
-		IParameterValidator validator = validatorMapping.get( theDataValidator);
+	private IParameterValidator getValidator(Data.Relation theDataRelation) {
+		IParameterValidator validator = relations.get( theDataRelation);
 		if(validator==null) {
-			Class<?> validatorType = theDataValidator.getType();
+			Class<?> validatorType = theDataRelation.getValidator().getType();
 			if(validatorType!=null) {
 				try {
 					Object validatorRaw = validatorType.newInstance();
@@ -193,18 +194,18 @@ public class CustomWidgetComposer extends WidgetComposer {
 								);
 						}
 	
-						for(Entry<String, String> attribute : theDataValidator.getAttributes().entrySet()) {
+						for(Entry<String, String> attribute : theDataRelation.getValidator().getAttributes().entrySet()) {
 							validator.setAttribute( attribute.getKey(), attribute.getValue());
 						}
 						
-						validatorMapping.put( theDataValidator, validator);
+						relations.put( theDataRelation, validator);
 					}
 					else {
-						logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.");
+						logError( "Could not cast \""+validatorRaw+"\" from type \""+validatorType+"\" to a valid IParameterValidator.", null);
 					}
 				}
 				catch(Exception e) {
-					logError( "Could not create instance from class \""+validatorType+"\". Tried to use the default constructor without parameter.");
+					logError( "Could not create instance from class \""+validatorType+"\". Tried to use the default constructor without parameter.", e);
 				}
 			}
 		}
@@ -227,15 +228,16 @@ public class CustomWidgetComposer extends WidgetComposer {
 				return new Image( Display.getCurrent(), theImage.getPath());
 			}
 			catch(Exception e) {
-				logError("could not load image: \""+theImage.getPath()+"\".");
+				logError("could not load image: \""+theImage.getPath()+"\".", e);
 			}
 		}
 		return null;
 	}
 
-	private void logError(String theString) {
-		// TODO logger
-		System.err.println(theString);		
+	private void logError(String theString, Exception e) {
+		ManagementPlugin
+		.getSharedInstance()
+		.eclipseLog(theString,  e);
 	}
 
 	

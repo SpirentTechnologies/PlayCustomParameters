@@ -21,7 +21,7 @@ public abstract class NotifyingWidget extends AbstractWidget implements IMessage
 	}
 
 	
-	protected abstract IMessageView getMessageView();
+	protected abstract IMessageView<?> getMessageView();
 	
 	
 	

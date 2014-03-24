@@ -3,6 +3,7 @@ package ttworkbench.play.parameters.settings.loader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,8 @@ public class DataLoaderXML extends DataLoaderAbstract {
 			Map<String, Data.Parameter> parameters = loadParameters(config);
 			setParameters(parameters);
 			
+			
+			
 			Map<String, Data.Widget> widgets = loadWidgets(config);
 			setWidgets(widgets);
 			
@@ -92,7 +95,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 
 
 	private Map<String, Data.Validator> loadValidators(XMLConfiguration config) throws ParameterConfigurationException {
-		HashMap<String, Data.Validator> result = new HashMap<String, Data.Validator>();
+		LinkedHashMap<String, Data.Validator> result = new LinkedHashMap<String, Data.Validator>();
 		
 		for(HierarchicalConfiguration val : config.configurationsAt("validators.validator")) {
 			String id = val.getString("[@id]");
@@ -109,7 +112,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 	 */
 
 	private Map<String, Data.Parameter> loadParameters(XMLConfiguration config) throws ParameterConfigurationException {
-		HashMap<String, Data.Parameter> result = new HashMap<String, Data.Parameter>();
+		LinkedHashMap<String, Data.Parameter> result = new LinkedHashMap<String, Data.Parameter>();
 		for(HierarchicalConfiguration val : config.configurationsAt("parameters.parameter")) {
 
 			LinkedList<Data.Relation> relations = loadRelations(val);
@@ -140,7 +143,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 				continue;
 			}
 			
-			Map<String, String> attrs = new HashMap<String, String>(validatorDefault.getAttributes());
+			Map<String, String> attrs = new LinkedHashMap<String, String>(validatorDefault.getAttributes());
 			attrs.putAll(attrs_new);
 
 			Data.Validator validator = new ValidatorImpl(
@@ -173,7 +176,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 	 */
 	
 	private Map<String, Data.Widget> loadWidgets(XMLConfiguration config) throws ParameterConfigurationException {
-		Map<String, Data.Widget> result = new HashMap<String, Data.Widget>();
+		Map<String, Data.Widget> result = new LinkedHashMap<String, Data.Widget>();
 
 		for(HierarchicalConfiguration val : config.configurationsAt("widgets.widget")) {
 			List<Data.Parameter> paras = new LinkedList<Data.Parameter>();
@@ -225,7 +228,7 @@ public class DataLoaderXML extends DataLoaderAbstract {
 	 */
 	
 	private Map<String, String> getAttributesFromConfig(HierarchicalConfiguration config) {
-		HashMap<String, String> result = new HashMap<String,String>();
+		LinkedHashMap<String, String> result = new LinkedHashMap<String,String>();
 		
 		for(HierarchicalConfiguration val : config.configurationsAt("attribute")) {
 			String value = val.getString("");
