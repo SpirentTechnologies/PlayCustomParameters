@@ -118,7 +118,7 @@
 			<validator id="visibility">
 				<relation parameterId="PX_FIB_NUMBER" action="true" />
 				<relation parameterId="PX_FIB_SUCC_NUMBER" action="true" />
-				<relation widgetName="Custom Widget 1" action="true" />
+				<!-- <relation widgetName="Custom Widget 1" action="true" /> -->
 				<attribute name="pattern">^.*: 5\)$</attribute>
 			</validator>
 			

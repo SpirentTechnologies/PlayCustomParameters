@@ -64,11 +64,18 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	}
 	
 	public void applySettings() {
-		if ( componentState == ComponentState.CREATED) {	
-		  if ( control.isVisible() != visible)
+		if ( componentState == ComponentState.CREATED) {
+			
+			// Composite.isVisible() behaves strange:
+			//  when the parent object is currently not shown, it'll return false.
+			//  this is why flag-checking here returns wrong answers.
+			
+		  // if ( control.isVisible() != visible)
 		  	control.setVisible( visible);
+
 		  if ( control.isEnabled() != enabled)
 		  	control.setEnabled( enabled);
+		  
 	  }
 	}
 

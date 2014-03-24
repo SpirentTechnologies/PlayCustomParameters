@@ -35,6 +35,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 	private final Map<Relation, IParameterValidator> availableValidatorsMap;
 	private final LinkedList<Relation> triggerableRelations = new LinkedList<Data.Relation>();
 
+	private static final boolean DEBUG = false; 
 	
 	public CustomWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap, Data.Widget theWidget, Map<Data.Relation, IParameterValidator> validatorMap) {
 		super( theConfigurator, theParametersMap);
@@ -128,13 +129,13 @@ public class CustomWidgetComposer extends WidgetComposer {
 							
 							// register for messages
 							if(msg && editor instanceof IMessageHandler) {
-								System.out.println("[editorMsg] \""+this.widget.getName()+"\" registered editor "+editor+" to "+validator+".");
+								if(DEBUG) System.out.println("[editorMsg] \""+this.widget.getName()+"\" registered editor "+editor+" to "+validator+".");
 								validator.registerForMessages( (IMessageHandler) editor);
 							}
 							
 							// register for actions
 							if(act && editor instanceof IActionHandler) {
-								System.out.println("[editorAct] \""+this.widget.getName()+"\" registered editor "+editor+" to "+validator+".");
+								if(DEBUG) System.out.println("[editorAct] \""+this.widget.getName()+"\" registered editor "+editor+" to "+validator+".");
 								validator.registerForActions( (IActionHandler) editor);
 							}
 						}
@@ -148,11 +149,11 @@ public class CustomWidgetComposer extends WidgetComposer {
 						}
 						
 						if(msg && widget instanceof IMessageHandler) {
-							System.out.println("[widgetMsg] \""+this.widget.getName()+"\" registered widget "+widget+" to "+validator+".");
+							if(DEBUG) System.out.println("[widgetMsg] \""+this.widget.getName()+"\" registered widget "+widget+" to "+validator+".");
 							validator.registerForMessages( (IMessageHandler) widget);
 						}
 						if(act && widget instanceof IActionHandler) {
-							System.out.println("[widgetAct] \""+this.widget.getName()+"\" registered widget "+widget+" to "+validator+".");
+							if(DEBUG) System.out.println("[widgetAct] \""+this.widget.getName()+"\" registered widget "+widget+" to "+validator+".");
 							validator.registerForActions( (IActionHandler) widget);
 						}
 					}
