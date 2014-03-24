@@ -6,6 +6,7 @@ import java.util.List;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class VisibilityToggleValidator extends ContextualValidator {
 
@@ -25,9 +26,9 @@ public class VisibilityToggleValidator extends ContextualValidator {
 		String tag = "tag_visible_hint";
 		
 		if(visible) {
-			validationResults.add( new ValidationResult(  String.format( "%s: visibility=true", this.getTitle()), ErrorKind.info, theClient, tag));
+			validationResults.add( new ValidationResultMessage(  String.format( "%s: visibility=true", this.getTitle()), ErrorKind.info, theClient, tag));
 		} else {
-			validationResults.add( new ValidationResult(  String.format( "%s: visibitly=false.", this.getTitle()), ErrorKind.info, theClient, tag));
+			validationResults.add( new ValidationResultMessage(  String.format( "%s: visibitly=false.", this.getTitle()), ErrorKind.info, theClient, tag));
 		}
 		return validationResults;
 	}	

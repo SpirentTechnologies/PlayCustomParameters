@@ -16,6 +16,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public class MacWidgetComposer extends WidgetComposer {
 
@@ -45,10 +46,9 @@ public class MacWidgetComposer extends WidgetComposer {
 				String theValue = ( (StringValue) parameter.getValue()).getTheContent();
 				System.out.println( "this is my parameter value:  " + theValue);
 				if (isMacAddress( theValue))
-					validationResults.add( new ValidationResult( "This entry has a valid MAC Address format.", ErrorKind.success,
-							"tag_is_mac"));
+					validationResults.add( new ValidationResultMessage( "This entry has a valid MAC Address format.", ErrorKind.success, "tag_is_mac"));
 				else {
-					validationResults.add( new ValidationResult( "This entry does not have a valid MAC Address format.",
+					validationResults.add( new ValidationResultMessage( "This entry does not have a valid MAC Address format.",
 							ErrorKind.error, "tag_is_mac"));
 				}
 				return validationResults;
