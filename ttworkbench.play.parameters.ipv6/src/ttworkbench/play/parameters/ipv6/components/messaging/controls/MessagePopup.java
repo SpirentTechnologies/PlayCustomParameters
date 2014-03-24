@@ -28,6 +28,8 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MessagePopup extends Composite implements IMessageContainer {
 	
+	private static final int MAX_POPUP_HEIGHT = 100;
+	private static final Point POPUP_SHIFT = new Point( 12, 12);
 	/**
 	 * 
 	 */
@@ -94,7 +96,6 @@ public class MessagePopup extends Composite implements IMessageContainer {
 		
 		// insert message container into scrollbox
 		messageContainer = new Composite( scrolledComposite, SWT.None);
-		//messageContainer.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false, 0, 0));
 		
 		// layout of message container shell
 		GridLayout messageContainerLayout = new GridLayout();
@@ -137,7 +138,7 @@ public class MessagePopup extends Composite implements IMessageContainer {
 	
 	private void showPopup( final Point theMousePosition) {
 		// TODO: handle case if popup is shown out of or intersect with getDisplay.getClientArea()
-		popupShell.setLocation( label.toDisplay( new Point( theMousePosition.x -12, theMousePosition.y -12)));
+		popupShell.setLocation( label.toDisplay( new Point( theMousePosition.x -POPUP_SHIFT.x, theMousePosition.y -POPUP_SHIFT.y)));
 		for ( Control control : messageContainer.getChildren()) {
 			control.setEnabled( false);
 		}
@@ -205,7 +206,7 @@ public class MessagePopup extends Composite implements IMessageContainer {
 		scrolledComposite.setMinSize( computedScrollSize);
 		
 		Point computedPopupSize = popupShell.computeSize( SWT.DEFAULT, messageContainer.getSize().y +2);
-		popupShell.setSize( computedPopupSize.x, Math.min( computedPopupSize.y, 100));
+		popupShell.setSize( computedPopupSize.x, Math.min( computedPopupSize.y, MAX_POPUP_HEIGHT));
 		
 		popupShell.update();
 		if ( messageView.getMessageInformation().getTotalCount() == 0)
