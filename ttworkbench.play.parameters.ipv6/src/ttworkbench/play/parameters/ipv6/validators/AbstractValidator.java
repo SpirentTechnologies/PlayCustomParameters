@@ -115,6 +115,11 @@ public abstract class AbstractValidator implements IParameterValidator {
 		actionHandlers.add( theActionHandler);
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "\""+getTitle()+"\"@"+getId();
+	}
 
 	@Override
 	public long getId() {

@@ -89,7 +89,10 @@ public abstract class AbstractWidget implements IWidget {
 	}
 
 	
-	
+	@Override
+	public String toString() {
+		return "\""+getTitle()+"\"@"+hashCode();
+	}
 	
 	protected Set<IAttribute> getAttributes() {
 		return attributes;
