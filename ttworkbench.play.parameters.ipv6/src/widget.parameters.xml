@@ -280,6 +280,9 @@
 		<validator id="disjunction">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.DisjunctionValidator</classpath>
 		</validator>
+		<validator id="valueLength">
+			<classpath>ttworkbench.play.parameters.ipv6.validators.ValueLengthValidator</classpath>
+		</validator>
 		
 		<validator id="fibValidator_PX_FIB_NUMBER">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.FibValidator_NUMBER</classpath>
