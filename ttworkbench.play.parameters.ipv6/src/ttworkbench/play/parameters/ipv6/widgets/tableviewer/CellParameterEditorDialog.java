@@ -3,6 +3,7 @@ package ttworkbench.play.parameters.ipv6.widgets.tableviewer;
 import org.eclipse.jface.dialogs.Dialog;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -36,5 +37,12 @@ public class CellParameterEditorDialog extends Dialog {
 		container.layout();
 		
 		return container;
+	}
+	
+	@Override
+	protected Button createButton(Composite theParent, int theId, String theLabel, boolean theDefaultButton) {
+		if(theId==0)
+			return super.createButton( theParent, theId, "Close", theDefaultButton);
+		return null;
 	}
 }
