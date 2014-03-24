@@ -1,8 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors.ip;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.FocusEvent;
@@ -16,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
@@ -134,10 +130,10 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 		}
 
 		protected boolean verifyText(final String theText) {
-			List<MessageRecord> messages = new LinkedList<MessageRecord>();
 
 			VerificationResult<String> result = verifier.verify( theText);
-			getMessageView().showMessages( result.messages);
+			// successMessages will not be shown, but this is not a Problem
+			getMessageView().flashMessages( result.messages);
 
 			return result.verified;
 		}
