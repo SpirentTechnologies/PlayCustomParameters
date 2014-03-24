@@ -60,7 +60,7 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 		theContainer.setBackground( display.getSystemColor( SWT.COLOR_GREEN));
 
 		label = new CLabel( theContainer, SWT.LEFT);
-		label.setText( this.getParameter().getName() + "_ADDRESS");
+		label.setText( this.getParameter().getName());
 
 		text = new Text( theContainer, SWT.BORDER | SWT.SINGLE);
 		EventHandler handler = new EventHandler();
@@ -151,12 +151,12 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 				VerificationResult<String> result = v.verify( theText);
 				verified |= result.verified;
 				if (verified) {
-					getMessageView().flashMessages( result.messages);
+					getMessageView().showMessages( result.messages);
 					return verified;
 				}
 				messages.addAll( result.messages);
 			}
-			getMessageView().flashMessages( messages);
+			getMessageView().showMessages( messages);
 			return verified;
 		}
 	}
