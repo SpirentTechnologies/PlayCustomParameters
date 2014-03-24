@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ttworkbench.play.parameters.ipv6.common.Globals;
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
@@ -26,6 +27,8 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	@Override
 	// TODO refactor: rename method to "compose()" ?
 	public void createWidgets(IConfigurator theConfigurator) {
+		Globals.setConfiguration( theConfigurator);
+		
 		ParameterMap parametersMap = new ParameterMap( theConfigurator);
 		if (parametersMap.isEmpty())
 			return;

@@ -118,7 +118,6 @@ public class MessagePopup extends Composite implements IMessageContainer {
 					Control underlayingControl = getUnterlayingControl( theEvent);
 					if ( underlayingControl instanceof MessageLabel) {
 						MessageLabel messageLabel = (MessageLabel) underlayingControl;
-						System.out.println( messageLabel.getMessage());
 						messageLabel.navigateToCauser();
 					}
 				}
