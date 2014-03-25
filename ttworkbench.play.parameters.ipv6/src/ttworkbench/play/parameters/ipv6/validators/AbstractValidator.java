@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+
 import ttworkbench.play.parameters.ipv6.validators.exceptions.ValidationException;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
@@ -88,13 +92,12 @@ public abstract class AbstractValidator implements IParameterValidator {
 			notifyMessageHandlers( this, resultsMessages, theParameter);
 			notifyActionHandlers( this, resultsActions, theParameter);
 		}
-		catch(ValidationException e) {
-			// TODO
-			e.printStackTrace();
-		}
 		catch(Exception e) {
-			// TODO 
 			e.printStackTrace();
+			MessageBox dialog = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_ERROR | SWT.OK);
+			dialog.setText(e.getClass().getSimpleName());
+			dialog.setMessage("A problem occured while invoking \""+this.getClass().getSimpleName()+"\":\n"+e.getMessage());
+			dialog.open(); 
 		}
 		
 		return results;
