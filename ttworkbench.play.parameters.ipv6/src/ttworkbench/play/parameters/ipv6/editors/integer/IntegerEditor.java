@@ -157,7 +157,7 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 			@Override
 			public void afterVerification(final VerificationEvent<String> theEvent) {
 				// verification passed, then write the value to parameter
-				ParameterValueUtil.setValue( getParameter(), theEvent.inputToVerify);
+				forceInputValue( theEvent.inputToVerify);
 				// and start the validation process
 				validateDelayed( theInputControl);
 				theEvent.doit = true;

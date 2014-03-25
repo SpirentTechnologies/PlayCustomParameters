@@ -87,7 +87,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 				abstractEditor = (AbstractEditor) editor;
 				if ( abstractEditor.isAdvancedMode() &&
 					   abstractEditor.hasControl())
-					abstractEditor.getControl().setVisible( false);
+					abstractEditor.setVisible( false);
 			}
 		}
 	}
@@ -100,18 +100,20 @@ public abstract class CustomWidget extends NotifyingWidget {
 			if ( editor instanceof AbstractEditor) {
 				abstractEditor = (AbstractEditor) editor;
 				if ( abstractEditor.hasControl())
-					abstractEditor.getControl().setVisible( true);
+					abstractEditor.setVisible( true);
+				else
+					createFreshEditors();
 			}
 		}
 	}
 	
 
 	@Override
-	public Control createControl(Composite theParent) {
+	protected void designControl(Composite theControl) {
+		
+		theControl.setLayout(new GridLayout());
 
-		theParent.setLayout(new GridLayout());
-
-		mainContainer = new Composite( theParent, SWT.None);
+		mainContainer = theControl;
 		// PRAGMA according to eclipse doc use of GridData styles is not recommended. Use SWT styles instead.  
 		mainContainer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 0, 0));
 		mainContainer.setLayout( new GridLayout());
@@ -140,8 +142,6 @@ public abstract class CustomWidget extends NotifyingWidget {
 		
 		scrolledComposite.setContent( editorsContainer);
 		scrolledComposite.setMinSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		
-		return mainContainer;
 	}	
 
 
@@ -161,7 +161,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 
 	
 	protected void createFreshEditors() {
-		List<IParameterEditor<?>> freshEditors = new ArrayList<IParameterEditor<?>>( getEditors());
+		List<IParameterEditor<?>> freshEditors = acquireEditors();
 		freshEditors.removeAll( editorControls.keySet());
 		for (IParameterEditor<?> freshEditor : freshEditors) {
 			createParameterEditor( freshEditor);

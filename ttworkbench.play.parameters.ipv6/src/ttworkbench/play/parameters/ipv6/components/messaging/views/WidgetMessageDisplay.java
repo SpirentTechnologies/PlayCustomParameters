@@ -86,7 +86,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			@Override
 			public void handleRegisterEvent( RegistryEvent theEvent) {
 				WidgetMessageDisplay.this.messagePopup.update();
-				//messageHeader.layout( true);
+				//theEvent.messageLabel.navigateToCauser()
 			}
 			
 			@Override

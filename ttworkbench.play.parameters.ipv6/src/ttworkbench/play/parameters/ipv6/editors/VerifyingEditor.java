@@ -3,6 +3,7 @@ package ttworkbench.play.parameters.ipv6.editors;
 import org.eclipse.swt.widgets.Control;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
+import ttworkbench.play.parameters.ipv6.components.design.EditorStateFlag;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
@@ -21,8 +22,22 @@ public abstract class VerifyingEditor<C extends Control, P> extends ValidatingEd
 		setInputControl( theInputControl);
 	}
 	
+	/**
+	 * Sets the value after successful verification.
+	 * @param theValue
+	 */
 	public void setInputValue( final String theValue) {
 		inputControl.setText( theValue);
+	}
+	
+	/**
+	 * Sets the value direct without verification. 
+	 * @param theValue
+	 */
+	protected void forceInputValue( final String theValue) {
+		getState().setFlag( EditorStateFlag.SET_PARAMETER);
+		ParameterValueUtil.setValue( getParameter(), theValue);
+		getState().unsetFlag( EditorStateFlag.SET_PARAMETER);
 	}
 	
 	protected void setInputControl( final IVerifyingControl<? extends C, P> theInputControl) {
@@ -59,7 +74,8 @@ public abstract class VerifyingEditor<C extends Control, P> extends ValidatingEd
   @Override
   public void reloadParameter() {
   	if ( hasControl() && 
-  			 !getState().contains( EditorStateFlag.UPDATE_PARAMETER)) {
+  			 !getState().isset( EditorStateFlag.VERIFYING) &&
+  			 !getState().isset( EditorStateFlag.SET_PARAMETER)) {
   		String updatedValue = ParameterValueUtil.getValue( getParameter());
   	  inputControl.forceText( updatedValue);
   	}

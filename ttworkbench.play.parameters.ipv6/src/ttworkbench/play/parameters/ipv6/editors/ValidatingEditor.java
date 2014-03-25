@@ -17,11 +17,11 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
+import ttworkbench.play.parameters.ipv6.components.design.EditorStateFlag;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.editors.AbstractEditor.EditorStateFlag;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
@@ -29,8 +29,8 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {

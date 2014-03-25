@@ -1,8 +1,6 @@
 package ttworkbench.play.parameters.ipv6.editors;
 
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,9 +12,15 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
+import ttworkbench.play.parameters.ipv6.components.design.ComponentState;
+import ttworkbench.play.parameters.ipv6.components.design.ControlState;
+import ttworkbench.play.parameters.ipv6.components.design.ControlStateFlag;
+import ttworkbench.play.parameters.ipv6.components.design.EditorState;
+import ttworkbench.play.parameters.ipv6.components.design.EditorStateFlag;
+import ttworkbench.play.parameters.ipv6.components.design.IEditorState;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -24,71 +28,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 
 public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 
-	public enum ComponentState {
-		INITIATING, CONSTRUCTED, DESTROYING, DESTROYED
-	}
-	
-	public enum ControlState {
-		NULL, CREATING, CREATED, UPDATING, DISPOSED
-	}
-	
-	public enum EditorStateFlag {
-		UPDATE_CONFIG, UPDATE_CONTROL, UPDATE_PARAMETER, VERIFYING, VALIDATING
-	}
-	
-	public interface IEditorState {
-		boolean contains( ComponentState theComponentState);
-		
-		boolean contains( ControlState theControlState);
-		
-		boolean contains( EditorStateFlag theEditorStateFlag);
-		
-		void setFlag( EditorStateFlag theEditorStateFlag);
-		
-		void unsetFlag( EditorStateFlag theEditorStateFlag);
-		
-	}
-	
-	public class EditorState implements IEditorState {
-		
-		private ComponentState componentState = ComponentState.INITIATING;
-		private ControlState controlState = ControlState.NULL;
-		private EnumSet<EditorStateFlag> editorStateFlags = EnumSet.noneOf( EditorStateFlag.class);
-		
-		public void setComponentState( ComponentState theComponentState) {
-			this.componentState = theComponentState;
-		}
-		
-		public void setControlState( ControlState theControlState) {
-			this.controlState = theControlState;
-		}
-	
-		public void setFlag( EditorStateFlag theEditorStateFlag) {
-			this.editorStateFlags.add( theEditorStateFlag);
-		}
-		
-		public void unsetFlag( EditorStateFlag theEditorStateFlag) {
-			this.editorStateFlags.remove( theEditorStateFlag);
-		}
-		
-		public boolean contains( ComponentState theComponentState) {
-			return componentState.equals( theComponentState);
-		}
-		
-		public boolean contains( ControlState theControlState) {
-			return controlState.equals( theControlState);
-		}
-		
-		public boolean contains( EditorStateFlag theEditorStateFlag) {
-			return editorStateFlags.contains( theEditorStateFlag);
-		}
-	}
-	
-	private EditorState editorState = new EditorState();
-	
-	private boolean visible = true;
-	private boolean enabled = true;
-	private boolean advancedMode = false;
+  private EditorState editorState = new EditorState();
 	
 	private String title;
 	private String description;
@@ -116,40 +56,46 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	
 	@Override
 	public void setEnabled( boolean theEnabledState) {
-	  this.enabled = theEnabledState;
+	  editorState.flag( ControlStateFlag.ENABLED, theEnabledState);	
 	  applySettings();
 	}
 	
 	public void applySettings() {
-		if ( editorState.contains( ControlState.CREATED)) {
+		if ( editorState.isset( ControlState.CREATED)) {
 			
 			// Composite.isVisible() behaves strange:
 			//  when the parent object is currently not shown, it'll return false.
 			//  this is why flag-checking here returns wrong answers.
 			
 		  // if ( control.isVisible() != visible)
-		  	control.setVisible( visible);
+		  	control.setVisible( editorState.isset( ControlStateFlag.VISIBLE));
 
-		  if ( control.isEnabled() != enabled)
-		  	control.setEnabled( enabled);
+		  if ( control.isEnabled() != editorState.isset( ControlStateFlag.ENABLED))
+		  	control.setEnabled( editorState.isset( ControlStateFlag.ENABLED));
 		  
 	  }
 	}
 
 	@Override
 	public boolean isEnabled() {
-	  return hasControl() && control.isEnabled();
+	  // Enabled in terms of "is not intended disabled".
+	  // Thereby ignore that the enable state of the wrapped control in relation to this may be sometime inconsistent. 
+		return hasControl() && editorState.isset( ControlStateFlag.ENABLED);
 	}
 
 	@Override
 	public void setVisible( boolean theVisibleState) {
-		this.visible = theVisibleState;
+		editorState.flag( ControlStateFlag.VISIBLE, theVisibleState);
 	  applySettings();
 	}
 
+
 	@Override
 	public boolean isVisible() {
-		return hasControl() && control.isVisible();
+		// Visible in terms of "is not intended hide".
+	  // Thereby ignore that the visible state of the wrapped control in relation to this may be sometime inconsistent. 
+		return hasControl() && editorState.isset( ControlStateFlag.VISIBLE);
+				//&& control.isVisible();
 	}
 
 	
@@ -169,7 +115,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 		
 		// handle advanced attribute  
 		if ( theName.equalsIgnoreCase( "advanced")) {
-			advancedMode = !theValue.equalsIgnoreCase( "false");
+			editorState.flag( EditorStateFlag.ADVANCED_MODE, !theValue.equalsIgnoreCase( "false"));
 		}
 	}
 
@@ -182,6 +128,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	@Override
 	public void updateParameter() {
 		editorState.setFlag( EditorStateFlag.UPDATE_PARAMETER);
+		System.out.println( "reloadParameter(); for " + this.hashCode() );
 		reloadParameter();
 		editorState.unsetFlag( EditorStateFlag.UPDATE_PARAMETER);
 	}
@@ -193,16 +140,15 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	public abstract void reloadParameter();
 	
 	public void setAdvancedMode() {
-		this.advancedMode = true;
-		
+		editorState.setFlag( EditorStateFlag.ADVANCED_MODE);
 	}
 	
   public void setNormalMode() {
-  	this.advancedMode = false;	
+  	editorState.unsetFlag( EditorStateFlag.ADVANCED_MODE);	
 	}
   
   public boolean isAdvancedMode() {
-  	return advancedMode;	
+  	return editorState.isset( EditorStateFlag.ADVANCED_MODE);	
 	}
   
 	@Override
@@ -288,7 +234,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	}
 	
 	public boolean hasControl() {
-		return editorState.contains( ControlState.CREATED);
+		return editorState.isset( ControlState.CREATED);
 	}
 	
 	public IEditorState getState() {
