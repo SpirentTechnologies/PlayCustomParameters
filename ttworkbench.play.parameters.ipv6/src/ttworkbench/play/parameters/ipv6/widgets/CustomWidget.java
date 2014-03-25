@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.internal.operations.AdvancedValidationUserApprover;
 
 
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
@@ -32,9 +34,8 @@ public abstract class CustomWidget extends NotifyingWidget {
 	private Composite editorsContainer;
 	private ScrolledComposite scrolledComposite;
 	private IWidgetLookAndBehaviour lookAndBehaviour;
-	//private MessagePanel messagePanel;
-  private WidgetMessageDisplay messageDisplay;
-  
+	private WidgetMessageDisplay messageDisplay;
+	
   // TODO following parameter map is never read(?)
 	private final Map<IParameterEditor<?>, Composite> editorControls = new LinkedHashMap<IParameterEditor<?>, Composite>();
 	
@@ -42,7 +43,6 @@ public abstract class CustomWidget extends NotifyingWidget {
 		super( theTitle, theDescription, theImage);
 		setLookAndBehaviour( getDefaultLookAndBehaviour());
 	}
-	
 	
 	private void createMessageDisplay( Composite theParent) {
 		messageDisplay = new WidgetMessageDisplay( theParent, SWT.NONE);
@@ -55,25 +55,57 @@ public abstract class CustomWidget extends NotifyingWidget {
 			}
 		});
 		
-		/*ToolBar toolBar = messageDisplay.getToolBar();
+    insertAdvancedButtonIntoMessageDisplay();
+	}
+	
+	private void insertAdvancedButtonIntoMessageDisplay() {
+		ToolBar toolBar = messageDisplay.getToolBar();
 		ToolItem advancedModeItem = new ToolItem( toolBar, SWT.CHECK);
-		 advancedModeItem.setText( "Advanced Mode");	
-		 
-		 Listener selectionListener = new Listener() {
-	      public void handleEvent(Event event) {
-	        ToolItem item = (ToolItem)event.widget;
-	        System.out.println(item.getText() + " is selected");
-	        if( (item.getStyle() & SWT.RADIO) != 0 || (item.getStyle() & SWT.CHECK) != 0 ) 
-	          System.out.println("Selection status: " + item.getSelection());
-	      }
-	    };
-	    advancedModeItem.addListener( SWT.Selection, selectionListener);
-		 
-    toolBar.pack();
-*/
+		advancedModeItem.setText( "Advanced Mode");	
+
+		Listener selectionListener = new Listener() {
+			public void handleEvent(Event event) {
+				ToolItem item = (ToolItem)event.widget;
+				if ( item.getSelection())
+					setEditorsInAdvancedMode();
+				else
+					setEditorsInNormalMode();
+			}
+		};
+		advancedModeItem.addListener( SWT.Selection, selectionListener);
+		toolBar.pack();
+		toolBar.getParent().layout();
 	}
 	
 	
+	
+	protected void setEditorsInNormalMode() {
+		AbstractEditor abstractEditor;
+		List<IParameterEditor<?>> editors = getEditors();
+		for (IParameterEditor editor : editors) {
+			if ( editor instanceof AbstractEditor) {
+				abstractEditor = (AbstractEditor) editor;
+				if ( abstractEditor.isAdvancedMode() &&
+					   abstractEditor.hasControl())
+					abstractEditor.getControl().setVisible( false);
+			}
+		}
+	}
+
+
+	protected void setEditorsInAdvancedMode() {
+		AbstractEditor abstractEditor;
+		List<IParameterEditor<?>> editors = getEditors();
+		for (IParameterEditor editor : editors) {
+			if ( editor instanceof AbstractEditor) {
+				abstractEditor = (AbstractEditor) editor;
+				if ( abstractEditor.hasControl())
+					abstractEditor.getControl().setVisible( true);
+			}
+		}
+	}
+	
+
 	@Override
 	public Control createControl(Composite theParent) {
 
@@ -129,7 +161,7 @@ public abstract class CustomWidget extends NotifyingWidget {
 
 	
 	protected void createFreshEditors() {
-		List<IParameterEditor<?>> freshEditors = getEditors();
+		List<IParameterEditor<?>> freshEditors = new ArrayList<IParameterEditor<?>>( getEditors());
 		freshEditors.removeAll( editorControls.keySet());
 		for (IParameterEditor<?> freshEditor : freshEditors) {
 			createParameterEditor( freshEditor);
@@ -149,9 +181,10 @@ public abstract class CustomWidget extends NotifyingWidget {
 			
 			editorControl.setLayoutData( editorGridData);
 
-			// react on dynamically insertion/deletion of controls when messages occur
-			if ( theEditor instanceof AbstractEditor<?>)
-				((AbstractEditor<?>) theEditor).getLookAndBehaviour().addControlChangedListener( new Listener() {
+			if ( theEditor instanceof AbstractEditor<?>) {
+			  AbstractEditor abstractEditor = ((AbstractEditor) theEditor);
+				// react on dynamically insertion/deletion of controls when messages occur
+				abstractEditor.getLookAndBehaviour().addControlChangedListener( new Listener() {
 
 					@Override
 					public void handleEvent(Event theArg0) {
@@ -159,6 +192,12 @@ public abstract class CustomWidget extends NotifyingWidget {
 						scrolledComposite.layout( true, true);
 					}
 				});
+				
+				// advanced flagged editors show only in advanced mode
+				// assume, the editor is set visible by default
+				if ( !this.isAdvancedMode() && abstractEditor.isAdvancedMode())
+					abstractEditor.setVisible( false);
+			}
 		}
 		editorsContainer.setSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		editorsContainer.layout();

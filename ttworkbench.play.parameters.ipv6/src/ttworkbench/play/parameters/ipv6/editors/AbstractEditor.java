@@ -88,6 +88,7 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	
 	private boolean visible = true;
 	private boolean enabled = true;
+	private boolean advancedMode = false;
 	
 	private String title;
 	private String description;
@@ -100,7 +101,6 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	
 	private Map<String,String> attributes = new HashMap<String, String>();
 
-	private boolean advancedMode = false;
 	
 	public AbstractEditor( final String theTitle, final String theDescription) {
 		super();

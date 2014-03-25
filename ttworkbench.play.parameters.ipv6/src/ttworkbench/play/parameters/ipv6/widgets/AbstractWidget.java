@@ -17,6 +17,7 @@ public abstract class AbstractWidget implements IWidget {
 
 	private boolean enabled = true;
 	private boolean visible = true;
+  private boolean advancedMode = false;
 	
 	private String title;
 	private String description;
@@ -30,7 +31,6 @@ public abstract class AbstractWidget implements IWidget {
 		super();
 		this.title = theTitle;
 		this.description = theDescription;
-		this.image = theImage;		
 	}
 	
 	@Override
@@ -71,11 +71,18 @@ public abstract class AbstractWidget implements IWidget {
 	@Override
 	public void setAttributes(Set<IAttribute> theAttributes) {
 		this.attributes = theAttributes;
+	
+	  // handle advanced attribute  
+		for (IAttribute attr : theAttributes) {
+			if ( attr.getName().equalsIgnoreCase( "advanced")) {
+				advancedMode = !attr.getValue().equalsIgnoreCase( "false");
+			}
+		}
 	}
 	
 	@Override
-	public void addEditor( IParameterEditor theEditors) {
-		editors.add( theEditors);	
+	public void addEditor( IParameterEditor theEditor) {
+		editors.add( theEditor);	
 	}
 	
 	@Override
@@ -108,6 +115,19 @@ public abstract class AbstractWidget implements IWidget {
 
 	protected Set<IParameterValueProvider> getValueProvider() {
 		return valueProvider;
+	}
+	
+	public void setAdvancedMode() {
+		this.advancedMode = true;
+		
+	}
+	
+  public void setNormalMode() {
+  	this.advancedMode = false;	
+	}
+  
+  public boolean isAdvancedMode() {
+  	return advancedMode;	
 	}
 	
 	@Override
