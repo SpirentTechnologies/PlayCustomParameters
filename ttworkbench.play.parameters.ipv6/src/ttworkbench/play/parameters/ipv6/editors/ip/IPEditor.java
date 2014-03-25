@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
+import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
@@ -137,6 +138,13 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 
 			return result.verified;
 		}
+	}
+
+	@Override
+	public void reloadParameter() {
+  	String updatedValue = ParameterValueUtil.getValue( getParameter());
+  	// TODO set updated text without touch verification or validation process
+  	// e.g. inputControl.forceText( updatedValue);
 	}
 
 }

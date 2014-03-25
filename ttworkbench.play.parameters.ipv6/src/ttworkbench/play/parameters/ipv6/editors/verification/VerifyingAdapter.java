@@ -3,8 +3,10 @@ package ttworkbench.play.parameters.ipv6.editors.verification;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.swt.SWT;
@@ -57,18 +59,21 @@ public abstract class VerifyingAdapter<C extends Control,P> implements IVerifyin
 		}
 
 		private void beforeVerification( VerificationEvent<String> theEvent) {
-			if ( listener != null)
+			for ( IVerificationListener listener : listeners) {
 				listener.beforeVerification( theEvent);
+			}
     }
 		
 		private void afterVerificationStep( VerificationEvent<String> theEvent) {
-			if ( listener != null)
+			for ( IVerificationListener listener : listeners) {
 				listener.afterVerificationStep( theEvent);
+			}
 		}
 		
 		private void afterVerification( VerificationEvent<String> theEvent) {
-			if ( listener != null)
+			for ( IVerificationListener listener : listeners) {
 				listener.afterVerification( theEvent);
+			}
 		}
 		
 		
@@ -78,7 +83,7 @@ public abstract class VerifyingAdapter<C extends Control,P> implements IVerifyin
 	private final C control;
 	private final IParameter<P> parameter;
 	private final Map<Integer, List<IVerifier<String>>> verifierMap = new HashMap<Integer, List<IVerifier<String>>>();
-	private IVerificationListener<String> listener;
+	private final Set<IVerificationListener<String>> listeners = new HashSet<IVerificationListener<String>>();
 	private final List<VerificationResult<String>> verificationResults = new ArrayList<VerificationResult<String>>();
 	private boolean verificationEnabled = true;
 	
@@ -130,8 +135,8 @@ public abstract class VerifyingAdapter<C extends Control,P> implements IVerifyin
 	}
 	
 	@Override
-	public void setListener( final IVerificationListener<String> theListener) {
-		this.listener = theListener;
+	public void addListener( final IVerificationListener<String> theListener) {
+		listeners.add( theListener);
 	}
 	
 	@Override
