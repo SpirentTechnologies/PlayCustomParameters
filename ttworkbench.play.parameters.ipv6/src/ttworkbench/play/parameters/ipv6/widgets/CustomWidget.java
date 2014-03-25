@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
@@ -42,18 +44,6 @@ public abstract class CustomWidget extends NotifyingWidget {
 	}
 	
 	
-//	private void createMessagePanel( Composite theParent) {
-//		messagePanel = new MessagePanel( theParent, SWT.NONE);
-//		messagePanel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
-//		messagePanel.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
-//		messagePanel.getLookAndBehaviour().addChangedListener( new Listener() {
-//			@Override
-//			public void handleEvent(Event theArg0) {
-//				updateControl();
-//			}
-//		});
-//	}
-	
 	private void createMessageDisplay( Composite theParent) {
 		messageDisplay = new WidgetMessageDisplay( theParent, SWT.NONE);
 		messageDisplay.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
@@ -64,6 +54,23 @@ public abstract class CustomWidget extends NotifyingWidget {
 				updateControl();
 			}
 		});
+		
+		/*ToolBar toolBar = messageDisplay.getToolBar();
+		ToolItem advancedModeItem = new ToolItem( toolBar, SWT.CHECK);
+		 advancedModeItem.setText( "Advanced Mode");	
+		 
+		 Listener selectionListener = new Listener() {
+	      public void handleEvent(Event event) {
+	        ToolItem item = (ToolItem)event.widget;
+	        System.out.println(item.getText() + " is selected");
+	        if( (item.getStyle() & SWT.RADIO) != 0 || (item.getStyle() & SWT.CHECK) != 0 ) 
+	          System.out.println("Selection status: " + item.getSelection());
+	      }
+	    };
+	    advancedModeItem.addListener( SWT.Selection, selectionListener);
+		 
+    toolBar.pack();
+*/
 	}
 	
 	

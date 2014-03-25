@@ -21,6 +21,7 @@ import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.editors.AbstractEditor.EditorStateFlag;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
@@ -34,7 +35,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultM
 
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
-	enum controlstate { none, constructed, created, messageOk};
+	enum controlstate { none, constructed, created};
 
 	private EditorMessageDisplay messageDisplay = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
@@ -73,6 +74,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	 * @return
 	 */
 	protected List<ValidationResult> validate( final IParameterControl<?,T> theCauser) {
+		getState().setFlag( EditorStateFlag.VALIDATING);
 		IConfiguration configuration = getConfiguration();
 		IParameter<?> parameter = getParameter();
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
@@ -87,6 +89,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 					}
 			}
 		}
+		getState().unsetFlag( EditorStateFlag.VALIDATING);
 		return validationResults;
 	}
 

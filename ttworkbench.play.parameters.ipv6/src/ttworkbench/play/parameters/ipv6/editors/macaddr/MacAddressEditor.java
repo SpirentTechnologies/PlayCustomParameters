@@ -117,7 +117,7 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 	}
 	
 	private void setVerifyListenerToControl( final IVerifyingControl<?,StringValue> theInputControl) {
-		theInputControl.setListener( new IVerificationListener<String>() {
+		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override
 			public void beforeVerification(final VerificationEvent<String> theEvent) {}

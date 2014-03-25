@@ -20,7 +20,7 @@ public interface IVerifyingControl<C extends Control,P> extends IParameterContro
 	
 	List<VerificationResult<String>> getVerificationResults();
 
-	void setListener(IVerificationListener<String> theListener);
+	void addListener(IVerificationListener<String> theListener);
 
 	void addVerifierToEvent(IVerifier<String> theVerifier, int theEventType);
 	
