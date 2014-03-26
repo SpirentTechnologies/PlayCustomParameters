@@ -18,4 +18,5 @@ public class Globals {
 		return configuration != null;
 	}
 	
+	
 }

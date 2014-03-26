@@ -161,6 +161,7 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 		}
 	}
 
+<<<<<<< HEAD
 	public void setFocus() {
 		text.setFocus();
 	}
@@ -171,4 +172,13 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 		text.setText( ParameterValueUtil.getValue( this.getParameter()));
 		this.handler.ignore = false;
 	}
+=======
+	@Override
+	public void reloadParameter() {
+  	String updatedValue = ParameterValueUtil.getValue( getParameter());
+  	// TODO set updated text without touch verification or validation process
+  	// e.g. inputControl.forceText( updatedValue);
+	}
+
+>>>>>>> branch 'sprint1' of https://github.com/TestingTechnologies/PlayCustomParameters.git
 }

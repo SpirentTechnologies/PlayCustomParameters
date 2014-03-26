@@ -93,8 +93,13 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 			}
 			
 			@Override
-			public void handleHydraPublishedEvent(IMessageHydra theMessageHydra) {
+			public void handleHydraPublishedEvent(IMessageInformation theMessageInformation, IMessageHydra theMessageHydra) {
 				// nothing todo
+			}
+			
+			@Override
+			public void handleRetrievePublishedEvent(IMessageInformation theMessageInformation, IMessageHydra theMessageHydra) {
+			  // nothing todo
 			}
 			
 		});
@@ -322,6 +327,11 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 			MessageRegistry superiorMessageRegistry = (MessageRegistry) superiorMessageInformation;
 			this.messageRegistry.setParent( superiorMessageRegistry);
 		}
+	}
+
+	@Override
+	public void addMessageListener(MessageListener theMessageListener) {
+		// not necessary
 	}
 	
 	

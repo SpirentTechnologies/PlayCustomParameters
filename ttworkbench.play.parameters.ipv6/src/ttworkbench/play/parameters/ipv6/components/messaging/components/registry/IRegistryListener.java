@@ -9,6 +9,8 @@ public interface IRegistryListener {
 
 	void handleDeregisterEvent( final RegistryEvent theEvent);
 
-	void handleHydraPublishedEvent(IMessageHydra theMessageHydra);	
+	void handleHydraPublishedEvent( IMessageInformation theMessageInformation, IMessageHydra theMessageHydra);
+	
+	void handleRetrievePublishedEvent( IMessageInformation theMessageInformation, IMessageHydra theMessageHydra);
 	
 }

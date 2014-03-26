@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
+import ttworkbench.play.parameters.ipv6.components.design.EditorStateFlag;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
@@ -28,13 +29,13 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValidator;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
 public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
-	enum controlstate { none, constructed, created, messageOk};
+	enum controlstate { none, constructed, created};
 
 	private EditorMessageDisplay messageDisplay = null;
 	private static final ScheduledExecutorService validationWorker = Executors.newSingleThreadScheduledExecutor();
@@ -73,6 +74,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 	 * @return
 	 */
 	protected List<ValidationResult> validate( final IParameterControl<?,T> theCauser) {
+		getState().setFlag( EditorStateFlag.VALIDATING);
 		IConfiguration configuration = getConfiguration();
 		IParameter<?> parameter = getParameter();
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
@@ -87,6 +89,7 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 					}
 			}
 		}
+		getState().unsetFlag( EditorStateFlag.VALIDATING);
 		return validationResults;
 	}
 

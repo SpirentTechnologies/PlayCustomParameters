@@ -38,6 +38,7 @@ public interface IVerifyingControl<C extends Control, P> extends IParameterContr
 	 */
 	List<VerificationResult<String>> getVerificationResults();
 
+<<<<<<< HEAD
 	/**
 	 * Set an ActionListener that will be invoked, if some actions on the Control
 	 * happens.
@@ -46,6 +47,9 @@ public interface IVerifyingControl<C extends Control, P> extends IParameterContr
 	 *          the Listener to be invoked.
 	 */
 	void setListener(IVerificationListener<String> theListener);
+=======
+	void addListener(IVerificationListener<String> theListener);
+>>>>>>> branch 'sprint1' of https://github.com/TestingTechnologies/PlayCustomParameters.git
 
 	/**
 	 * Add a verifier to an event. If the event is raised, the verifier will be

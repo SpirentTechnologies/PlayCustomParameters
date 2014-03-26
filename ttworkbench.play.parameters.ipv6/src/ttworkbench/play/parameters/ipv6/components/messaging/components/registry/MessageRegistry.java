@@ -99,7 +99,7 @@ public class MessageRegistry implements IMessageRegistry, IMessageInformation {
 			
 		  // we inform all listeners in parent about this new registration 
 			for ( IRegistryListener listener : parentRegistry.listeners) {
-				listener.handleHydraPublishedEvent( theMessageHydra);
+				listener.handleHydraPublishedEvent( this, theMessageHydra);
 			}
 		}
 	}
@@ -136,6 +136,11 @@ public class MessageRegistry implements IMessageRegistry, IMessageInformation {
 	  	parentRegistry.retrieveHydra( theMessageHydra);
 		errorKindMap.get( theMessageHydra.getErrorKind()).remove( theMessageHydra);
 		messageMap.values().removeAll( Collections.singleton( theMessageHydra));
+	
+		// we inform all listeners in parent about this cancellation 
+		for ( IRegistryListener listener : parentRegistry.listeners) {
+			listener.handleRetrievePublishedEvent( this, theMessageHydra);
+		}
 	}
 	
 
@@ -179,6 +184,22 @@ public class MessageRegistry implements IMessageRegistry, IMessageInformation {
 	@Override
 	public void addListener( IRegistryListener theListener) {
 		listeners.add( theListener);
+	}
+	
+	@Override
+	public Map<ErrorKind, Set<String>> compileMessagesReport() {
+		Map<ErrorKind, Set<String>> report = new HashMap<ErrorKind, Set<String>>();
+		Set<IMessageHydra> messageHydras;
+		Set<String> messages;
+		for (ErrorKind errorKind : errorKindMap.keySet()) {
+			messages = new HashSet<String>();
+			messageHydras = errorKindMap.get( errorKind);
+			for (IMessageHydra messageHydra : messageHydras) {
+				messages.add( messageHydra.getMessage());
+			}
+			report.put( errorKind, messages);
+		} 
+		return report;
 	}
 
 

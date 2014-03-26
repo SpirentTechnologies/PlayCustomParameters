@@ -34,7 +34,7 @@ public class ParameterValueUtil {
   public static String getValue( final IParameter<?> theParameter) {
   	return getValue( theParameter.getValue());
   }
-  public static String getDefault( final IParameter<?> theParameter) {
+  public static String getDefaultValue( final IParameter<?> theParameter) {
   	return getValue( theParameter.getDefaultValue());
   }
   
@@ -206,14 +206,14 @@ public class ParameterValueUtil {
   		}
   	}
 
-  	if ( value instanceof ValueExpression) // extends kernel.Value
+  	else if ( value instanceof ValueExpression) // extends kernel.Value
   		success= false; // ( (ValueExpression) value).toString();
 	
   	// IMPORTANT!
   	//  setValue needs to be called to trigger modify handlers
   	if(success)
 	 		theParameter.setValue( (T) value);
-   	
+ 
   	return success;
   }
 
