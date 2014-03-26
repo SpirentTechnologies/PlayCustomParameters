@@ -34,7 +34,7 @@ public class DefaultEditor extends AbstractEditor<Object> {
 		label.setText( parameter.getName());
 		label.setToolTipText( parameter.getDescription());
 		
-		Text text = new Text(theControl, SWT.READ_ONLY | SWT.BORDER);
+		text = new Text(theControl, SWT.READ_ONLY | SWT.BORDER);
 		text.setText( ParameterValueUtil.getValue( parameter));
 		
 		text.setToolTipText( parameter.getType());
@@ -49,7 +49,8 @@ public class DefaultEditor extends AbstractEditor<Object> {
 
 	@Override
 	public void reloadParameter() {
-		text.setText( ParameterValueUtil.getValue( getParameter()));
+		if ( hasControl())
+		  text.setText( ParameterValueUtil.getValue( getParameter()));
 	}
 
 	
