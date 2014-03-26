@@ -1,44 +1,40 @@
 package ttworkbench.play.parameters.ipv6.editors.ip;
 
+import java.beans.EventHandler;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
+import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
+import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
 import com.testingtech.muttcn.values.StringValue;
 
-public class IPEditor extends ValidatingEditor<StringValue> {
+public class IPEditor extends VerifyingEditor<Text, StringValue> {
 
 	private static final String TITLE = "Host Editor";
 	private static final String DESCRIPTION = "";
 
 	final Display display = Display.getCurrent();
 
-	private IVerifier<String> verifier = new OrVerifier( new IPv4Verifier(), new IPv6Verifier(), new HostnameVerifier());
-
+	private IVerifier<String> ALLVERIFIERS = new OrVerifier( new IPv4Verifier(), new IPv6Verifier(), new HostnameVerifier());
+	private IVerifier<String> verifier;
+	
 	private CLabel label;
 	private Text text;
 	private EventHandler handler; // not a generic Handler
-
-	private IVerifyingControl<?, StringValue> inputControl;
 
 	public IPEditor() {
 		super( TITLE, DESCRIPTION);
@@ -63,113 +59,72 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 		
 		theContainer.setBackground( display.getSystemColor( SWT.COLOR_GREEN));
 
+	// Hartcodierte Verifier für die IP-Adressen aus der XML-Datei [bernehmen
+//			if (this.getAttribute( "verifiers") != null) {
+//				List<IVerifier<String>> vs = new LinkedList<IVerifier<String>>();
+//				for (String s : this.getAttribute( "verifiers").split( ",")) {
+//					if (s.equalsIgnoreCase( "IPv4")) {
+//						vs.add( new IPv4Verifier());
+//					} else if (s.equalsIgnoreCase( "IPv6")) {
+//						vs.add( new IPv6Verifier());
+//					} else if (s.equalsIgnoreCase( "Hostname")) {
+//						vs.add( new HostnameVerifier());
+//					}
+//				}
+//
+//				if (!vs.isEmpty()) {
+//					this.verifier = new OrVerifier( vs.toArray( new IVerifier[vs.size()]));
+//				} else {
+//					this.verifier = this.ALLVERIFIERS;
+//				}
+//			}
+
+			// this.getAttribute("verifier") {
+			//
+			// }
+
+		
 		label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getName());
 
-		inputControl = new VerifyingText<StringValue>( getParameter(), theContainer, SWT.BORDER | SWT.SINGLE, verifier);
+		IVerifyingControl<Text,StringValue> inputControl = new VerifyingText<StringValue>( getParameter(), theContainer, SWT.BORDER | SWT.SINGLE);
+		inputControl.addVerifierToEvent( verifier, SWT.Verify);
+		setInputControl(inputControl);		
+		setVerifyerListenerToControl(inputControl);
 
 		// bad solution, but functional
 		text = (Text) inputControl.getControl();
 		// must be done after Textinitialisation, because of dependences.
-		this.handler = new EventHandler();
-		text.setToolTipText( handler.HELPVALUE);
-		text.addVerifyListener( handler);
-		text.addModifyListener( handler);
-		text.addFocusListener( handler);
+		text.setToolTipText( getParameter().getDescription());
+
 		// set the Default Parameter Value
-		text.setText( getParameter().getValue().getTheContent());
+		inputControl.forceText( getParameter().getDefaultValue().getTheContent());
 	}
 
-	private class EventHandler implements VerifyListener, ModifyListener, FocusListener {
+	private void setVerifyerListenerToControl(final IVerifyingControl<?, StringValue> theInputControl) {
+		theInputControl.addListener( new IVerificationListener<String>() {
 
-		final String HELPVALUE;
-		final Color COLOR_HELP = display.getSystemColor( SWT.COLOR_GRAY);
-		final Color COLOR_NORMAL = display.getSystemColor( SWT.COLOR_BLACK);
+			@Override
+			public void beforeVerification(VerificationEvent<String> theEvent) {}
 
-		protected boolean ignore = false;
-		/* indicates the State, with no Input */
-		protected boolean empty;;
-		private Text input = text;
-
-		public EventHandler() {
-			super();
-			this.HELPVALUE = verifier.toString();
-			empty = input.getText().isEmpty();
-			/* Fill with DefaultHelpText */
-			focusLost( null);
-		}
-
-		@Override
-		public void focusGained(FocusEvent e) {
-			if (empty) {
-				setText( "");
-			}
-		}
-
-		@Override
-		public void focusLost(FocusEvent e) {
-			if (empty) {
-				setText( HELPVALUE);
-				input.setForeground( COLOR_HELP);
-			} else {
-				input.setForeground( COLOR_NORMAL);
-			}
-		}
-
-		@Override
-		public void modifyText(ModifyEvent e) {
-			if (!ignore) {
-				if (empty) {
-					text.setForeground( COLOR_NORMAL);
-					empty = false;
-				} else {
-					if (input.getText().isEmpty())
-						empty = true;
-					else
-						verifyText( text.getText());
+			@Override
+			public void afterVerificationStep(VerificationEvent<String> theEvent) {
+				final List<VerificationResult<String>> results = theEvent.verificationResults;
+				final VerificationResult<String> lastResult = results.get( results.size()-1);
+				if (!lastResult.verified) {
+					theEvent.doit = true;
+					theEvent.skipVerification = true;
 				}
-			}
-		}
-
-		@Override
-		public void verifyText(VerifyEvent e) {
-			if (!ignore) {
-				if (empty) {
-					return;
-				}
-			}
-		}
-
-		private void setText(String theText) {
-			ignore = true;
-			input.setText( theText);
-			ignore = false;
-		}
-
-		protected boolean verifyText(final String theText) {
-
-			VerificationResult<String> result = verifier.verify( theText);
-			// successMessages will not be shown, but this is not a Problem
-			getMessageView().flashMessages( result.messages);
-
-			if (result.verified) {
-				inputControl.forceText( theText);
-				validateDelayed( inputControl);
+				getMessageView().flashMessages( lastResult.messages);
+				
 			}
 
-			return result.verified;
-		}
-	}
-
-	public void setFocus() {
-		text.setFocus();
-	}
-
-  @Override
-  public void reloadParameter() {
-		this.handler.ignore = true;
-		// this.getParameter().getValue().getTheContent()
-		text.setText( ParameterValueUtil.getValue( this.getParameter()));
-		this.handler.ignore = false;
+			@Override
+			public void afterVerification(VerificationEvent<String> theEvent) {
+				forceInputValue(theEvent.inputToVerify);
+				validateDelayed(theInputControl);
+				theEvent.doit = true;				
+			}			
+		});		
 	}
 }

@@ -16,7 +16,7 @@ public abstract class RegexVerifier implements IVerifier<String> {
 		String tag = "validity";
 
 		verified = theInput.matches( regex());
-		if (theInput.matches( regex())) {
+		if (verified) {
 			messages = Arrays.asList( new MessageRecord( tag, validMessageText( theInput), ErrorKind.success));
 		} else {
 			messages = Arrays.asList( new MessageRecord( tag, notValidMessageText( theInput), ErrorKind.warning));
