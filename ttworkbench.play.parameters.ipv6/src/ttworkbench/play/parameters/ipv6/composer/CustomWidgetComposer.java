@@ -228,7 +228,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 				return new Image( Display.getCurrent(), theImage.getPath());
 			}
 			catch(Exception e) {
-				logError("could not load image: \""+theImage.getPath()+"\".", e);
+				logError("could not load image: \""+theImage.getPath()+"\".", null);
 			}
 		}
 		return null;
