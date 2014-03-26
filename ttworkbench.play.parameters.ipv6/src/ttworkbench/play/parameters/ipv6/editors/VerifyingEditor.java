@@ -31,12 +31,12 @@ public abstract class VerifyingEditor<C extends Control, P> extends ValidatingEd
 	}
 	
 	/**
-	 * Sets the value direct without verification. 
+	 * Sets the parameter value direct without verification. 
 	 * @param theValue
 	 */
-	protected void forceInputValue( final String theValue) {
+	protected void forceParameterValue( final String theParameterValue) {
 		getState().setFlag( EditorStateFlag.SET_PARAMETER);
-		ParameterValueUtil.setValue( getParameter(), theValue);
+		ParameterValueUtil.setValue( getParameter(), theParameterValue);
 		getState().unsetFlag( EditorStateFlag.SET_PARAMETER);
 	}
 	

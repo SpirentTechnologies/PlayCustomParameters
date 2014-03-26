@@ -108,7 +108,7 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 			@Override
 			public void afterVerification(final VerificationEvent<String> theEvent) {	
 				// verification passed, then write the value to parameter
-				forceInputValue( theEvent.inputToVerify);
+				forceParameterValue( theEvent.inputToVerify);
 				// and start the validation process
 				validateDelayed( theInputControl);
 				theEvent.doit = true;
