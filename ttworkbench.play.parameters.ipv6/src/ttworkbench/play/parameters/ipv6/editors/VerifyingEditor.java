@@ -23,7 +23,7 @@ public abstract class VerifyingEditor<C extends Control, P> extends ValidatingEd
 	}
 	
 	/**
-	 * Sets the value after successful verification.
+	 * Starts verification process and sets the value after successful verification.
 	 * @param theValue
 	 */
 	public void setInputValue( final String theValue) {
