@@ -1,7 +1,6 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
-import ttworkbench.play.parameters.ipv6.editors.floatingpoint.FloatingPointEditor;
 import ttworkbench.play.parameters.ipv6.editors.ip.HostnameVerifier;
 import ttworkbench.play.parameters.ipv6.editors.ip.IPEditor;
 import ttworkbench.play.parameters.ipv6.editors.ip.IPv4Verifier;
@@ -38,7 +37,7 @@ public class IPWidgetComposer extends WidgetComposer {
 		getConfigurator().assign( new IPEditor( new IPv6Verifier()), ipWidget, ipv4Parameter);
 		getConfigurator().assign( new IPEditor( new HostnameVerifier()), ipWidget, ipv4Parameter);
 
-		getConfigurator().assign( new FloatingPointEditor(), ipWidget, floatParameter);
+		//getConfigurator().assign( new FloatingPointEditor(), ipWidget, floatParameter);
 
 	}
 }

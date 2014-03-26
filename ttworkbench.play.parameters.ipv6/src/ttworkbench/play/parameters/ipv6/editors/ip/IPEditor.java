@@ -153,7 +153,7 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 			getMessageView().flashMessages( result.messages);
 
 			if (result.verified) {
-				setParameterValue( theText);
+				inputControl.forceText( theText);
 				validateDelayed( inputControl);
 			}
 
@@ -161,24 +161,15 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 		}
 	}
 
-<<<<<<< HEAD
 	public void setFocus() {
 		text.setFocus();
 	}
 
-	protected void updateParameterValue() {
+  @Override
+  public void reloadParameter() {
 		this.handler.ignore = true;
 		// this.getParameter().getValue().getTheContent()
 		text.setText( ParameterValueUtil.getValue( this.getParameter()));
 		this.handler.ignore = false;
 	}
-=======
-	@Override
-	public void reloadParameter() {
-  	String updatedValue = ParameterValueUtil.getValue( getParameter());
-  	// TODO set updated text without touch verification or validation process
-  	// e.g. inputControl.forceText( updatedValue);
-	}
-
->>>>>>> branch 'sprint1' of https://github.com/TestingTechnologies/PlayCustomParameters.git
 }

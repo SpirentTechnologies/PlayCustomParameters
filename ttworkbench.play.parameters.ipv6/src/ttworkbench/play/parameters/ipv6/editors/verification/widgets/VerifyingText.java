@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
@@ -50,6 +51,7 @@ public class VerifyingText<P> extends VerifyingAdapter<Text,P> {
 
 		return modifiedText;		
 	}
+
 	
 	
 }
