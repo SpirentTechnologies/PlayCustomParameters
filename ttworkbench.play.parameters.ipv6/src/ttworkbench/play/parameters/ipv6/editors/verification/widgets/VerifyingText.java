@@ -14,11 +14,25 @@ import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
 public class VerifyingText<P> extends VerifyingAdapter<Text,P> {
 	
+	private final String defaultText;
 	
   public VerifyingText( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<String> ... theVerifiers) {
-	  super( theParameter, theParent, theStyle, theVerifiers);
+	  this( theParameter, theParent, theStyle, "", theVerifiers);
   }
-	
+
+  /**
+   * 
+   * @param theParameter
+   * @param theParent parent of the encapsulated control
+   * @param theStyle style of the encapsulated control
+   * @param theDefaultText text that is show instead of an empty field.
+   * @param theVerifiers verifiers which listen on SWT.Verify event.
+   */
+  public VerifyingText( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final String theDefaultText, final IVerifier<String> ... theVerifiers) {
+	  super( theParameter, theParent, theStyle, theVerifiers);
+	  this.defaultText = theDefaultText;
+  }
+  
 	@Override
 	public void setText( final String theText) {
 		getControl().setText( theText);
@@ -34,7 +48,9 @@ public class VerifyingText<P> extends VerifyingAdapter<Text,P> {
 		return new Text( theParent, theStyle);
 	}
 	
-	
+	/**
+	 * Specified for SWT.Verify event.
+	 */
 	@Override
 	protected String getModifiedTextByEvent(Event theEvent) {
 		String currentText = getControl().getText();
@@ -47,7 +63,7 @@ public class VerifyingText<P> extends VerifyingAdapter<Text,P> {
 		String modifiedText = leftString + insertion + rightString;
 
 		if ( modifiedText.isEmpty())
-			modifiedText = "0";
+			modifiedText = defaultText;
 
 		return modifiedText;		
 	}
