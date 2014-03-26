@@ -29,7 +29,7 @@ public class MacRangeVerifier implements IVerifier<String> {
 		MessageRecord validRangeInfo = new MessageRecord("valid_range_info", "MAC range is 17 characters at most", ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( invalidRangeWarning, validRangeInfo);
 		
-		return new VerificationResult<String>(theInput, isInRange, messages);
+		return new VerificationResult<String>( this, theInput, isInRange, messages);
 	}
 
 	

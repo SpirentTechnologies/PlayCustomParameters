@@ -49,7 +49,7 @@ public interface IVerifyingControl<C extends Control, P> extends IParameterContr
 
 	/**
 	 * Add a verifier to an event. If the event is raised, the verifier will be
-	 * triggered.
+	 * triggered. For each event type the add order is considered. 
 	 * 
 	 * @param theVerifier
 	 *          verifier to add for verification

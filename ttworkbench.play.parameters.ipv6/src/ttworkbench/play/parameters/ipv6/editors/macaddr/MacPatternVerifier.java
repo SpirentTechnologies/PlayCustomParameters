@@ -35,7 +35,7 @@ public class MacPatternVerifier implements IVerifier<String>{
 		MessageRecord macValidEntryInfo = new MessageRecord("valid_entry_info", MAC_VALID_ENTRY_MESSAGE, ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( invalidEntryMessage, macValidEntryInfo);
 		
-		return new VerificationResult<String>(theInput, isMac, messages);
+		return new VerificationResult<String>( this, theInput, isMac, messages);
 	}
 
 }

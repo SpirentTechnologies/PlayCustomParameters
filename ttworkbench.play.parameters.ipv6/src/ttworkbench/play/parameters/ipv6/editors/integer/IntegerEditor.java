@@ -93,7 +93,7 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Text, IntegerValue> inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, integerTypeVerifier, integerRangeVerifier);
+		IVerifyingControl<Text, IntegerValue> inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, "0", integerTypeVerifier, integerRangeVerifier);
 		setInputControl( inputControl);
 		
 		Text text = inputControl.getControl();

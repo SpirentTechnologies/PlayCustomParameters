@@ -21,7 +21,7 @@ public abstract class RegexVerifier implements IVerifier<String> {
 		} else {
 			messages = Arrays.asList( new MessageRecord( tag, notValidMessageText( theInput), ErrorKind.warning));
 		}
-		return new VerificationResult<String>( theInput, verified, messages);
+		return new VerificationResult<String>( this, theInput, verified, messages);
 	}
 
 	public String toString() {

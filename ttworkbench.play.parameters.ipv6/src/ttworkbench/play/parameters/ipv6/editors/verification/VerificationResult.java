@@ -7,6 +7,11 @@ import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 public class VerificationResult<T> {
 	
 	/**
+	 * Verifier which has produced this result.
+	 */
+	public final IVerifier<T> verifier;
+	
+	/**
 	 * input to verify
 	 */
 	public final T input;
@@ -22,8 +27,9 @@ public class VerificationResult<T> {
 	public final List<MessageRecord> messages;
 	
 	
-	public VerificationResult( final T theInput, final boolean isVerified, final List<MessageRecord> theMessages) {
+	public VerificationResult( final IVerifier<T> theVerifier, final T theInput, final boolean isVerified, final List<MessageRecord> theMessages) {
 		super();
+		this.verifier = theVerifier;
 		this.input = theInput;
 		this.verified = isVerified;
 		this.messages = theMessages;

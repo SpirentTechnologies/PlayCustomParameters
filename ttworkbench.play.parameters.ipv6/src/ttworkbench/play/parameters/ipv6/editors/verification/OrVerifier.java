@@ -40,7 +40,7 @@ public class OrVerifier implements IVerifier<String> {
 			messages = Arrays.asList( new MessageRecord( "validInput", String.format( "\"%s\" is not a valid ", theInput)
 					+ this.toString(), ErrorKind.warning));
 		}
-		return new VerificationResult<String>( theInput, verified, messages);
+		return new VerificationResult<String>( this, theInput, verified, messages);
 	}
 
 	public String toString() {

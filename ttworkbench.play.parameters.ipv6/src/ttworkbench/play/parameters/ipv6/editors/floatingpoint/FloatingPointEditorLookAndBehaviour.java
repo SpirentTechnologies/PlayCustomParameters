@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6.editors.floatingpoint;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Layout;
@@ -11,16 +13,19 @@ public class FloatingPointEditorLookAndBehaviour extends DefaultEditorLookAndBeh
 
 	@Override
 	public Layout getLayout() {
-		RowLayout rowLayout = new RowLayout( SWT.HORIZONTAL);
-		return rowLayout;
+		GridLayout gridLayout = new GridLayout( 3, false);
+		return gridLayout;
 	}
 
 	@Override
 	public Object[] getLayoutDataOfControls() {
-		RowData[] layoutData = new RowData[3];
-		layoutData[0] = new RowData();
-		layoutData[1] = new RowData();
-		layoutData[2] = new RowData();
+		GridData[] layoutData = new GridData[6];
+		layoutData[0] = new GridData( 200, SWT.DEFAULT);
+		layoutData[1] = new GridData( SWT.LEFT, SWT.TOP, false, false, 0, 0);
+		layoutData[2] = new GridData( SWT.LEFT, SWT.TOP, true, false, 0, 0);
+		layoutData[3] = new GridData( SWT.LEFT, SWT.TOP, false, false, 0, 0);
+		layoutData[4] = new GridData( SWT.LEFT, SWT.TOP, false, false, 0, 0);
+		layoutData[5] = new GridData( SWT.LEFT, SWT.TOP, true, false, 0, 0);
 		return layoutData;
 	}
 
