@@ -3,21 +3,24 @@
 
 	<types>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor">	
-			<expression>^UInt\d{0,2}$</expression>
-			<expression>^Int\d{0,2}$</expression>
+			<expression>^U?Int\d{0,2}$</expression>
 			<expression>^integer$</expression>
-			<attribute name="attr1">value1</attribute>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.macaddr.MacAddressEditor">	
-			<expression>^PC_MAC_UCA_HS01$</expression>
-			<expression>^MacAddress$</expression>
+			<expression>^PC_MAC_UCA_HS01$</expression> <!-- valid? -->
+			<expression>^MacAddress$</expression> <!-- valid? -->
+			<expression>^MacLayer$</expression>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
-			<expression></expression>			
+			<expression>^Ipv6AddressStr$</expression>
+		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enum.EnumEditor">
+			<expression>^boolean$</expression>
 		</editor>
 	</types>
 
 	<widgets>
+	<!--
 		<widget name="Custom Widget 1">
 			<description>text</description>
 			<image path="path" />
@@ -142,7 +145,7 @@
 			</editor>
 			<editor parameterId="PX_MAC_UCA_RT03_A"/>
 		</widget>
-		
+		-->
 	</widgets>
 		
 	<parameters>
