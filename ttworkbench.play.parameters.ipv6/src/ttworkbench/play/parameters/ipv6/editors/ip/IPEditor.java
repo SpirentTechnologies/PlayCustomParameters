@@ -121,7 +121,7 @@ public class IPEditor extends VerifyingEditor<Text, StringValue> {
 
 			@Override
 			public void afterVerification(VerificationEvent<String> theEvent) {
-				forceInputValue(theEvent.inputToVerify);
+				forceParameterValue(theEvent.inputToVerify);
 				validateDelayed(theInputControl);
 				theEvent.doit = true;				
 			}			
