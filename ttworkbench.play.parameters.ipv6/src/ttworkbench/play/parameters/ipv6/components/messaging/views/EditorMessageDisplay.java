@@ -323,6 +323,11 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 			this.messageRegistry.setParent( superiorMessageRegistry);
 		}
 	}
+
+	@Override
+	public void addMessageListener(MessageListener theMessageListener) {
+		// not necessary
+	}
 	
 	
 	

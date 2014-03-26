@@ -1,11 +1,14 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.views;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -38,9 +41,12 @@ import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePop
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorReport;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorReport.ErrorAction;
 
 public class WidgetMessageDisplay extends Composite implements IMessageView<IWidget> {
 	
@@ -67,9 +73,13 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 	private MessageHeader messageHeader;
 	private Composite wrappedComposite;
 	private ToolBar toolBar;
+	private final IWidget widget;
+
+	private Set<MessageListener> messageListeners = new HashSet<MessageListener>(); 
 	
-	public WidgetMessageDisplay( final Composite theParent, final int theStyle) {
+	public WidgetMessageDisplay( final IWidget theWidget, final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
+		this.widget = theWidget;
 		createPanel( theParent);
 		initMessageRegistry();
 		// precreate default block
@@ -86,7 +96,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			@Override
 			public void handleRegisterEvent( RegistryEvent theEvent) {
 				WidgetMessageDisplay.this.messagePopup.update();
-				//theEvent.messageLabel.navigateToCauser()
+				reportMessages( theEvent, ErrorReport.ErrorAction.occur);
 			}
 			
 			@Override
@@ -100,6 +110,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 					WidgetMessageDisplay.this.setBackground( frameColor);
 					WidgetMessageDisplay.this.messagePopup.update();	
 					messageHeader.layout( true);
+					reportMessages( theEvent, ErrorReport.ErrorAction.done);
 				}
 			}
 			
@@ -110,6 +121,18 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			}
 			
 		});
+	}
+
+	protected void reportMessages( RegistryEvent theEvent, ErrorAction theErrorAction) {
+		ErrorReport errorReport =  new ErrorReport();
+		errorReport.lastErrorAction = theErrorAction;
+		errorReport.lastErrorKind = theEvent.errorKind;
+		errorReport.lastErrorMessage = theEvent.messageLabel.getMessage();
+		errorReport.messages = theEvent.registry.compileMessagesReport();
+		errorReport.majorErrorKind = theEvent.registry.getHighestErrorKind();
+		for ( MessageListener messageListener : messageListeners) {
+			messageListener.report( errorReport);
+		}
 	}
 
 	private void createPanel(Composite theParent) {
@@ -336,6 +359,11 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 	public void setSuperiorView(IMessageView<?> theMessageView) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void addMessageListener( final MessageListener theMessageListener) {
+		messageListeners.add( theMessageListener);
 	}
 
 	

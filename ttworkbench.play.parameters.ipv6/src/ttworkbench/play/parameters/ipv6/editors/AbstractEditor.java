@@ -128,7 +128,6 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 	@Override
 	public void updateParameter() {
 		editorState.setFlag( EditorStateFlag.UPDATE_PARAMETER);
-		System.out.println( "reloadParameter(); for " + this.hashCode() );
 		reloadParameter();
 		editorState.unsetFlag( EditorStateFlag.UPDATE_PARAMETER);
 	}

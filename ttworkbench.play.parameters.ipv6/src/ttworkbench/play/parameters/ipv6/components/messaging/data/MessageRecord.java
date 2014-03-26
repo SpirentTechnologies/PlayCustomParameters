@@ -45,6 +45,11 @@ public class MessageRecord {
     return hash;
 	}
 	
+	@Override
+	public String toString() {
+		 return String.format( "MessageRecord@%d( tag: %s, message: %s, errorkind: %s, causer: %s)",hashCode(), tag, message, errorKind.toString(), causer);
+	}
+	
 	
 	
 }

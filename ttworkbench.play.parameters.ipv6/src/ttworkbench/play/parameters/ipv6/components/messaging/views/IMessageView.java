@@ -58,5 +58,7 @@ public interface IMessageView<ClientComponent> {
 
 	void setSuperiorView(IMessageView<?> theMessageView);
 
+	void addMessageListener(MessageListener theMessageListener);
+
 
 }

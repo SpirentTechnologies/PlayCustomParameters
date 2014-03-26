@@ -180,6 +180,22 @@ public class MessageRegistry implements IMessageRegistry, IMessageInformation {
 	public void addListener( IRegistryListener theListener) {
 		listeners.add( theListener);
 	}
+	
+	@Override
+	public Map<ErrorKind, Set<String>> compileMessagesReport() {
+		Map<ErrorKind, Set<String>> report = new HashMap<ErrorKind, Set<String>>();
+		Set<IMessageHydra> messageHydras;
+		Set<String> messages;
+		for (ErrorKind errorKind : errorKindMap.keySet()) {
+			messages = new HashSet<String>();
+			messageHydras = errorKindMap.get( errorKind);
+			for (IMessageHydra messageHydra : messageHydras) {
+				messages.add( messageHydra.getMessage());
+			}
+			report.put( errorKind, messages);
+		} 
+		return report;
+	}
 
 
 	

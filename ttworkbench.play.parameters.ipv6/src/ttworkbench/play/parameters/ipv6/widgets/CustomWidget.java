@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -21,12 +22,15 @@ import org.eclipse.ui.internal.operations.AdvancedValidationUserApprover;
 
 
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
+import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageListener;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.WidgetMessageDisplay;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.impl.CustomSWT;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorReport;
 
 public abstract class CustomWidget extends NotifyingWidget {
 
@@ -45,13 +49,28 @@ public abstract class CustomWidget extends NotifyingWidget {
 	}
 	
 	private void createMessageDisplay( Composite theParent) {
-		messageDisplay = new WidgetMessageDisplay( theParent, SWT.NONE);
+		messageDisplay = new WidgetMessageDisplay( this, theParent, SWT.NONE);
 		messageDisplay.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 0, 0));
 		messageDisplay.setLookAndBehaviour( lookAndBehaviour.getMessaagePanelLookAndBehaviour());
 		messageDisplay.getLookAndBehaviour().addChangedListener( new Listener() {
 			@Override
 			public void handleEvent(Event theArg0) {
 				updateControl();
+			}
+		});
+		
+		messageDisplay.addMessageListener( new MessageListener() {
+			
+			@Override
+			public void report(ErrorReport theErrorReport) {
+				Event event = new Event();
+				event.widget = getControl();
+				event.data = theErrorReport;
+				event.type = CustomSWT.Message;
+				Set<Listener> listeners = getListenersForEvent( CustomSWT.Message);
+				for (Listener listener : listeners) {
+					listener.handleEvent( event);
+				}
 			}
 		});
 		

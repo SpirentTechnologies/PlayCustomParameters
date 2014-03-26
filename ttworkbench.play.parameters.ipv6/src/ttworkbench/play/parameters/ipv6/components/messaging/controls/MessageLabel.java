@@ -25,6 +25,7 @@ import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.widgets.AbstractWidget;
+import ttworkbench.play.parameters.ipv6.widgets.WidgetUtil;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
@@ -52,6 +53,7 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		setDefaultLayoutData();
 		label = createLabel();
 	  setMessage( getMessage(), getErrorKind());
+	  //System.out.println( String.format( "MessageLabel@%d( %s)",hashCode(), messageRecord.toString()));
 	}
 	
 	private void setDefaultLayoutData() {
@@ -133,8 +135,11 @@ public class MessageLabel extends Composite implements IMessageLabel {
 	 * @param theWidget
 	 * @return
 	 */
+	@Override
 	public boolean isCauserOnWidgetVisible( final IWidget theWidget) {
-		Map<AbstractWidget, List<AbstractEditor<?>>> widgetToEditorsOfParameterMap = getWidgetToEditorsOfParameterMap( messageRecord.causer);
+		if ( messageRecord.causer == null)
+			return false;
+		Map<AbstractWidget, List<AbstractEditor<?>>> widgetToEditorsOfParameterMap = WidgetUtil.getWidgetToEditorsOfParameterMap( messageRecord.causer);
 		if ( !( theWidget instanceof AbstractWidget))
 			return false;
 		List<AbstractEditor<?>> widgetEditors = widgetToEditorsOfParameterMap.get( theWidget);
@@ -145,8 +150,9 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		return false;
 	}
 	
+	
 	public boolean focusBestEditorForCauser() {
-		Map<AbstractWidget, List<AbstractEditor<?>>> widgetToEditorsOfParameterMap = getWidgetToEditorsOfParameterMap( messageRecord.causer);
+		Map<AbstractWidget, List<AbstractEditor<?>>> widgetToEditorsOfParameterMap = WidgetUtil.getWidgetToEditorsOfParameterMap( messageRecord.causer);
 		if ( widgetToEditorsOfParameterMap.size() == 0)
 			return false;
 		
@@ -180,7 +186,7 @@ public class MessageLabel extends Composite implements IMessageLabel {
 			
 			if ( bestWidget == null ||
 				   // second best case: the widget with the original error sender
-					 isGrantParentOfChild( widget.getControl(), messageRecord.causer.getControl()))
+					WidgetUtil.isGrantParentOfChild( widget.getControl(), messageRecord.causer.getControl()))
 				bestWidget = widget;
 			
 		}
@@ -190,9 +196,9 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		
 		Control bestWidgetControl = bestWidget.getControl();
 		if ( !bestWidget.isSelected())
-			selectNextParentTabOfControl( bestWidgetControl);
+			WidgetUtil.selectNextParentTabOfControl( bestWidgetControl);
 		
-		if ( isGrantParentOfChild( bestWidgetControl, messageRecord.causer.getControl()))
+		if ( WidgetUtil.isGrantParentOfChild( bestWidgetControl, messageRecord.causer.getControl()))
 			messageRecord.causer.getControl().setFocus();
 		else
 			bestEditor.setFocus();
@@ -200,81 +206,11 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		return true;
 	}
 
-	/**
-	 * retrieves a mapping of AbstractWidgets to the AbstractEditors on them. 
-	 * @return
-	 */
-	private Map<AbstractWidget, List<AbstractEditor<?>>> getWidgetToEditorsMap() {
-		Map<AbstractWidget, List<AbstractEditor<?>>> result = new HashMap<AbstractWidget, List<AbstractEditor<?>>>();
-		List<AbstractEditor<?>> abstractEditors;
-		List<IParameterEditor<?>> editors;
 
-		if ( Globals.hasConfiguration()) {
-			Set<IWidget> widgets = Globals.getConfiguration().getWidgets();
-			for (IWidget widget : widgets) {
-				if ( widget instanceof AbstractWidget) {
-					abstractEditors = new ArrayList<AbstractEditor<?>>();
-					editors = ((AbstractWidget) widget).acquireEditors();
-					for (IParameterEditor<?> editor : editors) {
-						if ( editor instanceof AbstractEditor)
-							abstractEditors.add( (AbstractEditor<?>) editor);
-					}
-					result.put( (AbstractWidget) widget, abstractEditors);
-				}
-			}
-		}
-		return result;
-	}
 
-	private Map<AbstractWidget, List<AbstractEditor<?>>> getWidgetToEditorsOfParameterMap( IParameterControl<? extends Control,?> theParameterControl) {
-		Map<AbstractWidget, List<AbstractEditor<?>>> result = new HashMap<AbstractWidget, List<AbstractEditor<?>>>();
-		Set<IParameterEditor> parameterEditors = Globals.getConfiguration().getEditors( theParameterControl.getParameter());
-		List<AbstractEditor<?>> widgetEditors;
-		
-		Map<AbstractWidget, List<AbstractEditor<?>>> widgetToEditorsMap = getWidgetToEditorsMap();
-		for ( AbstractWidget widget : widgetToEditorsMap.keySet()) {
-			widgetEditors = widgetToEditorsMap.get( widget);
-			if ( !Collections.disjoint( widgetEditors, parameterEditors)) {
-				widgetEditors.retainAll( parameterEditors);
-				result.put( widget, widgetEditors);
-			}
-		}
-		return result;
-	}
 
 	
 	
-	private boolean isGrantParentOfChild( final Control theParent, final Control theChild) {
-		Control currentControl = theChild;
-		while ( currentControl != null && currentControl != theParent) {
-			currentControl = currentControl.getParent();
-		}
-		return currentControl == theParent;
-	}
-
-	private boolean selectNextParentTabOfControl(Control theControl) {
-		Control currentControl = theControl;
-		Control lastControl = null;
-		while ( currentControl != null &&
-				    !(currentControl instanceof CTabFolder)) {
-			lastControl = currentControl;
-			currentControl = currentControl.getParent();
-		}
-		
-	  if ( currentControl != null &&
-	  		 currentControl instanceof CTabFolder) {
-	    CTabFolder tabFolder = (CTabFolder) currentControl;
-	    CTabItem[] items = tabFolder.getItems();
-	    for (CTabItem item : items) {
-	    	if ( item.getControl() == lastControl) {
-	    		tabFolder.setSelection( item);
-	    		return true;
-	    	}
-	    }
-	  }
-	  
-	  return false;
-	}
 	
 	
 }

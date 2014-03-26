@@ -428,6 +428,11 @@ public class MessagePanel extends Composite implements IMessageView<Composite> {
 		
 	}
 
+	@Override
+	public void addMessageListener(MessageListener theMessageListener) {
+		// not necessary
+	}
+
 	
 	
 

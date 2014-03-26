@@ -1,8 +1,11 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -11,6 +14,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.components.design.ComponentState;
 import ttworkbench.play.parameters.ipv6.components.design.ControlState;
@@ -37,6 +41,8 @@ public abstract class AbstractWidget implements IWidget {
 	private Set<IParameterValidator> validators;
 	private Set<IParameterValueProvider> valueProvider;
 	private Composite control;
+
+	private Map<Integer,Set<Listener>> listeners = new HashMap<Integer,Set<Listener>>();
 	
 	public AbstractWidget( final String theTitle, final String theDescription, final Image theImage) {
 		super();
@@ -202,7 +208,17 @@ public abstract class AbstractWidget implements IWidget {
 		  
 	  }
 	}
-
+	
+	@Override
+	public void addListener( final int theEventType, final Listener theListener) {
+		if ( !listeners.containsKey( theEventType))
+			listeners.put( theEventType, new HashSet<Listener>());
+		listeners.get(theEventType).add( theListener);
+	}
+	
+	protected Set<Listener> getListenersForEvent( final int theEventType) {
+		return listeners.get( theEventType);
+	}
 	
 	
 	@Override
