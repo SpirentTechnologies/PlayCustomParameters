@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import ttworkbench.play.parameters.ipv6.common.Globals;
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
+import ttworkbench.play.parameters.ipv6.composer.EnumWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.FibWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IPWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.IWidgetComposer;
@@ -45,6 +46,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 		widgetComposers.add( new FibWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new MacWidgetComposer( theConfigurator, parametersMap));
 		widgetComposers.add( new IPWidgetComposer( theConfigurator, parametersMap));
+		widgetComposers.add( new EnumWidgetComposer( theConfigurator, parametersMap));
 		
 		
 		// custom widget configuration
@@ -57,7 +59,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 				widgetComposer.compose();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				System.err.println("A problem occured while composing a \""+widgetComposer.getClass().getSimpleName()+"\": "+e.getMessage());
 			}
 		}
 		for (IWidgetComposer widgetComposer : widgetComposers) {
@@ -65,7 +67,7 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 				widgetComposer.resolve();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				System.err.println("A problem occured while resolving a \""+widgetComposer.getClass().getSimpleName()+"\": "+e.getMessage());
 			}
 		}
 		theConfigurator.endConfigure();
@@ -99,10 +101,15 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 				}
 			}
 			
-			MessageBox dialog = new MessageBox(Display.getDefault().getActiveShell(), SWT.ERROR | SWT.OK);
-			dialog.setText("A problem occured while loading widget and parameters settings.");
-			dialog.setMessage(msg);
-			dialog.open(); 
+			try {
+				MessageBox dialog = new MessageBox(Display.getDefault().getActiveShell(), SWT.ERROR | SWT.OK);
+				dialog.setText("A problem occured while loading widget and parameters settings.");
+				dialog.setMessage(msg);
+				dialog.open();
+			}
+			catch(Exception e1) {
+				System.err.println("Could not show error message dialog for widget and parameters settings: "+msg);
+			}
 		}
 		return customs;
 	}
