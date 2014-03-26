@@ -132,15 +132,16 @@ public class MessageRegistry implements IMessageRegistry, IMessageInformation {
 
 	
 	private void retrieveHydra(IMessageHydra theMessageHydra) {
-	  if ( parentRegistry != null)
+	  if ( parentRegistry != null) {
 	  	parentRegistry.retrieveHydra( theMessageHydra);
+			
+	  	// we inform all listeners in parent about this cancellation 
+			for ( IRegistryListener listener : parentRegistry.listeners) {
+				listener.handleRetrievePublishedEvent( this, theMessageHydra);
+			}
+	  }
 		errorKindMap.get( theMessageHydra.getErrorKind()).remove( theMessageHydra);
 		messageMap.values().removeAll( Collections.singleton( theMessageHydra));
-	
-		// we inform all listeners in parent about this cancellation 
-		for ( IRegistryListener listener : parentRegistry.listeners) {
-			listener.handleRetrievePublishedEvent( this, theMessageHydra);
-		}
 	}
 	
 
