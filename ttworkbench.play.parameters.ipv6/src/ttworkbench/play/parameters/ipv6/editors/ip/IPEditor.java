@@ -18,8 +18,10 @@ import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehavi
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
+import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
 import com.testingtech.muttcn.values.StringValue;
 
@@ -36,6 +38,8 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 	private Text text;
 	private EventHandler handler; // not a generic Handler
 
+	private IVerifyingControl<?, StringValue> inputControl;
+
 	public IPEditor() {
 		super( TITLE, DESCRIPTION);
 	}
@@ -43,7 +47,6 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 	public IPEditor( final IVerifier<String> verifier) {
 		this();
 		this.verifier = verifier;
-
 	}
 
 	@Override
@@ -54,12 +57,19 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 	@Override
 	protected void createEditRow(Composite theContainer) {
 		// TODO remove
+//		this.getAttribute("verifier") {
+//			
+//		}
+		
 		theContainer.setBackground( display.getSystemColor( SWT.COLOR_GREEN));
 
 		label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getName());
 
-		text = new Text( theContainer, SWT.BORDER | SWT.SINGLE);
+		inputControl = new VerifyingText<StringValue>( getParameter(), theContainer, SWT.BORDER | SWT.SINGLE, verifier);
+
+		// bad solution, but functional
+		text = (Text) inputControl.getControl();
 		// must be done after Textinitialisation, because of dependences.
 		this.handler = new EventHandler();
 		text.setToolTipText( handler.HELPVALUE);
@@ -144,6 +154,7 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 
 			if (result.verified) {
 				setParameterValue( theText);
+				validateDelayed( inputControl);
 			}
 
 			return result.verified;
