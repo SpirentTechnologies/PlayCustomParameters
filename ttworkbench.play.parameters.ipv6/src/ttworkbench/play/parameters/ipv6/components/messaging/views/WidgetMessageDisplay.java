@@ -96,7 +96,6 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			@Override
 			public void handleRegisterEvent( RegistryEvent theEvent) {
 				WidgetMessageDisplay.this.messagePopup.update();
-				reportMessages( theEvent, ErrorReport.ErrorAction.occur);
 			}
 			
 			@Override
@@ -110,26 +109,31 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 					WidgetMessageDisplay.this.setBackground( frameColor);
 					WidgetMessageDisplay.this.messagePopup.update();	
 					messageHeader.layout( true);
-					reportMessages( theEvent, ErrorReport.ErrorAction.done);
 				}
 			}
 			
 			@Override
-			public void handleHydraPublishedEvent( IMessageHydra theMessageHydra) {
+			public void handleHydraPublishedEvent( IMessageInformation theMessageInformation, IMessageHydra theMessageHydra) {
 				theMessageHydra.newLabel( messagePopup);
 				WidgetMessageDisplay.this.messagePopup.update();
+				reportMessages( theMessageInformation, theMessageHydra, ErrorReport.ErrorAction.occur);
+			}
+			
+			@Override
+			public void handleRetrievePublishedEvent(IMessageInformation theMessageInformation, IMessageHydra theMessageHydra) {
+				reportMessages( theMessageInformation, theMessageHydra, ErrorReport.ErrorAction.done);
 			}
 			
 		});
 	}
 
-	protected void reportMessages( RegistryEvent theEvent, ErrorAction theErrorAction) {
+	protected void reportMessages( IMessageInformation theMessageInformation, IMessageHydra theMessageHydra, ErrorAction theErrorAction) {
 		ErrorReport errorReport =  new ErrorReport();
 		errorReport.lastErrorAction = theErrorAction;
-		errorReport.lastErrorKind = theEvent.errorKind;
-		errorReport.lastErrorMessage = theEvent.messageLabel.getMessage();
-		errorReport.messages = theEvent.registry.compileMessagesReport();
-		errorReport.majorErrorKind = theEvent.registry.getHighestErrorKind();
+		errorReport.lastErrorKind = theMessageHydra.getErrorKind();
+		errorReport.lastErrorMessage = theMessageHydra.getMessage();
+		errorReport.messages = theMessageInformation.compileMessagesReport();
+		errorReport.majorErrorKind = theMessageInformation.getHighestErrorKind();
 		for ( MessageListener messageListener : messageListeners) {
 			messageListener.report( errorReport);
 		}

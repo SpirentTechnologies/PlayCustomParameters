@@ -118,6 +118,10 @@ public abstract class AbstractEditor<T> implements IParameterEditor<T> {
 			editorState.flag( EditorStateFlag.ADVANCED_MODE, !theValue.equalsIgnoreCase( "false"));
 		}
 	}
+	
+	protected String getAttribute( String theName) {
+		return attributes.get( theName);
+	}
 
 	@Override
 	public void parametersChanged(List<IParameter<?>> theParameters) {
