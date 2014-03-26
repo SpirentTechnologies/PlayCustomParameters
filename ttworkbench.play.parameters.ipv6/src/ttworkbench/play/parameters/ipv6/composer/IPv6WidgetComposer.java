@@ -58,8 +58,8 @@ public class IPv6WidgetComposer extends WidgetComposer {
 		};
 
 		// TODO: replace demo composition
-		Set<IParameter> parameters = getConfigurator().getParameterModel().getParameters();
-		for (IParameter parameter : parameters) {
+		Set<IParameter<?>> parameters = getConfigurator().getParameterModel().getParameters();
+		for (IParameter<?> parameter : parameters) {
 			ValidatingEditor<?> editor;
 			if (parameter.getType().matches( TYPE_MATCH_INTEGER))
 				editor = new IntegerEditor();

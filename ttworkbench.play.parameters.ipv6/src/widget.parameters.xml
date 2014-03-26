@@ -14,16 +14,13 @@
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
 			<expression>^Ipv6AddressStr$</expression>
 		</editor>
-		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enum.EnumEditor">
-			<expression>^boolean$</expression>
-		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enums.EnumEditor">
-			<expression>PC_MAC_FILTER</expression>
+			<expression>^boolean$</expression>
 		</editor>
 	</types>
 
 	<widgets>
-	<!--
+
 		<widget name="Custom Widget 1">
 			<description>text</description>
 			<image path="path" />
@@ -52,7 +49,6 @@
 		<widget name="Fibonacci">
 			<description>Fibonacci editor</description>
 			<editor parameterId="PX_N" />
-			
 			<editor parameterId="PX_FIB_NUMBER">
 				<attribute name="advanced" />
 			</editor>
@@ -64,7 +60,6 @@
 		<widget name="Enum Widget">
 			<description>Enum editor</description>
 			<editor parameterId="PC_MAC_FILTER"/>
-			</editor>
 		</widget>
 		
 		<widget name="General Test">
@@ -103,16 +98,16 @@
 			<editor parameterId="PX_NET_DEVICE_ID_1"/>
 			<editor parameterId="PX_NET_DEVICE_ID_2">
 				<attribute name="advanced"/>
-				</editor>
+			</editor>
 			<editor parameterId="PX_PREFIX_LENGTH">			
 				<attribute name="advanced"/>
-				</editor>
+			</editor>
 			<editor parameterId="PX_IPSEC_CONTROL">
 				<attribute name="advanced"/>
-				</editor>
+			</editor>
 			<editor parameterId="PX_IPSEC_PROTOCOL_MODE">
 				<attribute name="advanced"/>
-				</editor>
+			</editor>
 			<editor parameterId="PX_ENCRYPTION_ALGO">
 				<attribute name="advanced"/>
  			</editor>
@@ -155,7 +150,7 @@
 			</editor>
 			<editor parameterId="PX_MAC_UCA_RT03_A"/>
 		</widget>
-		-->
+
 	</widgets>
 		
 	<parameters>
@@ -164,9 +159,6 @@
 			<validator id="vMAC" />
 		</parameter>
 		
-		<parameter id="PC_MAC_FILTER">
-			<validator id="vEnum">
-		</parameter>
 		
 
 		<parameter id="PX_N">
@@ -288,10 +280,6 @@
 	
 		<validator id="vMAC">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.MacAddressValidator</classpath>
-			<attribute name="attr1">value1</attribute>
-		</validator>
-		
-		<validator id="vEnum">
 		</validator>
 		
 		<validator id="visibility">
