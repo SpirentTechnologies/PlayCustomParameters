@@ -92,7 +92,7 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 	}
 	
 	private void createComboBox( Composite theComposite, Object theLayoutData){
-		inputControl = new VerifyingCombo<StringValue>( getParameter(), theComposite, SWT.BORDER, macCharVerifier, macRangeVerifier, macPatternVerifier);
+		inputControl = new VerifyingCombo<StringValue>( getParameter(), theComposite, SWT.LEFT, macCharVerifier, macRangeVerifier, macPatternVerifier);
 		final Combo macCombo = inputControl.getControl();
 		final Rectangle dimensions = new Rectangle(50, 50, 200, 65);
 		macCombo.setBounds( dimensions);
@@ -103,11 +103,13 @@ public class MacAddressEditor extends ValidatingEditor<StringValue> {
 
 		int index = 0;
 		for(StringValue value : availableValues){
+			macCombo.setForeground(theComposite.getDisplay().getSystemColor(SWT.COLOR_GREEN));
 			macCombo.add(value.getTheContent().toString(), index);
 			index++;
 			System.out.println(value.getTheContent().toString());
 		}
 		
+		macCombo.setForeground(theComposite.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		setVerifyListenerToControl( inputControl);
 	}
 	
