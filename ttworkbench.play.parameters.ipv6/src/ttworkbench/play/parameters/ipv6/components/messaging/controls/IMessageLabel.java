@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.controls;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public interface IMessageLabel {
@@ -20,4 +21,6 @@ public interface IMessageLabel {
 	 * Then this editor is given the focus. 
 	 */
 	void navigateToCauser();
+
+	boolean isCauserOnWidgetVisible(IWidget theWidget);
 }

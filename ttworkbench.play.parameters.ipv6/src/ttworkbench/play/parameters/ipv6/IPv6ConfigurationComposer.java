@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+
+import ttworkbench.play.parameters.ipv6.common.Globals;
 import ttworkbench.play.parameters.ipv6.composer.CustomWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.DefaultWidgetComposer;
 import ttworkbench.play.parameters.ipv6.composer.EnumWidgetComposer;
@@ -27,6 +32,8 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 	@Override
 	// TODO refactor: rename method to "compose()" ?
 	public void createWidgets(IConfigurator theConfigurator) {
+		Globals.setConfiguration( theConfigurator);
+		
 		ParameterMap parametersMap = new ParameterMap( theConfigurator);
 		if (parametersMap.isEmpty())
 			return;
@@ -48,10 +55,20 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 
 		theConfigurator.beginConfigure();
 		for (IWidgetComposer widgetComposer : widgetComposers) {
-			widgetComposer.compose();
+			try {
+				widgetComposer.compose();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		for (IWidgetComposer widgetComposer : widgetComposers) {
-			widgetComposer.resolve();
+			try {
+				widgetComposer.resolve();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		theConfigurator.endConfigure();
 	}
@@ -71,15 +88,23 @@ public class IPv6ConfigurationComposer implements IConfigurationComposer {
 			if(widgets.length<1) {
 				throw new ParameterConfigurationException("No widgets have been found.");
 			}
-		} catch (ParameterConfigurationException e) {
-			// TODO Messagebox
-			e.printStackTrace();
+		}
+		catch (ParameterConfigurationException e) {
+			String msg = e.getMessage();
 			int i=0;
 			for(Exception e1 : DataLoader.getErrors()) {
-				System.out.println();
-				System.out.print(" ["+(++i)+"] ");
-				e1.printStackTrace();
+				msg += "\n["+(++i)+"] "+e1.getMessage()+"\n";
+				
+				int j=0;
+				for(Throwable cause = e1.getCause(); cause!=null; cause = cause.getCause()) {
+					msg += "\n["+i+"."+(++j)+"] " + cause.getMessage()+"\n";
+				}
 			}
+			
+			MessageBox dialog = new MessageBox(Display.getDefault().getActiveShell(), SWT.ERROR | SWT.OK);
+			dialog.setText("A problem occured while loading widget and parameters settings.");
+			dialog.setMessage(msg);
+			dialog.open(); 
 		}
 		return customs;
 	}

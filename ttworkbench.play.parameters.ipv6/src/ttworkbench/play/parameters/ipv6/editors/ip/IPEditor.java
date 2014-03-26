@@ -1,9 +1,5 @@
 package ttworkbench.play.parameters.ipv6.editors.ip;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.FocusEvent;
@@ -17,34 +13,40 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
-import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
+import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
+import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
+import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
-public class IPEditor extends ValidatingEditor<String> {
+import com.testingtech.muttcn.values.StringValue;
+
+public class IPEditor extends ValidatingEditor<StringValue> {
 
 	private static final String TITLE = "Host Editor";
 	private static final String DESCRIPTION = "";
 
 	final Display display = Display.getCurrent();
 
-	private List<IVerifier<String>> verificators = Arrays.asList( new IPv4Verifier(), new IPv6Verifier(),
-			new HostnameVerifier());
+	private IVerifier<String> verifier = new OrVerifier( new IPv4Verifier(), new IPv6Verifier(), new HostnameVerifier());
 
 	private CLabel label;
 	private Text text;
+	private EventHandler handler; // not a generic Handler
+
+	private IVerifyingControl<?, StringValue> inputControl;
 
 	public IPEditor() {
 		super( TITLE, DESCRIPTION);
 	}
 
-	public IPEditor( final IVerifier<String>... verificators) {
+	public IPEditor( final IVerifier<String> verifier) {
 		this();
-		this.verificators = Arrays.asList( verificators);
-
+		this.verifier = verifier;
 	}
 
 	@Override
@@ -55,19 +57,27 @@ public class IPEditor extends ValidatingEditor<String> {
 	@Override
 	protected void createEditRow(Composite theContainer) {
 		// TODO remove
+//		this.getAttribute("verifier") {
+//			
+//		}
+		
 		theContainer.setBackground( display.getSystemColor( SWT.COLOR_GREEN));
 
 		label = new CLabel( theContainer, SWT.LEFT);
-		label.setText( this.getParameter().getName() + "_ADDRESS");
+		label.setText( this.getParameter().getName());
 
-		text = new Text( theContainer, SWT.BORDER | SWT.SINGLE);
-		EventHandler handler = new EventHandler();
-		// text.setSize( 150, SWT.DEFAULT);
+		inputControl = new VerifyingText<StringValue>( getParameter(), theContainer, SWT.BORDER | SWT.SINGLE, verifier);
+
+		// bad solution, but functional
+		text = (Text) inputControl.getControl();
+		// must be done after Textinitialisation, because of dependences.
+		this.handler = new EventHandler();
 		text.setToolTipText( handler.HELPVALUE);
-
 		text.addVerifyListener( handler);
 		text.addModifyListener( handler);
 		text.addFocusListener( handler);
+		// set the Default Parameter Value
+		text.setText( getParameter().getValue().getTheContent());
 	}
 
 	private class EventHandler implements VerifyListener, ModifyListener, FocusListener {
@@ -78,21 +88,13 @@ public class IPEditor extends ValidatingEditor<String> {
 
 		protected boolean ignore = false;
 		/* indicates the State, with no Input */
-		protected boolean empty = true;
+		protected boolean empty;;
 		private Text input = text;
 
 		public EventHandler() {
 			super();
-			StringBuffer buffer = new StringBuffer();
-			boolean first = true;
-			for (IVerifier<String> v : verificators) {
-				if (!first) {
-					buffer.append( " or ");
-				}
-				buffer.append( v.toString());
-				first = false;
-			}
-			this.HELPVALUE = buffer.toString();
+			this.HELPVALUE = verifier.toString();
+			empty = input.getText().isEmpty();
 			/* Fill with DefaultHelpText */
 			focusLost( null);
 		}
@@ -109,6 +111,8 @@ public class IPEditor extends ValidatingEditor<String> {
 			if (empty) {
 				setText( HELPVALUE);
 				input.setForeground( COLOR_HELP);
+			} else {
+				input.setForeground( COLOR_NORMAL);
 			}
 		}
 
@@ -121,8 +125,9 @@ public class IPEditor extends ValidatingEditor<String> {
 				} else {
 					if (input.getText().isEmpty())
 						empty = true;
+					else
+						verifyText( text.getText());
 				}
-				verifyText( text.getText());
 			}
 		}
 
@@ -141,22 +146,30 @@ public class IPEditor extends ValidatingEditor<String> {
 			ignore = false;
 		}
 
-		private boolean verifyText(final String theText) {
-			List<MessageRecord> messages = new LinkedList<MessageRecord>();
-			boolean verified = false;
+		protected boolean verifyText(final String theText) {
 
-			for (IVerifier<String> v : verificators) {
-				VerificationResult<String> result = v.verify( theText);
-				verified |= result.verified;
-				if (verified) {
-					getMessageView().flashMessages( result.messages);
-					return verified;
-				}
-				messages.addAll( result.messages);
+			VerificationResult<String> result = verifier.verify( theText);
+			// successMessages will not be shown, but this is not a Problem
+			getMessageView().flashMessages( result.messages);
+
+			if (result.verified) {
+				inputControl.forceText( theText);
+				validateDelayed( inputControl);
 			}
-			getMessageView().flashMessages( messages);
-			return verified;
+
+			return result.verified;
 		}
 	}
 
+	public void setFocus() {
+		text.setFocus();
+	}
+
+  @Override
+  public void reloadParameter() {
+		this.handler.ignore = true;
+		// this.getParameter().getValue().getTheContent()
+		text.setText( ParameterValueUtil.getValue( this.getParameter()));
+		this.handler.ignore = false;
+	}
 }

@@ -73,12 +73,13 @@ public class IPv6Widget extends AbstractWidget {
 		}
 	}
 
+	
 	@Override
-	public Control createControl(Composite theParent) {
+	protected void designControl(Composite theControl) {
+		
+		theControl.setLayout( new FillLayout(SWT.HORIZONTAL));
 
-		theParent.setLayout( new FillLayout(SWT.HORIZONTAL));
-
-	  scrolledComposite = new ScrolledComposite( theParent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+	  scrolledComposite = new ScrolledComposite( theControl, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayout( new FillLayout( SWT.HORIZONTAL));
 		scrolledComposite.setLayoutData( new GridData(SWT.FILL, SWT.TOP, true, true, 0, 0));
 		scrolledComposite.setExpandHorizontal(true);
@@ -92,8 +93,6 @@ public class IPv6Widget extends AbstractWidget {
 		
 		scrolledComposite.setContent( editorsContainer);
 		scrolledComposite.setMinSize( editorsContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));
-		
-		return scrolledComposite;
 	}
 
 

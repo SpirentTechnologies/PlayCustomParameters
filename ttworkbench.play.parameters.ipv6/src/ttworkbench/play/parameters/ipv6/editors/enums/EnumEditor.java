@@ -137,4 +137,10 @@ public class EnumEditor extends ValidatingEditor<StringValue> {
 		return ( values.size() < 3);
 	}
 
+	@Override
+	public void reloadParameter() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

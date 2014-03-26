@@ -1,11 +1,14 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.views;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -14,11 +17,18 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock.RegisterDirective;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
@@ -31,9 +41,12 @@ import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePop
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.widgets.CustomWidget;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorReport;
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorReport.ErrorAction;
 
 public class WidgetMessageDisplay extends Composite implements IMessageView<IWidget> {
 	
@@ -57,11 +70,16 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 	
 	private MessagePopup messageOverviewPopup;
 	private MessagePopup messagePopup;
-	MessageHeader messageHeader;
+	private MessageHeader messageHeader;
 	private Composite wrappedComposite;
+	private ToolBar toolBar;
+	private final IWidget widget;
+
+	private Set<MessageListener> messageListeners = new HashSet<MessageListener>(); 
 	
-	public WidgetMessageDisplay( final Composite theParent, final int theStyle) {
+	public WidgetMessageDisplay( final IWidget theWidget, final Composite theParent, final int theStyle) {
 		super( theParent, theStyle);
+		this.widget = theWidget;
 		createPanel( theParent);
 		initMessageRegistry();
 		// precreate default block
@@ -78,7 +96,6 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			@Override
 			public void handleRegisterEvent( RegistryEvent theEvent) {
 				WidgetMessageDisplay.this.messagePopup.update();
-				//messageHeader.layout( true);
 			}
 			
 			@Override
@@ -96,12 +113,30 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			}
 			
 			@Override
-			public void handleHydraPublishedEvent( IMessageHydra theMessageHydra) {
+			public void handleHydraPublishedEvent( IMessageInformation theMessageInformation, IMessageHydra theMessageHydra) {
 				theMessageHydra.newLabel( messagePopup);
 				WidgetMessageDisplay.this.messagePopup.update();
+				reportMessages( theMessageInformation, theMessageHydra, ErrorReport.ErrorAction.occur);
+			}
+			
+			@Override
+			public void handleRetrievePublishedEvent(IMessageInformation theMessageInformation, IMessageHydra theMessageHydra) {
+				reportMessages( theMessageInformation, theMessageHydra, ErrorReport.ErrorAction.done);
 			}
 			
 		});
+	}
+
+	protected void reportMessages( IMessageInformation theMessageInformation, IMessageHydra theMessageHydra, ErrorAction theErrorAction) {
+		ErrorReport errorReport =  new ErrorReport();
+		errorReport.lastErrorAction = theErrorAction;
+		errorReport.lastErrorKind = theMessageHydra.getErrorKind();
+		errorReport.lastErrorMessage = theMessageHydra.getMessage();
+		errorReport.messages = theMessageInformation.compileMessagesReport();
+		errorReport.majorErrorKind = theMessageInformation.getHighestErrorKind();
+		for ( MessageListener messageListener : messageListeners) {
+			messageListener.report( errorReport);
+		}
 	}
 
 	private void createPanel(Composite theParent) {
@@ -109,7 +144,7 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		 *  create panel frame, that wrap messages and editor
 		 */
 		{
-			GridLayout layout = new GridLayout(1, false);
+			GridLayout layout = new GridLayout(2, false);
 			layout.horizontalSpacing = 0;
 			layout.verticalSpacing = 0;
 			layout.marginHeight = 1;
@@ -128,9 +163,22 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 			messageHeader.setLayoutData( messageContainerGridData);
 		}
 
+		/*
+		 * create toolbar with button to de/activate advanced edit mode 
+		 */
+		{
+			toolBar = new ToolBar( this, SWT.BORDER);
+			GridData toolBarGridData = new GridData(SWT.RIGHT, SWT.FILL, false, false, 0, 0);	 
+			toolBar.setLayoutData( toolBarGridData);
+		}
+
 	
 		this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		this.layout();
+	}
+	
+	public ToolBar getToolBar() {
+		return toolBar;
 	}
 
 	@Override
@@ -315,6 +363,11 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 	public void setSuperiorView(IMessageView<?> theMessageView) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void addMessageListener( final MessageListener theMessageListener) {
+		messageListeners.add( theMessageListener);
 	}
 
 	

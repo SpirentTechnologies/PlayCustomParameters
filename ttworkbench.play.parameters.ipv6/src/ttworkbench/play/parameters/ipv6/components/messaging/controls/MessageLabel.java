@@ -1,38 +1,32 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.controls;
 
 import java.awt.Toolkit;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Widget;
 
 import ttworkbench.play.parameters.ipv6.common.Globals;
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
-import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
-import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageHydra;
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
-import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessageDisplay;
 import ttworkbench.play.parameters.ipv6.customize.IMessageLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
 import ttworkbench.play.parameters.ipv6.widgets.AbstractWidget;
+import ttworkbench.play.parameters.ipv6.widgets.WidgetUtil;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
@@ -59,6 +53,7 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		setDefaultLayoutData();
 		label = createLabel();
 	  setMessage( getMessage(), getErrorKind());
+	  //System.out.println( String.format( "MessageLabel@%d( %s)",hashCode(), messageRecord.toString()));
 	}
 	
 	private void setDefaultLayoutData() {
@@ -130,27 +125,92 @@ public class MessageLabel extends Composite implements IMessageLabel {
 
 	@Override
 	public void navigateToCauser() {
+		System.out.println( "Causer: " + messageRecord.causer);
 		if ( messageRecord.causer != null)
-			focusEditorForParameter( messageRecord.causer);
+			focusBestEditorForCauser();
 	}
-
-	private boolean focusEditorForParameter(IParameterControl<?,?> theParameterControl) {
-		if ( theParameterControl.getControl().isVisible()) {
-			theParameterControl.getControl().setFocus();
-			return true;
-		}
-		
-		// try to find a editor for this parameter on the current active widget (tab)
-		if ( Globals.hasConfiguration()) {
-			Set<IParameterEditor> editors = Globals.getConfiguration().getEditors( theParameterControl.getParameter());
-			for ( IParameterEditor editor : editors) {
-				if ( editor.isVisible() && editor instanceof AbstractEditor) {
-					((AbstractEditor)editor).setFocus();
-					return true;
-				}
-			}
+	
+	/**
+	 * Tests, if an editor for the message causer is placed and visible on the specified widget. 
+	 * @param theWidget
+	 * @return
+	 */
+	@Override
+	public boolean isCauserOnWidgetVisible( final IWidget theWidget) {
+		if ( messageRecord.causer == null)
+			return false;
+		Map<AbstractWidget, List<AbstractEditor<?>>> widgetToEditorsOfParameterMap = WidgetUtil.getWidgetToEditorsOfParameterMap( messageRecord.causer);
+		if ( !( theWidget instanceof AbstractWidget))
+			return false;
+		List<AbstractEditor<?>> widgetEditors = widgetToEditorsOfParameterMap.get( theWidget);
+		for (AbstractEditor<?> abstractEditor : widgetEditors) {
+			if ( abstractEditor.isVisible())
+				return true;
 		}
 		return false;
 	}
+	
+	
+	public boolean focusBestEditorForCauser() {
+		Map<AbstractWidget, List<AbstractEditor<?>>> widgetToEditorsOfParameterMap = WidgetUtil.getWidgetToEditorsOfParameterMap( messageRecord.causer);
+		if ( widgetToEditorsOfParameterMap.size() == 0)
+			return false;
+		
+		AbstractWidget bestWidget = null;
+		AbstractEditor<?> bestEditor = null;
+		for ( AbstractWidget widget : widgetToEditorsOfParameterMap.keySet()) {
+			
+			// find best editor
+			bestEditor = null;
+		  List<AbstractEditor<?>> editors = widgetToEditorsOfParameterMap.get( widget);
+			for (AbstractEditor<?> abstractEditor : editors) {
+				if ( abstractEditor.isVisible()) {
+					bestEditor = abstractEditor;
+				  break;
+				}
+			}
+			if ( bestEditor == null)
+				continue;
+			
+			// find best widget
+			if ( !widget.isVisible())
+				continue;
+			if ( !widget.hasControl())
+				continue;
+			
+			// best case: an editor for this parameter on the active tab 
+			if ( widget.isSelected()) {
+				bestWidget = widget;
+			  break;
+			}
+			
+			if ( bestWidget == null ||
+				   // second best case: the widget with the original error sender
+					WidgetUtil.isGrantParentOfChild( widget.getControl(), messageRecord.causer.getControl()))
+				bestWidget = widget;
+			
+		}
+		
+		if ( bestEditor == null)
+			return false;
+		
+		Control bestWidgetControl = bestWidget.getControl();
+		if ( !bestWidget.isSelected())
+			WidgetUtil.selectNextParentTabOfControl( bestWidgetControl);
+		
+		if ( WidgetUtil.isGrantParentOfChild( bestWidgetControl, messageRecord.causer.getControl()))
+			messageRecord.causer.getControl().setFocus();
+		else
+			bestEditor.setFocus();
+		
+		return true;
+	}
+
+
+
+
+	
+	
+	
 	
 }

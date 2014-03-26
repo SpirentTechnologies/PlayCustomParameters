@@ -35,6 +35,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 	private final Map<Relation, IParameterValidator> availableValidatorsMap;
 	private final LinkedList<Relation> triggerableRelations = new LinkedList<Data.Relation>();
 
+	private static final boolean DEBUG = false; 
 	
 	public CustomWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap, Data.Widget theWidget, Map<Data.Relation, IParameterValidator> validatorMap) {
 		super( theConfigurator, theParametersMap);
@@ -64,6 +65,10 @@ public class CustomWidgetComposer extends WidgetComposer {
 			
 			if(parameter!=null) {
 				IParameterEditor<?> editor = ParameterEditorMapper.getInstance().getEditor(parameter);
+				for(Entry<String, String> attr : dataParameter.getAttributes().entrySet()) {
+					editor.setAttribute( attr.getKey(), attr.getValue());
+				}
+				
 				getConfigurator().assign( editor, defaultWidget, parameter);
 				
 				/*
@@ -96,6 +101,7 @@ public class CustomWidgetComposer extends WidgetComposer {
 		
 		for(Data.Relation relation : triggerableRelations) {
 			IParameterValidator validator = availableValidatorsMap.remove( relation);
+			
 			if(validator!=null) {
 				SimpleValidatorContext context = getValidatorContext(validator);
 				Data.RelationPartner[] relationPartners = relation.getRelationPartners();
@@ -113,23 +119,23 @@ public class CustomWidgetComposer extends WidgetComposer {
 						IParameter<?> relatedParameter = getParametersMap().getParameterById( id);
 						if(context!=null) {
 							context.addParameter( relatedParameter);
-						}
-						
+						}						
 
 						// set related parameter editor
 						Set<IParameterEditor> editors = getConfigurator().getEditors( relatedParameter);
+						
 						// TODO consider reevaluation: should all editors of a parameter be registered for messages/actions 
 						for(IParameterEditor<?> editor : editors) {
 							
 							// register for messages
 							if(msg && editor instanceof IMessageHandler) {
-								System.out.println("[editorMsg] registered \""+editor.getParameter().getId()+"\" to \""+validator.getTitle()+"\".");
+								if(DEBUG) System.out.println("[editorMsg] \""+this.widget.getName()+"\" registered editor "+editor+" to "+validator+".");
 								validator.registerForMessages( (IMessageHandler) editor);
 							}
 							
 							// register for actions
 							if(act && editor instanceof IActionHandler) {
-								System.out.println("[editorAct] registered \""+editor.getParameter().getId()+"\" to \""+validator.getTitle()+"\".");
+								if(DEBUG) System.out.println("[editorAct] \""+this.widget.getName()+"\" registered editor "+editor+" to "+validator+".");
 								validator.registerForActions( (IActionHandler) editor);
 							}
 						}
@@ -143,11 +149,11 @@ public class CustomWidgetComposer extends WidgetComposer {
 						}
 						
 						if(msg && widget instanceof IMessageHandler) {
-							System.out.println("[widgetMsg] registered \""+widget.getTitle()+"\" to \""+validator.getTitle()+"\".");
+							if(DEBUG) System.out.println("[widgetMsg] \""+this.widget.getName()+"\" registered widget "+widget+" to "+validator+".");
 							validator.registerForMessages( (IMessageHandler) widget);
 						}
 						if(act && widget instanceof IActionHandler) {
-							System.out.println("[widgetAct] registered \""+widget.getTitle()+"\" to \""+validator.getTitle()+"\".");
+							if(DEBUG) System.out.println("[widgetAct] \""+this.widget.getName()+"\" registered widget "+widget+" to "+validator+".");
 							validator.registerForActions( (IActionHandler) widget);
 						}
 					}

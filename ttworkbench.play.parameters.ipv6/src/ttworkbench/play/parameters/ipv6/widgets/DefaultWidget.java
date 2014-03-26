@@ -29,11 +29,11 @@ public class DefaultWidget extends AbstractWidget {
 	}
 
 	@Override
-	public Control createControl(Composite theParent) {
+	protected void designControl(Composite theControl) {
 
-		theParent.setLayout( new FillLayout( SWT.HORIZONTAL));
+		theControl.setLayout( new FillLayout( SWT.HORIZONTAL));
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite( theParent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		ScrolledComposite scrolledComposite = new ScrolledComposite( theControl, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setExpandHorizontal( true);
 		scrolledComposite.setExpandVertical( true);
 
@@ -59,7 +59,6 @@ public class DefaultWidget extends AbstractWidget {
 		
 
 		scrolledComposite.setContent( composite);
-		return scrolledComposite;
 	}
 
 	

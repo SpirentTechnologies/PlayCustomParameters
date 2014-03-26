@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
@@ -25,6 +26,7 @@ import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
+import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
@@ -37,7 +39,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 import de.tu_berlin.cs.uebb.tools.util.Display;
 
-public class IntegerEditor extends ValidatingEditor<IntegerValue> {
+public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 	
 	private static final String TITLE = "Integer Editor";
 	private static final String DESCRIPTION = "";
@@ -47,8 +49,6 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	
 	private IntegerTypeVerifier integerTypeVerifier = new IntegerTypeVerifier();
 	private IntegerRangeVerifier integerRangeVerifier = null;
-	
-	private IVerifyingControl<?,IntegerValue> inputControl;
 	
 	
 	public IntegerEditor() {
@@ -67,10 +67,6 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		determineIntegerType();
 	}
 	
-	public void setValue( final BigInteger theValue) {
-		inputControl.setText( theValue.toString());
-	}
-	
 	private void determineIntegerType() { 
 		String parameterType = getParameter().getType();
 		integerType = IntegerType.valueOfTypeName( parameterType);
@@ -78,13 +74,6 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 
 	
-	@Override
-	protected void designControl(Composite theControl) {
-		super.designControl( theControl);
-	}
-	
-	
-
 
 	
 	private static void setWidthForText( Text theTextControl, int visibleChars) {
@@ -105,14 +94,17 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, integerTypeVerifier, integerRangeVerifier);
-		Text text = (Text) inputControl.getControl();
+		IVerifyingControl<Text, IntegerValue> inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, integerTypeVerifier, integerRangeVerifier);
+		setInputControl( inputControl);
+		
+		Text text = inputControl.getControl();
 		text.setText( getParameter().getValue().getTheNumber().toString());
 		text.setLayoutData( theLayoutData);
-		int maxNeededChars = integerType.getMaxValue().toString().length();
-		if ( integerType.getMaxValue() != null)
+		if ( integerType.getMaxValue() != null) {
+			int maxNeededChars = integerType.getMaxValue().toString().length();
 		  text.setTextLimit( maxNeededChars);
-		setWidthForText( text, maxNeededChars);
+		  setWidthForText( text, maxNeededChars);
+		}
 		
 		setVerifyListenerToControl( inputControl);
 		
@@ -120,15 +112,17 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			
 			@Override
 			public void handleEvent(Event theArg0) {
-				if ( inputControl.getText().isEmpty())
-					inputControl.setText( "0");
+				if ( getInputControl().getText().isEmpty())
+					getInputControl().setText( "0");
 			}
 		});
 	}
 	
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerifier, integerRangeVerifier);
-		Spinner spinner = (Spinner) inputControl.getControl();
+		IVerifyingControl<Spinner, IntegerValue> inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerifier, integerRangeVerifier);
+		setInputControl( inputControl);
+		
+		Spinner spinner = inputControl.getControl();
 		spinner.setMinimum( integerType.getMinValue().intValue());
 		spinner.setMaximum( integerType.getMaxValue().intValue());
 		spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
@@ -141,7 +135,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 	}
 
 	private void setVerifyListenerToControl( final IVerifyingControl<?,IntegerValue> theInputControl) {
-		theInputControl.setListener( new IVerificationListener<String>() {
+		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override
 			public void beforeVerification(final VerificationEvent<String> theEvent) {}
@@ -150,8 +144,9 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			public void afterVerificationStep(final VerificationEvent<String> theEvent) {
 				final List<VerificationResult<String>> results = theEvent.verificationResults;
 				final VerificationResult<String> lastResult = results.get( results.size() -1);
-				if(theEvent.inputToVerify.length() < 17)
-					theEvent.doit = true;
+				// TODO why?
+				//if(theEvent.inputToVerify.length() < 17)
+					//theEvent.doit = true;
 				if ( !lastResult.verified) {
 					getMessageView().flashMessages( lastResult.messages);
 					theEvent.skipVerification = true;
@@ -160,9 +155,9 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 			}
 			
 			@Override
-			public void afterVerification(final VerificationEvent<String> theEvent) {
+			public void afterVerification(final VerificationEvent<String> theEvent) {	
 				// verification passed, then write the value to parameter
-				setParameterValue( theEvent.inputToVerify);
+				forceInputValue( theEvent.inputToVerify);
 				// and start the validation process
 				validateDelayed( theInputControl);
 				theEvent.doit = true;
@@ -197,9 +192,10 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		reset.setText ("Reset");
 		reset.addSelectionListener( new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent theE) {
-				setValue( getParameter().getDefaultValue().getTheNumber());
-				super.widgetSelected( theE);
+			public void widgetSelected(SelectionEvent theEvent) {
+				String defaultValueString = ParameterValueUtil.getDefaultValue( getParameter());
+				setInputValue( defaultValueString);
+				super.widgetSelected( theEvent);
 			}
 		});
 		//label.setText( this.getParameter().getDescription());
@@ -211,17 +207,7 @@ public class IntegerEditor extends ValidatingEditor<IntegerValue> {
 		return new IntegerEditorLookAndBehaviour();
 	}
 	
-	@Override
-	public void setFocus() {
-		inputControl.getControl().setFocus();
-	}
 
-
-  @Override
-  protected void updateParameterValue() {
-  	String updatedValue = ParameterValueUtil.getValue( getParameter());
-  	inputControl.forceText( updatedValue);
-  }
 
 
 }
