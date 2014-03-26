@@ -74,7 +74,7 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 
 	@Override
 	public IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour() {
-		return new DefaultEditorLookAndBehaviour();
+		return new MacEditorLookAndBehaviour();
 	}
 
 

@@ -16,7 +16,7 @@
 			<expression></expression>			
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enums.EnumEditor">
-			<expression>PC_MAC_FILTER</expression>
+			<expression></expression>
 		</editor>
 	</types>
 
@@ -49,7 +49,7 @@
 		<widget name="Fibonacci">
 			<description>Fibonacci editor</description>
 			<editor parameterId="PX_N" />
-			
+
 			<editor parameterId="PX_FIB_NUMBER">
 				<attribute name="advanced" />
 			</editor>
@@ -61,7 +61,6 @@
 		<widget name="Enum Widget">
 			<description>Enum editor</description>
 			<editor parameterId="PC_MAC_FILTER"/>
-			</editor>
 		</widget>
 		
 		<widget name="General Test">
@@ -159,12 +158,7 @@
 	
 		<parameter id="PC_MAC_UCA_HS01">
 			<validator id="vMAC" />
-		</parameter>
-		
-		<parameter id="PC_MAC_FILTER">
-			<validator id="vEnum">
-		</parameter>
-		
+		</parameter>	
 
 		<parameter id="PX_N">
 			<description visible="true">Beschreibung</description>
@@ -286,9 +280,6 @@
 		<validator id="vMAC">
 			<classpath>ttworkbench.play.parameters.ipv6.validators.MacAddressValidator</classpath>
 			<attribute name="attr1">value1</attribute>
-		</validator>
-		
-		<validator id="vEnum">
 		</validator>
 		
 		<validator id="visibility">
