@@ -18,8 +18,10 @@ import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehavi
 import ttworkbench.play.parameters.ipv6.customize.RowEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
+import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
 import com.testingtech.muttcn.values.StringValue;
 
@@ -34,6 +36,9 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 
 	private CLabel label;
 	private Text text;
+	private EventHandler handler; // not a generic Handler
+
+	private IVerifyingControl<?, StringValue> inputControl;
 
 	public IPEditor() {
 		super( TITLE, DESCRIPTION);
@@ -42,7 +47,6 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 	public IPEditor( final IVerifier<String> verifier) {
 		this();
 		this.verifier = verifier;
-
 	}
 
 	@Override
@@ -53,19 +57,27 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 	@Override
 	protected void createEditRow(Composite theContainer) {
 		// TODO remove
+//		this.getAttribute("verifier") {
+//			
+//		}
+		
 		theContainer.setBackground( display.getSystemColor( SWT.COLOR_GREEN));
 
 		label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getName());
 
-		text = new Text( theContainer, SWT.BORDER | SWT.SINGLE);
-		EventHandler handler = new EventHandler();
-		// text.setSize( 150, SWT.DEFAULT);
-		text.setToolTipText( handler.HELPVALUE);
+		inputControl = new VerifyingText<StringValue>( getParameter(), theContainer, SWT.BORDER | SWT.SINGLE, verifier);
 
+		// bad solution, but functional
+		text = (Text) inputControl.getControl();
+		// must be done after Textinitialisation, because of dependences.
+		this.handler = new EventHandler();
+		text.setToolTipText( handler.HELPVALUE);
 		text.addVerifyListener( handler);
 		text.addModifyListener( handler);
 		text.addFocusListener( handler);
+		// set the Default Parameter Value
+		text.setText( getParameter().getValue().getTheContent());
 	}
 
 	private class EventHandler implements VerifyListener, ModifyListener, FocusListener {
@@ -76,12 +88,13 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 
 		protected boolean ignore = false;
 		/* indicates the State, with no Input */
-		protected boolean empty = true;
+		protected boolean empty;;
 		private Text input = text;
 
 		public EventHandler() {
 			super();
 			this.HELPVALUE = verifier.toString();
+			empty = input.getText().isEmpty();
 			/* Fill with DefaultHelpText */
 			focusLost( null);
 		}
@@ -98,6 +111,8 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 			if (empty) {
 				setText( HELPVALUE);
 				input.setForeground( COLOR_HELP);
+			} else {
+				input.setForeground( COLOR_NORMAL);
 			}
 		}
 
@@ -110,8 +125,9 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 				} else {
 					if (input.getText().isEmpty())
 						empty = true;
+					else
+						verifyText( text.getText());
 				}
-				verifyText( text.getText());
 			}
 		}
 
@@ -136,15 +152,24 @@ public class IPEditor extends ValidatingEditor<StringValue> {
 			// successMessages will not be shown, but this is not a Problem
 			getMessageView().flashMessages( result.messages);
 
+			if (result.verified) {
+				inputControl.forceText( theText);
+				validateDelayed( inputControl);
+			}
+
 			return result.verified;
 		}
 	}
 
-	@Override
-	public void reloadParameter() {
-  	String updatedValue = ParameterValueUtil.getValue( getParameter());
-  	// TODO set updated text without touch verification or validation process
-  	// e.g. inputControl.forceText( updatedValue);
+	public void setFocus() {
+		text.setFocus();
 	}
 
+  @Override
+  public void reloadParameter() {
+		this.handler.ignore = true;
+		// this.getParameter().getValue().getTheContent()
+		text.setText( ParameterValueUtil.getValue( this.getParameter()));
+		this.handler.ignore = false;
+	}
 }
