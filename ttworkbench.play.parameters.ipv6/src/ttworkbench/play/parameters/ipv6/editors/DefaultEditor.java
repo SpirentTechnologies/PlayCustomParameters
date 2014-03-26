@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditorLookAndBehaviour;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 

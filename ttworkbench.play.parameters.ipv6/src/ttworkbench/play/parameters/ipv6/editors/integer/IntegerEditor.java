@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
-import ttworkbench.play.parameters.ipv6.customize.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
@@ -41,7 +40,7 @@ import de.tu_berlin.cs.uebb.tools.util.Display;
 
 public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 	
-	private static final String TITLE = "Integer Editor";
+	private static final String TITLE = "Floating Point Editor";
 	private static final String DESCRIPTION = "";
 	
 	private IntegerType integerType = IntegerType.UNSIGNED_INT;
@@ -144,9 +143,6 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 			public void afterVerificationStep(final VerificationEvent<String> theEvent) {
 				final List<VerificationResult<String>> results = theEvent.verificationResults;
 				final VerificationResult<String> lastResult = results.get( results.size() -1);
-				// TODO why?
-				//if(theEvent.inputToVerify.length() < 17)
-					//theEvent.doit = true;
 				if ( !lastResult.verified) {
 					getMessageView().flashMessages( lastResult.messages);
 					theEvent.skipVerification = true;
@@ -198,8 +194,6 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 				super.widgetSelected( theEvent);
 			}
 		});
-		//label.setText( this.getParameter().getDescription());
-		//label.setLayoutData( layoutData[2]);
 	}
 
 	@Override

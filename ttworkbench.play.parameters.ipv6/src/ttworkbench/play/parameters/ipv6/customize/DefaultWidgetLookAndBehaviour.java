@@ -6,6 +6,8 @@ import java.util.Set;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditorLookAndBehaviour;
+
 public class DefaultWidgetLookAndBehaviour implements IWidgetLookAndBehaviour {
 
 	private Set<Listener> controlChangedListeners = new HashSet<Listener>();
