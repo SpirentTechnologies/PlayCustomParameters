@@ -18,7 +18,7 @@ public class ParameterMap {
 	
 	private void loadParameters( IConfigurator theConfigurator) {
 		idToParameterMap = new LinkedHashMap<String, IParameter<?>>();
-		Set<IParameter> parameters = theConfigurator.getParameterModel().getParameters();
+		Set<IParameter<?>> parameters = theConfigurator.getParameterModel().getParameters();
 		for (IParameter<?> parameter : parameters) {
 			idToParameterMap.put( parameter.getId(), parameter);
 		}

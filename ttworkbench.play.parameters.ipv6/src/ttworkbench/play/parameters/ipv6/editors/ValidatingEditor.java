@@ -80,13 +80,15 @@ public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements I
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 		if ( configuration != null) {			
 			Set<IParameterValidator> validators = configuration.getValidators( parameter);
-			for (IParameterValidator validator : validators) {
-				if ( !Thread.currentThread().isInterrupted())
-					try {
-				    validationResults.addAll( validator.validate( parameter, theCauser));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			if (validators != null) {
+				for (IParameterValidator validator : validators) {
+					if ( !Thread.currentThread().isInterrupted())
+						try {
+							validationResults.addAll( validator.validate( parameter, theCauser));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+				}
 			}
 		}
 		getState().unsetFlag( EditorStateFlag.VALIDATING);
