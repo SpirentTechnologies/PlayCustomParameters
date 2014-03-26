@@ -35,8 +35,8 @@ public class AndVerifier implements IVerifier<String> {
 		if (verified) {
 			messages = Arrays.asList( new MessageRecord( "validInput", "valid " + this.toString(), ErrorKind.success));
 		} else {
-			messages = Arrays.asList( new MessageRecord( "validInput", "is not a valid " + notValidVerifier.toString(),
-					ErrorKind.warning));
+			messages = Arrays.asList( new MessageRecord( "validInput", String.format( "\"%s\" is not a valid ", theInput)
+					+ notValidVerifier.toString(), ErrorKind.warning));
 		}
 		return new VerificationResult<String>( theInput, verified, messages);
 	}

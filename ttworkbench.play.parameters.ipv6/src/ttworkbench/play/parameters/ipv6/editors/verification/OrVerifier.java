@@ -37,8 +37,8 @@ public class OrVerifier implements IVerifier<String> {
 			messages = Arrays
 					.asList( new MessageRecord( "validInput", "valid " + validVerifier.toString(), ErrorKind.success));
 		} else {
-			messages = Arrays
-					.asList( new MessageRecord( "validInput", "is not a valid " + this.toString(), ErrorKind.warning));
+			messages = Arrays.asList( new MessageRecord( "validInput", String.format( "\"%s\" is not a valid ", theInput)
+					+ this.toString(), ErrorKind.warning));
 		}
 		return new VerificationResult<String>( theInput, verified, messages);
 	}

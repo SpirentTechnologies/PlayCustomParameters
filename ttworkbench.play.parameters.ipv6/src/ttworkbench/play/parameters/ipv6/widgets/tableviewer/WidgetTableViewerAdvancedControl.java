@@ -1,5 +1,7 @@
 package ttworkbench.play.parameters.ipv6.widgets.tableviewer;
 
+import java.util.HashSet;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -12,9 +14,13 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
+import com.testingtech.ttworkbench.ttman.parameters.impl.ParameterChangedListener;
 
 public class WidgetTableViewerAdvancedControl extends WidgetTableViewerControl {
+	
+	private HashSet<IParameterEditor<?>> registeredListeners = new HashSet<IParameterEditor<?>>();
 	
 	public WidgetTableViewerAdvancedControl(Composite parent) {
 		super(parent);
@@ -30,10 +36,13 @@ public class WidgetTableViewerAdvancedControl extends WidgetTableViewerControl {
 			public void update(ViewerCell cell) {
 				Object obj = cell.getElement();
 				if(obj instanceof IParameterEditor<?>) {
-					cell.setText( String.valueOf( coldef.columnType.valueOf( (IParameterEditor<?>) obj)));
+					IParameterEditor<?> editor = (IParameterEditor<?>) obj;
+					checkCellListener(editor);
+					cell.setText( String.valueOf( coldef.columnType.valueOf( editor)));
 				}
 			}
 		});
+		
 		
 		if(coldef.columnType == ParameterEditorColumnType.COLUMN_PARAMETER_VALUE) {
 			tvc.setEditingSupport( new EditingSupport(getTableViewer()) {
@@ -86,4 +95,17 @@ public class WidgetTableViewerAdvancedControl extends WidgetTableViewerControl {
 		return tc;
 	}
 
+
+	protected <T> void checkCellListener(IParameterEditor<T> editor) {
+		if(registeredListeners.add( editor)) {
+			IParameter<T> parameter = editor.getParameter();
+			parameter.addParameterChangedListener( new ParameterChangedListener<T>() {
+				@Override
+				public void parameterChanged(IParameter<T> theTheParameter) {
+					getTableViewer().refresh();
+				}
+			});
+		}
+		
+	}
 }
