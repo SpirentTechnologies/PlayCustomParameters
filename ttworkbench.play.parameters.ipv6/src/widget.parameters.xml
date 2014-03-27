@@ -6,6 +6,9 @@
 			<expression>^U?Int\d{0,2}$</expression>
 			<expression>^integer$</expression>
 		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.floatingpoint.FloatingPointEditor">	
+		  <expression>^float$</expression>
+		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.macaddr.MacAddressEditor">	
 			<expression>^PC_MAC_UCA_HS01$</expression> <!-- valid? -->
 			<expression>^MacAddress$</expression> <!-- valid? -->
@@ -63,6 +66,14 @@
 			</editor>
 			<editor parameterId="PX_FIB_SUCC_NUMBER">
 				<attribute name="advanced" />
+			</editor>
+		</widget>
+
+
+		<widget name="Floats">
+			<description>Float editor</description>
+			<editor parameterId="PX_FLOAT_NUMBER">
+			  <attribute name="locale">en,de</attribute>
 			</editor>
 		</widget>
 		

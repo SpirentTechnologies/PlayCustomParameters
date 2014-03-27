@@ -104,7 +104,6 @@ public class MessagePopup extends Composite implements IMessageContainer {
 		messageContainerLayout.marginWidth = 0;
 		messageContainerLayout.marginHeight = 0;
 		messageContainer.setLayout( messageContainerLayout);
-		messageContainer.setBackground( getDisplay().getSystemColor( SWT.COLOR_CYAN));
 		
 		scrolledComposite.setContent( messageContainer);
 		scrolledComposite.setMinSize( messageContainer.computeSize( SWT.DEFAULT, SWT.DEFAULT));

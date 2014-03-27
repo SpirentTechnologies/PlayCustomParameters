@@ -29,7 +29,7 @@ public class MacCharVerifier implements IVerifier<String> {
 		MessageRecord invalidCharWarning = new MessageRecord("invalid_char_warning", "The character is invalid", ErrorKind.warning);
 		MessageRecord validCharInfo = new MessageRecord("valid_char_info", "the characters allowed are Alphanumerical (0-9, a-f), \":\" and \"-\"", ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( invalidCharWarning, validCharInfo);
-		return new VerificationResult<String>(theInput, isValidChar, messages);
+		return new VerificationResult<String>( this, theInput, isValidChar, messages);
 	}
 
 }

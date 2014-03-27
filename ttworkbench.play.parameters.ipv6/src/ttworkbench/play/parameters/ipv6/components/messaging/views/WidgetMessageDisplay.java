@@ -157,7 +157,6 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		 */
 		{
 			messageHeader = new MessageHeader( this, this);
-			messageHeader.setBackground( lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( ErrorKind.error));
 			GridData messageContainerGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 0, 0);
 			messageContainerGridData.minimumHeight = MESSAGE_CONTAINER_HEIGHT;
 			messageHeader.setLayoutData( messageContainerGridData);

@@ -1,4 +1,4 @@
-package ttworkbench.play.parameters.ipv6.editors.integer;
+package ttworkbench.play.parameters.ipv6.editors.octet;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -34,42 +34,37 @@ import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingSp
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
 import com.testingtech.muttcn.values.IntegerValue;
+import com.testingtech.muttcn.values.OctetStringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 import de.tu_berlin.cs.uebb.tools.util.Display;
 
-public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
+public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 	
 	private static final String TITLE = "Floating Point Editor";
 	private static final String DESCRIPTION = "";
 	
-	private IntegerType integerType = IntegerType.UNSIGNED_INT;
-	private boolean useOnlyTextField;
+	private OctetType octetType = OctetType.OCT;
 	
-	private IntegerTypeVerifier integerTypeVerifier = new IntegerTypeVerifier();
-	private IntegerRangeVerifier integerRangeVerifier = null;
+	private OctetTypeVerifier octetTypeVerifier = new OctetTypeVerifier();
+	private OctetRangeVerifier octetRangeVerifier = null;
 	
 	
-	public IntegerEditor() {
-		this( false);
-	}
-	
-	public IntegerEditor( final boolean optionUseOnlyTextField) {
+	public OctetEditor() {
 		super( TITLE, DESCRIPTION);
-		this.useOnlyTextField = optionUseOnlyTextField;
 	}
 
 	
 	@Override
-	public void setParameter(IParameter<IntegerValue> theParameter) {
+	public void setParameter(IParameter<OctetStringValue> theParameter) {
 		super.setParameter( theParameter);
-		determineIntegerType();
+		determineOctetType();
 	}
 	
-	private void determineIntegerType() { 
+	private void determineOctetType() { 
 		String parameterType = getParameter().getType();
-		integerType = IntegerType.valueOfTypeName( parameterType);
-		integerRangeVerifier = new IntegerRangeVerifier( integerType);
+		octetType = OctetType.valueOfTypeName( parameterType);
+		octetRangeVerifier = new OctetRangeVerifier( octetType);
 	}
 
 	
@@ -93,16 +88,16 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Text, IntegerValue> inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, "0", integerTypeVerifier, integerRangeVerifier);
+		IVerifyingControl<Text, OctetStringValue> inputControl = new VerifyingText<OctetStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, octetTypeVerifier, octetRangeVerifier);
 		setInputControl( inputControl);
 		
 		Text text = inputControl.getControl();
 		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
-		if ( integerType.getMaxValue() != null) {
-			int maxNeededChars = integerType.getMaxValue().toString().length();
-		  text.setTextLimit( maxNeededChars);
-		  setWidthForText( text, maxNeededChars);
+		if ( octetType.getMaxOctets() != null) {
+			Long maxNeededChars = octetType.getMaxOctets() * 8L;
+		  text.setTextLimit( maxNeededChars.intValue());
+		  setWidthForText( text, maxNeededChars.intValue());
 		}
 		
 		setVerifyListenerToControl( inputControl);
@@ -117,23 +112,7 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		});
 	}
 	
-	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Spinner, IntegerValue> inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerifier, integerRangeVerifier);
-		setInputControl( inputControl);
-		
-		Spinner spinner = inputControl.getControl();
-		spinner.setMinimum( integerType.getMinValue().intValue());
-		spinner.setMaximum( integerType.getMaxValue().intValue());
-		spinner.setSelection( getParameter().getValue().getTheNumber().intValue());
-		spinner.setIncrement( 1);
-		spinner.setPageIncrement( 100);
-		spinner.setTextLimit( integerType.getMaxValue().toString().length());
-		spinner.setLayoutData( theLayoutData);
-
-		setVerifyListenerToControl( inputControl);	
-	}
-
-	private void setVerifyListenerToControl( final IVerifyingControl<?,IntegerValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<Text,OctetStringValue> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override
@@ -174,16 +153,8 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		String toolTipString = this.getParameter().getName() + ":\n" + this.getParameter().getDescription();
 		label.setToolTipText( toolTipString);
 		
-		if ( useOnlyTextField ||
-				 integerType.getMinValue() == null ||
-				 integerType.getMaxValue() == null ||
-				 integerType.getMinValue().compareTo( new BigInteger( String.valueOf( Integer.MIN_VALUE))) < 0 ||
-				 integerType.getMaxValue().compareTo( new BigInteger( String.valueOf( Integer.MAX_VALUE))) > 0) {
-			createTextInputWidget( theContainer, layoutData[0]);
-		} else {
-			createSpinnerInputWidget( theContainer, layoutData[0]);
-		}
-			
+		createTextInputWidget( theContainer, layoutData[0]);
+		
 		Button reset = new Button (theContainer, SWT.PUSH);
 		reset.setText ("Reset");
 		reset.addSelectionListener( new SelectionAdapter() {

@@ -28,7 +28,7 @@ public class IntegerTypeVerifier implements IVerifier<String> {
 		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", theInput), ErrorKind.warning); 
 		MessageRecord acceptedValuesInfo = new MessageRecord( "valid_chars_info", "Only integer values accepted.", ErrorKind.info); 
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, acceptedValuesInfo); 
-		return new VerificationResult<String>( theInput, verified, messages);
+		return new VerificationResult<String>( this, theInput, verified, messages);
 	}
 	
 }

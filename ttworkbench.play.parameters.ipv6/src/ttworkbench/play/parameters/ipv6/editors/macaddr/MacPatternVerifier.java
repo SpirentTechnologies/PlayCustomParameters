@@ -13,7 +13,6 @@ public class MacPatternVerifier implements IVerifier<String>{
 
 	private static final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})$";
 	private static final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]){5}([0-9a-fA-F]{2})$";
-	private static final String MAC_PATTERN3 = "^([0-9a-fA-F]{12})$";
 	
 	private static final String  MAC_VALID_ENTRY_MESSAGE = "valid entries: Alphanumerical (a-f) seperated with \":\" or \"-\"";
 	
@@ -22,7 +21,7 @@ public class MacPatternVerifier implements IVerifier<String>{
 			return true;
 		}else {
 			System.out.println(theInput);	
-			return (theInput.matches( MAC_PATTERN1)) || (theInput.matches( MAC_PATTERN2)) || (theInput.matches( MAC_PATTERN3));
+			return (theInput.matches( MAC_PATTERN1)) || (theInput.matches( MAC_PATTERN2));
 		}
 		
 	}
@@ -35,7 +34,7 @@ public class MacPatternVerifier implements IVerifier<String>{
 		MessageRecord macValidEntryInfo = new MessageRecord("valid_entry_info", MAC_VALID_ENTRY_MESSAGE, ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( invalidEntryMessage, macValidEntryInfo);
 		
-		return new VerificationResult<String>(theInput, isMac, messages);
+		return new VerificationResult<String>( this, theInput, isMac, messages);
 	}
 
 }

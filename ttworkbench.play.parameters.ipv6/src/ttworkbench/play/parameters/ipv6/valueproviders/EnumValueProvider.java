@@ -40,8 +40,12 @@ public class EnumValueProvider implements IParameterValueProvider{
 		// TODO Auto-generated method stub
 		boolean isRadio = false;
 		
+		//these 2 sets are only meant for Tests
 		Set<T> testEnumRadio = new HashSet<T>();
 		Set<T> testEnumCombo = new HashSet<T>();
+		
+		//This set gets the value from the real list
+		Set<T> availableValues = new HashSet<T>(); 
 		
 		testEnumRadio.add( theParameter.getValue());
 		testEnumRadio.add( theParameter.getDefaultValue());
@@ -49,6 +53,10 @@ public class EnumValueProvider implements IParameterValueProvider{
 		testEnumCombo.add((T) newString("value1"));
 		testEnumCombo.add((T) newString("value2"));
 		testEnumCombo.add((T) newString("value3"));
+		
+		if(availableValues.size() < 3){
+			isRadio = true;
+		}
 		
 		return (isRadio)?testEnumRadio:testEnumCombo;
 	}

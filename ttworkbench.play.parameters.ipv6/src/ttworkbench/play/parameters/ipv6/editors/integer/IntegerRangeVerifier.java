@@ -58,7 +58,7 @@ public class IntegerRangeVerifier implements IVerifier<String> {
 		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", theInput), ErrorKind.warning); 
 		MessageRecord codomainInfo = new MessageRecord( "valid_chars_info", String.format( "Only integers in range [%s,%s] accepted.", integerType.getMinValue(), integerType.getMaxValue()), ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, codomainInfo); 
-		return new VerificationResult<String>( theInput, verified, messages);
+		return new VerificationResult<String>( this, theInput, verified, messages);
 	}
 
 	
