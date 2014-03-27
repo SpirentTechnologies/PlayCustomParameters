@@ -14,7 +14,6 @@ public class MacPatternVerifier extends RegexVerifier{
 
 	private static final String MAC_PATTERN1 = "^(?:[a-fA-F0-9]{2}([-:]))(?:[a-fA-F0-9]{2}\\1){4}[a-fA-F0-9]{2}$";
 	
-	private static final String  MAC_VALID_ENTRY_MESSAGE = "valid entries: Alphanumerical (a-f) seperated with \":\" or \"-\"";
 
 	@Override
 	protected String regex() {
@@ -24,14 +23,11 @@ public class MacPatternVerifier extends RegexVerifier{
 	@Override
 	protected String validMessageText(String theInput) {
 		// TODO Auto-generated method stub
-		String validMessage = "This entry is valid MAC-Address";
-		return validMessage;
+		return "This is a valid MAC-Address";
 	}
 	@Override
 	protected String notValidMessageText(String theInput) {
 		// TODO Auto-generated method stub
-		System.out.println("result of my regular expression: " + MAC_PATTERN1.matches( theInput.trim()));
-		System.out.println("my input: "+ theInput);
 		return String.format( "\"%s\" is not a valid MAC-Address.", theInput);
 	}
 	@Override

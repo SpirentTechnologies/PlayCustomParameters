@@ -10,9 +10,9 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
-public class DisjunctionValidator extends FibValidator {
+public class DisjunctionValidator extends ContextualValidator {
 	public DisjunctionValidator() {
-		super("Disjunction Validator");
+		super("Disjunction Validator", "Checks if the values are disjunct");
 	}
 	
 	@Override
@@ -39,8 +39,8 @@ public class DisjunctionValidator extends FibValidator {
     validationResults.add( new ValidationResultMessage(
     		
     		disjunctive
-    			? String.format( "%s: %s and %s are NOT disjunctive.", this.getTitle(), parA.getName(), parB.getName())
-    			: String.format( "%s: set of %s parameters is disjunctive.", this.getTitle(), paras.length+1),
+    			? String.format( "%s: %s and %s are NOT disjunct.", this.getTitle(), parA.getName(), parB.getName())
+    			: String.format( "%s: set of %s parameters is disjunct.", this.getTitle(), paras.length+1),
     			
     		disjunctive
     			? ErrorKind.success
@@ -48,7 +48,7 @@ public class DisjunctionValidator extends FibValidator {
     			
     		theClient,
     		
-    		"tag_is_disjunctive"));
+    		"tag_is_disjunct"));
     	
     return validationResults;
 	}
