@@ -97,7 +97,7 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		setInputControl( inputControl);
 		
 		Text text = inputControl.getControl();
-		text.setText( getParameter().getValue().getTheNumber().toString());
+		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
 		if ( integerType.getMaxValue() != null) {
 			int maxNeededChars = integerType.getMaxValue().toString().length();

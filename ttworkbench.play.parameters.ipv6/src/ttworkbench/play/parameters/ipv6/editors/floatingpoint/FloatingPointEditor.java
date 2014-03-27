@@ -89,14 +89,14 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 
 		// initialize input control
 		Text text = inputControl.getControl();
-		text.setText( getParameter().getValue().getTheNumber().toString());
+		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
 		
 		setVerifyListenerToControl( inputControl);
 	}
 	
 
-	private void setVerifyListenerToControl( final IVerifyingControl<?,FloatValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<Text,FloatValue> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override
