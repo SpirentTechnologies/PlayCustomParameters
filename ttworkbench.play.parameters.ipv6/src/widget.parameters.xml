@@ -62,7 +62,9 @@
 
 		<widget name="Floats">
 			<description>Float editor</description>
-			<editor parameterId="PX_FLOAT_NUMBER" />
+			<editor parameterId="PX_FLOAT_NUMBER">
+			  <attribute name="locale">en,de</attribute>
+			</editor>
 		</widget>
 		
 		<widget name="Enum Widget">

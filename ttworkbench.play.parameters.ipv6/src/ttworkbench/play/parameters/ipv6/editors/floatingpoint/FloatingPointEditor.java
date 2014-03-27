@@ -54,7 +54,7 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 	private static final String TITLE = "Integer Editor";
 	private static final String DESCRIPTION = "";
 	
-	private final List<Locale> locales;
+	private List<Locale> locales;
 	
 	private CLabel labelInterpretedValue;
 		
@@ -67,7 +67,17 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 		this.locales = theLocales;
 	}
 	
-	
+	@Override
+	public void setAttribute(String theName, String theValue) {
+		if ( theName.equalsIgnoreCase( "locale")) {
+			locales = new ArrayList<Locale>();
+			String[] localeNames = theValue.split( "\\s*,\\s*");
+			for (String localeName : localeNames) {
+				locales.add( new Locale( localeName));	
+			}
+		}
+		super.setAttribute( theName, theValue);
+	}
 
 
 
