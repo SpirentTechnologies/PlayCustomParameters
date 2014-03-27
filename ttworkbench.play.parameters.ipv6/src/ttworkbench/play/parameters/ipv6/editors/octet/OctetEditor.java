@@ -119,12 +119,14 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 				    theEvent.doit = false;
 					} else {
 						theEvent.verifierParams = new Object[]{lastResult.output};
+						theEvent.doit = true;
 					}
 				}
 				
 				if ( lastResult.verifier instanceof OctetRangeVerifier) {
 					if ( !lastResult.verified) {
-						getMessageView().showMessages( lastResult.messages);
+						getMessageView().showMessage( lastResult.messages.get( 0));
+						getMessageView().flashMessage( lastResult.messages.get( 1));
 						theEvent.skipVerification = true;
 						theEvent.doit = true;
 					} else {

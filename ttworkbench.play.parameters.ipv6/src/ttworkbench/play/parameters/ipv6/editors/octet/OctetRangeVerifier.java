@@ -30,11 +30,11 @@ public class OctetRangeVerifier implements IVerifier<String> {
 	
 	
 	private Long valueToOctets( BigInteger theValue) {
-		if ( theValue == null)
+		if ( theValue == null || theValue.compareTo( new BigInteger( "0")) <= 0)
 			return 0L;
 		
-		double valueSqrt = Math.sqrt(theValue.doubleValue());
-		long valueOctets = (long) Math.ceil( valueSqrt / 8.0);
+		double valueLn = Math.log( theValue.doubleValue()) / Math.log(2);
+		long valueOctets = (long) Math.floor( valueLn / 8.0) +1;
 	  return valueOctets;
 	}
 	
