@@ -15,6 +15,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
 import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
@@ -24,20 +25,22 @@ import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingCombo;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingRadio;
 import ttworkbench.play.parameters.ipv6.valueproviders.EnumValueProvider;
-import com.testingtech.muttcn.expressions.ValueExpression;
+
+import com.testingtech.muttcn.kernel.Expression;
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.muttcn.values.ConstantValue;
 import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class EnumEditor extends ValidatingEditor<ValueExpression> {
+public class EnumEditor<T extends Expression> extends ValidatingEditor<T> {
 
 	private static final String TITLE = "Enum Editor";
 	private static final String DESCRIPTION = "Enum Editor";
 
 	private static final int ENUM_MAX_LENGTH = 20;
-	private IVerifyingControl<?, ValueExpression> inputControl;
+	private IVerifyingControl<? extends Control, T> inputControl;
 
-	private final EnumValueProvider enumValueProvider = new EnumValueProvider();
+	private final EnumValueProvider<T> enumValueProvider = new EnumValueProvider<T>();
 
 	private final EnumContextVerifier enumContextVerifier = new EnumContextVerifier();
 
@@ -69,9 +72,9 @@ public class EnumEditor extends ValidatingEditor<ValueExpression> {
 	}
 
 	private void createRadioGroup(Composite theContainer, Object theLayoutData) {
-		inputControl = new VerifyingRadio<ValueExpression>( getParameter(), theContainer, SWT.SHADOW_IN, enumContextVerifier);
+		inputControl = new VerifyingRadio<T>( getParameter(), theContainer, SWT.SHADOW_IN, enumContextVerifier);
 
-		final HashMap<String, ValueExpression> availableValues = getAvailableValues();
+		final HashMap<String, T> availableValues = getAvailableValues();
 
 		//Make a group for the Radio Buttons
 		final Group enumRadioGroup = (Group) inputControl.getControl();
@@ -93,27 +96,31 @@ public class EnumEditor extends ValidatingEditor<ValueExpression> {
 
 	
 
-	private HashMap<String, ValueExpression> getAvailableValues() {
-		final IParameter<ValueExpression> parameter = this.getParameter();
-		HashMap<String, ValueExpression> availableValues = new HashMap<String, ValueExpression>();
-		for(ValueExpression value : enumValueProvider.getAvailableValues( parameter)) {
+	private HashMap<String, T> getAvailableValues() {
+		final IParameter<T> parameter = this.getParameter();
+		HashMap<String, T> availableValues = new HashMap<String, T>();
+		for(T value : enumValueProvider.getAvailableValues( parameter)) {
 			String content = null;
 			
 			if(value instanceof StringValue) {
 				content = ((StringValue) value).getTheContent();
 			}
-			else if(value instanceof ConstantValue) {
-				content = ((ConstantValue) value).getTheName().getTheName();
+			else if(value instanceof Expression) {
+				content = ((Expression) value).getTheName().getTheName();
 			}
+			else {
+				System.err.println("Could not identify \""+value+"\".");
+			}
+			
 			if(value!=null) {
 				availableValues.put( content, value);
 			}
-		}
+		}	
 		return availableValues;
 	}
 	
 	private void createCombo(Composite theContainer, Object theLayoutData) {
-		inputControl = new VerifyingCombo<ValueExpression>( getParameter(), theContainer, SWT.READ_ONLY, enumContextVerifier);
+		inputControl = new VerifyingCombo<T>( getParameter(), theContainer, SWT.READ_ONLY, enumContextVerifier);
 
 		final Combo enumCombo = (Combo) inputControl.getControl();
 		final Rectangle dimensions = new Rectangle( 50, 50, 200, 65);
@@ -122,16 +129,18 @@ public class EnumEditor extends ValidatingEditor<ValueExpression> {
 		enumCombo.setTextLimit( ENUM_MAX_LENGTH);
 
 
-		final HashMap<String, ValueExpression> availableValues = getAvailableValues();
+		final HashMap<String, T> availableValues = getAvailableValues();
 		int index = 0;
 		for (String key : availableValues.keySet()) {
-			enumCombo.add( key, index++);
-			// System.out.println( key);
+			if(key!=null) {
+				enumCombo.add( key, index++);
+				// System.out.println( key);
+			}
 		}
 
 		enumCombo.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent theEvent) {
-					ValueExpression v = availableValues.get(enumCombo.getText());
+					T v = availableValues.get(enumCombo.getText());
 					getParameter().setValue( v);
 				}
 			});
@@ -155,6 +164,7 @@ public class EnumEditor extends ValidatingEditor<ValueExpression> {
 	private <T> boolean isBoolean(Set<T> values) {
 		return ( values.size() < 3);
 	}
+	
 
 	@Override
 	public void reloadParameter() {

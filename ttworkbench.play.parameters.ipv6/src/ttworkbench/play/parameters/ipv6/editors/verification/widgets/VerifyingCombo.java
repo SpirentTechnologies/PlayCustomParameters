@@ -7,9 +7,10 @@ import org.eclipse.swt.widgets.Event;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
+import com.testingtech.muttcn.kernel.Expression;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class VerifyingCombo<P> extends VerifyingAdapter<Combo,P>{
+public class VerifyingCombo<P extends Expression> extends VerifyingAdapter<Combo,P>{
 
 	public VerifyingCombo( final IParameter<P> theParameter, Composite theParent, int theStyle, final IVerifier<String> ... theVerifiers) {
 		super( theParameter, theParent, theStyle, theVerifiers);

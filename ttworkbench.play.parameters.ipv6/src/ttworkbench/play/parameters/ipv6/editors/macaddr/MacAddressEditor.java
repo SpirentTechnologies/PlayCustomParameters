@@ -1,55 +1,29 @@
 package ttworkbench.play.parameters.ipv6.editors.macaddr;
 
 
-import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Text;
-
-import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
-import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
-import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingCombo;
-import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 import ttworkbench.play.parameters.ipv6.valueproviders.MacValueProvider;
 
 import com.testingtech.muttcn.values.StringValue;
-import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 
@@ -63,7 +37,7 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 	private  MacRangeVerifier macRangeVerifier = new MacRangeVerifier();
 	private  MacCharVerifier macCharVerifier = new MacCharVerifier();
 	
-	private IParameterValueProvider macValueProvider = new MacValueProvider();
+	private IParameterValueProvider<StringValue> macValueProvider = new MacValueProvider();
 	
 	
 	

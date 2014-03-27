@@ -1,9 +1,7 @@
 package ttworkbench.play.parameters.ipv6.valueproviders;
 
-import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +12,7 @@ import com.testingtech.muttcn.values.impl.StringValueImpl;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 
-public class MacValueProvider implements IParameterValueProvider{
+public class MacValueProvider implements IParameterValueProvider<StringValue> {
 
 	@Override
 	public void setAttribute(String theName, String theValue) {
@@ -41,9 +39,9 @@ public class MacValueProvider implements IParameterValueProvider{
 	}
 
 	@Override
-	public <T> Set<T> getAvailableValues(IParameter<T> theParameter) {
+	public Set<StringValue> getAvailableValues(IParameter<StringValue> theParameter) {
 		// TODO Auto-generated method stub
-		Set<T> values = new HashSet<T>();
+		Set<StringValue> values = new HashSet<StringValue>();
 		try {
 	    Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
 	    int index = 0;
@@ -61,7 +59,7 @@ public class MacValueProvider implements IParameterValueProvider{
 	          sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
 	        }
 	        System.out.println(sb.toString());
-	        values.add( (T) newString(sb.toString()));
+	        values.add( (StringValue) newString(sb.toString()));
 	      }
 	      index++;
 	    }

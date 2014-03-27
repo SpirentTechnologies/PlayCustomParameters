@@ -21,7 +21,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultM
 public class MacWidgetComposer extends WidgetComposer {
 
 	// get relevant parameters
-	final IParameter<String> parameter_MacAddress = getParametersMap().getParameterById( "PC_MAC_UCA_HS01");
+	final IParameter<StringValue> parameter_MacAddress = getParametersMap().getParameterById( "PC_MAC_UCA_HS01");
 
 	public MacWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 		super( theConfigurator, theParametersMap);

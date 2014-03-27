@@ -21,12 +21,14 @@ import ttworkbench.play.parameters.ipv6.components.design.IEditorState;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 
+import com.testingtech.muttcn.kernel.Expression;
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 
-public abstract class AbstractEditor<T> implements IParameterEditor<T> {
+public abstract class AbstractEditor<T extends Expression> implements IParameterEditor<T> {
 
   private EditorState editorState = new EditorState();
 	

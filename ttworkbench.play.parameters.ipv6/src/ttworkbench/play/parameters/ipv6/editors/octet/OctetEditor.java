@@ -1,12 +1,6 @@
 package ttworkbench.play.parameters.ipv6.editors.octet;
 
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -16,28 +10,21 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
-import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingSpinner;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
-import com.testingtech.muttcn.values.IntegerValue;
 import com.testingtech.muttcn.values.OctetStringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-
-import de.tu_berlin.cs.uebb.tools.util.Display;
 
 public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 	
