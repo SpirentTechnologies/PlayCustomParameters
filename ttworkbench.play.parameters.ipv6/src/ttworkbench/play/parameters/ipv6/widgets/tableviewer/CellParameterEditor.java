@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c)  .
  * All rights reserved. This program and the accompanying materials
@@ -19,6 +20,7 @@
  * Contributors:
  *     
  ******************************************************************************/
+
 package ttworkbench.play.parameters.ipv6.widgets.tableviewer;
 
 import java.text.MessageFormat;
@@ -35,9 +37,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
-public abstract class CellParameterEditor extends DialogCellEditor {
+public abstract class CellParameterEditor<T extends Value> extends DialogCellEditor {
 	
 	private static final boolean SHOW_ONLY_VALUE_IN_TABLE = true;
 	
@@ -48,7 +51,7 @@ public abstract class CellParameterEditor extends DialogCellEditor {
 		super( parent);
 	}
 
-	public abstract IParameterEditor<Object> getEditor();
+	public abstract IParameterEditor<T> getEditor();
 
 
 	@Override
@@ -94,10 +97,11 @@ public abstract class CellParameterEditor extends DialogCellEditor {
         }
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void updateContents(Object value) {
 		if (editorComposite != null) {
-			getEditor().getParameter().setValue( value);
+			getEditor().getParameter().setValue( (T) value);
 		}
 	}
 
@@ -111,7 +115,7 @@ public abstract class CellParameterEditor extends DialogCellEditor {
 
 	@Override
 	protected Object openDialogBox(Control cellEditorWindow) {
-		IParameterEditor<Object> editor = getEditor();
+		IParameterEditor<T> editor = getEditor();
 		
 		Dialog dialog = new CellParameterEditorDialog(cellEditorWindow.getShell(), editor);
 		if (dialog.open() == Window.OK) {

@@ -152,7 +152,7 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 
 	@Override
 	public IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour() {
-		return super.getLookAndBehaviour();//new FloatingPointEditorLookAndBehaviour();
+		return new StringEditorLookAndBehaviour();
 	}
 	
 

@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c)  .
  * All rights reserved. This program and the accompanying materials
@@ -19,11 +20,13 @@
  * Contributors:
  *     
  ******************************************************************************/
+
 package ttworkbench.play.parameters.ipv6.validators;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
@@ -63,7 +66,7 @@ public class SimpleValidatorContext implements IValidatorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> IParameterEditor<T>[] getEditorsForParameter(IParameter<T> theParameter) {
+	public <T extends Value> IParameterEditor<T>[] getEditorsForParameter(IParameter<T> theParameter) {
 		if(configurator!=null) {
 			return (IParameterEditor<T>[]) configurator
 					.getAvailableEditors( theParameter).toArray( new IParameterEditor<?>[0]);

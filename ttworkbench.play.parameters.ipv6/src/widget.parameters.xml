@@ -20,6 +20,7 @@
   Contributors:
       
 -->
+<?xml version="1.0" encoding="UTF-8"?>
 <settings xmlns="https://github.com/TestingTechnologies/PlayCustomParameters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/TestingTechnologies/PlayCustomParameters widget.parameters.05.xsd ">
 
 	<types>
@@ -49,6 +50,16 @@
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enums.EnumEditor">
 			<expression>^boolean$</expression>
+			<expression>^CampaignType$</expression>
+			<expression>^IpSecSwitch$</expression>
+			<expression>^IpSecControl$</expression>
+			<expression>^IpSecProtocolMode$</expression>
+			<expression>^ConfigId$</expression>
+			<expression>^EncryptionAlgo$</expression>
+			<expression>^PseudoRandomFunction$</expression>
+			<expression>^IntegrityAlgo$</expression>
+			<expression>^DiffieHellmanGroup$</expression>
+			<expression>^IutRole$</expression>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.string.StringEditor">
 			<expression>^charstring$</expression>
@@ -114,7 +125,7 @@
 
 		<widget name="Strings">
 			<description>String editor</description>
-			<editor parameterId="PX_SOME_STRING"> 
+			<editor parameterId="PX_SOME_STRING" > 
 			  <attribute name="regex">^S.*</attribute>  
 			</editor>
 			<editor parameterId="PX_SOME_String10" />
@@ -130,6 +141,7 @@
 		
 		<widget name="Enum Widget">
 			<description>Enum editor</description>
+>>>>>>> 7270532e122a3a3f9f19e7bf28d7c8cf5a18a8ff
 			<editor parameterId="PC_MAC_FILTER"/>
 		</widget>
 		

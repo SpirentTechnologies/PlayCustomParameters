@@ -19,12 +19,14 @@
  * Contributors:
  *     
  ******************************************************************************/
+
 package ttworkbench.play.parameters.ipv6;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
@@ -46,7 +48,7 @@ public class ParameterMap {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> IParameter<T> getParameterById( final String theId) {
+	public <T extends Value> IParameter<T> getParameterById( final String theId) {
 		return (IParameter<T>) idToParameterMap.get( theId);
 	}
 	

@@ -42,7 +42,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultM
 public class EnumWidgetComposer extends WidgetComposer{
 	
 	//get relevant parameters
-	final IParameter<String> parameter_MAC_FILTER = getParametersMap().getParameterById( "PC_MAC_FILTER");
+	final IParameter<StringValue> parameter_MAC_FILTER = getParametersMap().getParameterById( "PC_MAC_FILTER");
 
 	public EnumWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 		super( theConfigurator, theParametersMap);

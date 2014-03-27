@@ -19,12 +19,14 @@
  * Contributors:
  *     
  ******************************************************************************/
+
 package ttworkbench.play.parameters.ipv6.composer;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
 import ttworkbench.play.parameters.ipv6.editors.macaddr.MacAddressEditor;
 import ttworkbench.play.parameters.ipv6.widgets.MacWidget;
 
+import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
@@ -32,7 +34,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 public class MacWidgetComposer extends WidgetComposer {
 
 	// get relevant parameters
-	final IParameter<String> parameter_MacAddress = getParametersMap().getParameterById( "PX_MAC_UCA_HS01");
+	final IParameter<StringValue> parameter_MacAddress = getParametersMap().getParameterById( "PX_MAC_UCA_HS01");
 
 	public MacWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 		super( theConfigurator, theParametersMap);

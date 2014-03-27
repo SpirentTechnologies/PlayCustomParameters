@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c)  .
  * All rights reserved. This program and the accompanying materials
@@ -19,6 +20,7 @@
  * Contributors:
  *     
  ******************************************************************************/
+
 package ttworkbench.play.parameters.ipv6.valueproviders;
 
 import java.net.NetworkInterface;
@@ -28,12 +30,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.testingtech.muttcn.values.StringValue;
-import com.testingtech.muttcn.values.impl.StringValueImpl;
+import com.testingtech.muttcn.values.OctetStringValue;
+import com.testingtech.muttcn.values.impl.OctetStringValueImpl;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 
-public class MacValueProvider implements IParameterValueProvider{
+public class MacValueProvider implements IParameterValueProvider<OctetStringValue> {
 
 	@Override
 	public void setAttribute(String theName, String theValue) {
@@ -60,9 +62,8 @@ public class MacValueProvider implements IParameterValueProvider{
 	}
 
 	@Override
-	public <T> Set<T> getAvailableValues(IParameter<T> theParameter) {
-		// TODO Auto-generated method stub
-		Set<T> values = new HashSet<T>();
+	public Set<OctetStringValue> getAvailableValues(IParameter<OctetStringValue> theParameter) {
+		Set<OctetStringValue> values = new HashSet<OctetStringValue>();
 		try {
 	    Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
 	    while(networks.hasMoreElements()) {
@@ -77,7 +78,7 @@ public class MacValueProvider implements IParameterValueProvider{
 	        }
 	        if(sb.toString().length() <= 17){
 	        	//to filter the invalid addresses
-	        	values.add( (T) newString(sb.toString()));
+	        	values.add( newString(sb.toString()));
 	        }
 	      }
 	    }
@@ -89,8 +90,8 @@ public class MacValueProvider implements IParameterValueProvider{
 		return values;
 	}
 	
-	private StringValue newString( String theString) {
-		StringValue stringValue = new StringValueImpl() {};
+	private OctetStringValue newString( String theString) {
+		OctetStringValue stringValue = new OctetStringValueImpl() {};
 		stringValue.setTheContent( theString);
 	  return stringValue;
 	}

@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c)  .
  * All rights reserved. This program and the accompanying materials
@@ -19,6 +20,7 @@
  * Contributors:
  *     
  ******************************************************************************/
+
 package ttworkbench.play.parameters.ipv6.editors.verification.widgets;
 
 import org.eclipse.swt.widgets.Combo;
@@ -28,9 +30,10 @@ import org.eclipse.swt.widgets.Event;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
+import com.testingtech.muttcn.kernel.Expression;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class VerifyingCombo<P> extends VerifyingAdapter<Combo,P>{
+public class VerifyingCombo<P extends Expression> extends VerifyingAdapter<Combo,P>{
 	
 	private final String defaultText;
 

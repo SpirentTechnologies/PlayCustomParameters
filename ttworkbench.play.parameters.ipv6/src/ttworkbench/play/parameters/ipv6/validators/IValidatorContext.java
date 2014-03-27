@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c)  .
  * All rights reserved. This program and the accompanying materials
@@ -19,8 +20,10 @@
  * Contributors:
  *     
  ******************************************************************************/
+
 package ttworkbench.play.parameters.ipv6.validators;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
@@ -38,7 +41,7 @@ public interface IValidatorContext {
 	 * @param parameter
 	 * @return
 	 */
-	<T> IParameterEditor<T>[] getEditorsForParameter( IParameter<T> parameter);
+	<T extends Value> IParameterEditor<T>[] getEditorsForParameter( IParameter<T> parameter);
 
 	/**
 	 * TODO

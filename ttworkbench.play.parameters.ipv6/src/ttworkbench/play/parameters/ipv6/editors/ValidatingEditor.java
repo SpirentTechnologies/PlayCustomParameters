@@ -44,6 +44,8 @@ import ttworkbench.play.parameters.ipv6.components.messaging.views.EditorMessage
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 
+import com.testingtech.muttcn.kernel.Expression;
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IActionHandler;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IMessageHandler;
@@ -54,7 +56,7 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultAction;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
-public abstract class ValidatingEditor<T> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
+public abstract class ValidatingEditor<T extends Expression> extends AbstractEditor<T> implements IMessageHandler, IActionHandler {
 
 	enum controlstate { none, constructed, created};
 

@@ -35,11 +35,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Widget;
 
+import com.testingtech.muttcn.kernel.Expression;
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public abstract class VerifyingAdapter<C extends Control,P> implements IVerifyingControl<C,P> {
+public abstract class VerifyingAdapter<C extends Control,P extends Expression> implements IVerifyingControl<C,P> {
 	
 	private class VerifyListener implements Listener {
 		
@@ -86,7 +87,7 @@ public abstract class VerifyingAdapter<C extends Control,P> implements IVerifyin
     }
 		
 		private void afterVerificationStep( VerificationEvent<String> theEvent) {
-			for ( IVerificationListener listener : listeners) {
+			for ( IVerificationListener<String> listener : listeners) {
 				listener.afterVerificationStep( theEvent);
 			}
 		}

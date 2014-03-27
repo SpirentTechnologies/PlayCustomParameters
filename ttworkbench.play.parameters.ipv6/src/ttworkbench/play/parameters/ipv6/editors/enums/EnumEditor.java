@@ -21,6 +21,7 @@
  ******************************************************************************/
 package ttworkbench.play.parameters.ipv6.editors.enums;
 
+import java.util.HashMap;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -35,6 +36,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
 import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
@@ -45,17 +47,21 @@ import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingCo
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingRadio;
 import ttworkbench.play.parameters.ipv6.valueproviders.EnumValueProvider;
 
+import com.testingtech.muttcn.kernel.Expression;
+import com.testingtech.muttcn.kernel.Value;
+import com.testingtech.muttcn.values.ConstantValue;
 import com.testingtech.muttcn.values.StringValue;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class EnumEditor extends ValidatingEditor<StringValue> {
+public class EnumEditor<T extends Expression> extends ValidatingEditor<T> {
 
 	private static final String TITLE = "Enum Editor";
 	private static final String DESCRIPTION = "Enum Editor";
 
 	private static final int ENUM_MAX_LENGTH = 20;
-	private IVerifyingControl<?, StringValue> inputControl;
+	private IVerifyingControl<? extends Control, T> inputControl;
 
-	private final EnumValueProvider enumValueProvider = new EnumValueProvider();
+	private final EnumValueProvider<T> enumValueProvider = new EnumValueProvider<T>();
 
 	private final EnumContextVerifier enumContextVerifier = new EnumContextVerifier();
 
@@ -87,34 +93,55 @@ public class EnumEditor extends ValidatingEditor<StringValue> {
 	}
 
 	private void createRadioGroup(Composite theContainer, Object theLayoutData) {
-		// TODO Auto-generated method stub
-		inputControl = new VerifyingRadio<StringValue>( getParameter(), theContainer, SWT.SHADOW_IN, enumContextVerifier);
+		inputControl = new VerifyingRadio<T>( getParameter(), theContainer, SWT.SHADOW_IN, enumContextVerifier);
 
-		Set<StringValue> availableValues = enumValueProvider.getAvailableValues( this.getParameter());
+		final HashMap<String, T> availableValues = getAvailableValues();
 
 		//Make a group for the Radio Buttons
 		final Group enumRadioGroup = (Group) inputControl.getControl();
 		enumRadioGroup.setLayout( new RowLayout( SWT.VERTICAL));
 
 		//Create radio buttons according to the number of the available values
-		for (StringValue value : availableValues) {
+		for (final String key : availableValues.keySet()) {
 			final Button radio = new Button( enumRadioGroup, SWT.RADIO);
-			radio.setText( value.getTheContent());
-			//add listeners to the radion buttons
+			radio.setText( key);
 			radio.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent theEvent) {
 					if (radio.getSelection() == true) {
-						System.out.println( "my current selection: " + radio.getText());
-						getParameter().getValue().setTheContent(radio.getText());
+						getParameter().setValue( availableValues.get( key));
 					}
 				}
 			});
 		}
 	}
 
+	
+
+	private HashMap<String, T> getAvailableValues() {
+		final IParameter<T> parameter = this.getParameter();
+		HashMap<String, T> availableValues = new HashMap<String, T>();
+		for(T value : enumValueProvider.getAvailableValues( parameter)) {
+			String content = null;
+			
+			if(value instanceof StringValue) {
+				content = ((StringValue) value).getTheContent();
+			}
+			else if(value instanceof Expression) {
+				content = ((Expression) value).getTheName().getTheName();
+			}
+			else {
+				System.err.println("Could not identify \""+value+"\".");
+			}
+			
+			if(value!=null) {
+				availableValues.put( content!=null ? content : "", value);
+			}
+		}	
+		return availableValues;
+	}
+	
 	private void createCombo(Composite theContainer, Object theLayoutData) {
-		// TODO Auto-generated method stub
-		inputControl = new VerifyingCombo<StringValue>( getParameter(), theContainer, SWT.READ_ONLY, enumContextVerifier);
+		inputControl = new VerifyingCombo<T>( getParameter(), theContainer, SWT.READ_ONLY, enumContextVerifier);
 
 		final Combo enumCombo = (Combo) inputControl.getControl();
 		final Rectangle dimensions = new Rectangle( 50, 50, 200, 65);
@@ -122,24 +149,25 @@ public class EnumEditor extends ValidatingEditor<StringValue> {
 		setWidthForText( enumCombo, ENUM_MAX_LENGTH);
 		enumCombo.setTextLimit( ENUM_MAX_LENGTH);
 
-		Set<StringValue> availableValues = enumValueProvider.getAvailableValues( this.getParameter());
 
+		final HashMap<String, T> availableValues = getAvailableValues();
 		int index = 0;
-		for (StringValue value : availableValues) {
-			enumCombo.add( value.getTheContent().toString(), index);
-			index++;
-			System.out.println( value.getTheContent().toString());
+		for (String key : availableValues.keySet()) {
+			if(key!=null) {
+				enumCombo.add( key, index++);
+				// System.out.println( key);
+			}
 		}
 
 		enumCombo.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent theEvent) {
-					getParameter().getValue().setTheContent(enumCombo.getText());
+					T v = availableValues.get(enumCombo.getText());
+					getParameter().setValue( v);
 				}
 			});
 	}
 
 	private void setWidthForText(Combo theComboControl, int visibleChars) {
-		// TODO Auto-generated method stub
 		GC gc = new GC( theComboControl);
 		int charWidth = gc.getFontMetrics().getAverageCharWidth();
 		gc.dispose();
@@ -157,6 +185,7 @@ public class EnumEditor extends ValidatingEditor<StringValue> {
 	private <T> boolean isBoolean(Set<T> values) {
 		return ( values.size() < 3);
 	}
+	
 
 	@Override
 	public void reloadParameter() {

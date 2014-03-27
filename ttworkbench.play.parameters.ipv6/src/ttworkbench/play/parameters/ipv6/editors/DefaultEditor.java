@@ -31,9 +31,10 @@ import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditorLookAndBehaviour;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class DefaultEditor extends AbstractEditor<Object> {
+public class DefaultEditor<T extends Value> extends AbstractEditor<T> {
 
 	private static final String TITLE = "Default Editor";
 	private static final String DESCRIPTION = "";
@@ -47,7 +48,7 @@ public class DefaultEditor extends AbstractEditor<Object> {
 
 	@Override
 	protected void designControl( Composite theControl) {
-		IParameter<Object> parameter = getParameter();
+		IParameter<T> parameter = getParameter();
 		
 
 		theControl.setLayout(new GridLayout(2, false));

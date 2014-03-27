@@ -29,6 +29,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.testingtech.muttcn.kernel.Value;
+import com.testingtech.muttcn.values.StringValue;
+import com.testingtech.muttcn.values.impl.StringValueImpl;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
 
@@ -40,7 +43,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider;
  * @param <I>
  *          Class, which describes the IP-Format.
  */
-public class IPValueProvider<I extends InetAddress> implements IParameterValueProvider {
+public class IPValueProvider<I extends InetAddress> implements IParameterValueProvider<StringValue> {
 
 	private Class<I> ipType;
 
@@ -72,11 +75,10 @@ public class IPValueProvider<I extends InetAddress> implements IParameterValuePr
 		return null;
 	}
 
-	@SuppressWarnings("hiding")
-	@Override
-	public <String> Set<String> getAvailableValues(IParameter<String> theParameter) {
 
-		Set<String> values = new HashSet<String>();
+
+	public Set<StringValue> getAvailableValues(IParameter<StringValue> theParameter) {
+		Set<StringValue> values = new HashSet<StringValue>();
 
 		Enumeration<NetworkInterface> networkInterfaces;
 		try {
@@ -86,7 +88,11 @@ public class IPValueProvider<I extends InetAddress> implements IParameterValuePr
 				while (inetAddresses.hasMoreElements()) {
 					InetAddress i = inetAddresses.nextElement();
 					if (ipType.isAssignableFrom( i.getClass())) {
-						values.add( (String) i.toString());
+						StringValue value = new StringValueImpl() {
+							
+						};
+						value.setTheContent( i.toString());
+						values.add( value);
 					}
 				}
 			}

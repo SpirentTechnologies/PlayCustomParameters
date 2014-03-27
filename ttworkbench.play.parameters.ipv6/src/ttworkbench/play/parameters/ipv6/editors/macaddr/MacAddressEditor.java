@@ -58,7 +58,7 @@ public class MacAddressEditor extends VerifyingEditor<Combo,OctetStringValue> {
 	private static final int MAC_LENGTH = 17;
 	
 	
-	private IParameterValueProvider macValueProvider = new MacValueProvider();
+	private IParameterValueProvider<OctetStringValue> macValueProvider = new MacValueProvider();
 	private IVerifier<String> verifier;
 	
 	public MacAddressEditor() {

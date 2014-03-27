@@ -73,7 +73,7 @@ public class FloatTypeVerifier implements IVerifier<String> {
 		return "" + theRegexCharacter;
 	}
 
-	private boolean isValueAnFloatPreTest( String theValue) {
+	private boolean isValueFloatPreTest( String theValue) {
 		final String floatRegex = "(-|\\+)?[0-9]{1,3}(%s?[0-9]{3})*(%s[0-9]+)?(%s(-|\\+)?[0-9]+)?";
 		try {
 			DecimalFormatSymbols dfs = new DecimalFormatSymbols( locale);
@@ -104,7 +104,7 @@ public class FloatTypeVerifier implements IVerifier<String> {
 		}
   }
 
-  private boolean isValueAnFloatPostTest( String theAdjustInput) {
+  private boolean isValueFloatPostTest( String theAdjustInput) {
   	try {
   		new BigDecimal( theAdjustInput);
   		return true;
@@ -115,9 +115,9 @@ public class FloatTypeVerifier implements IVerifier<String> {
  
 	@Override
 	public VerificationResult<String> verify( String theInput, Object... theParams) {
-		boolean verified = isValueAnFloatPreTest( theInput);
+		boolean verified = isValueFloatPreTest( theInput);
 		String adjustInput = verified ? convertLocaleNumberToBigDecimalExpression( theInput) : theInput;
-		verified = verified && isValueAnFloatPostTest( adjustInput);
+		verified = verified && isValueFloatPostTest( adjustInput);
 		
 		String asYetTestetLocalesString = "";
 		for (int i = 0; i < theParams.length; i++) {
