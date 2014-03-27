@@ -113,7 +113,7 @@ public class EnumEditor<T extends Expression> extends ValidatingEditor<T> {
 			}
 			
 			if(value!=null) {
-				availableValues.put( content, value);
+				availableValues.put( content!=null ? content : "", value);
 			}
 		}	
 		return availableValues;
