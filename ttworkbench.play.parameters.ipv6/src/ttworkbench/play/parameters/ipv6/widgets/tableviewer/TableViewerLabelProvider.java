@@ -2,10 +2,13 @@ package ttworkbench.play.parameters.ipv6.widgets.tableviewer;
 
 import java.util.LinkedList;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.testingtech.ttworkbench.metamodel.muttcn.generator.CLTextGenerator;
+import com.testingtech.ttworkbench.ttman.ManagementPlugin;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 
@@ -44,7 +47,13 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 	 */
 	public String getColumnText(Object element, int columnIndex) {
 		IParameterEditor<?> editor = (IParameterEditor<?>) element;
-		return String.valueOf( registeredColumns.get( columnIndex).valueOf( editor));
+		Object value = registeredColumns.get( columnIndex).valueOf( editor);
+		if (value instanceof EObject) {
+			return CLTextGenerator.getUnformattedText( (EObject) value, ManagementPlugin.getRepositoryView());
+		}
+		else {
+			return String.valueOf( value);
+		}
 	}
 
 	/**

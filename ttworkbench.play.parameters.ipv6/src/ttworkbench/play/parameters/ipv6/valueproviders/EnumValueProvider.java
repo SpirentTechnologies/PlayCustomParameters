@@ -247,7 +247,7 @@ public class EnumValueProvider<T extends Expression> implements IParameterValueP
       }
 		}
 		catch(Exception e) {
-			System.err.println("Could not find available values for \""+theParameter.getName()+"\": "+e.getMessage());
+			System.err.println("Could not find available values for \""+theParameter.getName()+"\" (type: "+theParameter.getType()+"): "+e.getMessage());
 			enumValues.add( theParameter.getValue());
 			enumValues.add( theParameter.getDefaultValue());
 		}
