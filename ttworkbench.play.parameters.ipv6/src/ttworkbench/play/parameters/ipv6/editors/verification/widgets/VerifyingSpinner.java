@@ -4,13 +4,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Spinner;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
 
-public class VerifyingSpinner<P> extends VerifyingAdapter<Spinner,P> {
+public class VerifyingSpinner<P extends Value> extends VerifyingAdapter<Spinner,P> {
 
 	
 	public VerifyingSpinner( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<String> ... theVerifiers) {

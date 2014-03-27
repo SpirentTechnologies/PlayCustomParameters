@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 
+import com.testingtech.muttcn.kernel.Expression;
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.impl.ParameterChangedListener;
@@ -73,11 +75,11 @@ public class WidgetTableViewerAdvancedControl extends WidgetTableViewerControl {
 				protected CellEditor getCellEditor(final Object obj) {
 					Table table = getTableViewer().getTable();
 					if(obj instanceof IParameterEditor) {
-						return new CellParameterEditor(table) {
-							
+						return new CellParameterEditor<Value>(table) {
+
 							@SuppressWarnings("unchecked")
-							public IParameterEditor<Object> getEditor() {
-								return (IParameterEditor<Object>) obj;
+							public IParameterEditor<Value> getEditor() {
+								return (IParameterEditor<Value>) obj;
 							}
 						};
 					}
@@ -96,7 +98,7 @@ public class WidgetTableViewerAdvancedControl extends WidgetTableViewerControl {
 	}
 
 
-	protected <T> void checkCellListener(IParameterEditor<T> editor) {
+	protected <T extends Expression> void checkCellListener(IParameterEditor<T> editor) {
 		if(registeredListeners.add( editor)) {
 			IParameter<T> parameter = editor.getParameter();
 			parameter.addParameterChangedListener( new ParameterChangedListener<T>() {

@@ -36,6 +36,8 @@ public class IPEditor extends VerifyingEditor<Text, StringValue> {
 	private CLabel label;
 	private Text text;
 	private EventHandler handler; // not a generic Handler
+	
+	private static final int IP_LENGTH = 15;
 
 	public IPEditor() {
 		super( TITLE, DESCRIPTION);
@@ -87,9 +89,11 @@ public class IPEditor extends VerifyingEditor<Text, StringValue> {
 		text = (Text) inputControl.getControl();
 		// must be done after Textinitialisation, because of dependences.
 		text.setToolTipText( getParameter().getDescription());
+		text.setTextLimit( IP_LENGTH);
 
 		// set the Default Parameter Value
 		inputControl.forceText( getParameter().getDefaultValue().getTheContent());
+		
 	}
 
 	private void setVerifyerListenerToControl(final IVerifyingControl<?, StringValue> theInputControl) {

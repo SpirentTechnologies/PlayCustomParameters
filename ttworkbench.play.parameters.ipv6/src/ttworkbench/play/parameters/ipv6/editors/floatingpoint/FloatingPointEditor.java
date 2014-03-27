@@ -1,53 +1,28 @@
 package ttworkbench.play.parameters.ipv6.editors.floatingpoint;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.tools.ant.taskdefs.Local;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
-import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
-import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
-import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
-import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingSpinner;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
 import com.testingtech.muttcn.values.FloatValue;
-import com.testingtech.muttcn.values.IntegerValue;
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-
-import de.tu_berlin.cs.uebb.tools.util.Display;
 
 public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 	

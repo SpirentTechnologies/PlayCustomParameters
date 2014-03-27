@@ -2,13 +2,15 @@ package ttworkbench.play.parameters.ipv6.editors;
 
 import org.eclipse.swt.widgets.Control;
 
+import com.testingtech.muttcn.kernel.Value;
+
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.components.design.EditorStateFlag;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 
-public abstract class VerifyingEditor<C extends Control, P> extends ValidatingEditor<P> {
+public abstract class VerifyingEditor<C extends Control, P extends Value> extends ValidatingEditor<P> {
 	
 	private IVerifyingControl<? extends C,P> inputControl;
 	

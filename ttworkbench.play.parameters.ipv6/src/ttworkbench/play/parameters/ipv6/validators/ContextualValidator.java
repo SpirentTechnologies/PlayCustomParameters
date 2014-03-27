@@ -1,5 +1,6 @@
 package ttworkbench.play.parameters.ipv6.validators;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
@@ -15,11 +16,11 @@ public abstract class ContextualValidator extends AbstractValidator implements I
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> IParameter<T> getParameter( int index) {
+	public <T extends Value> IParameter<T> getParameter( int index) {
 		return (IParameter<T>) getContext().getParameters()[index];
 	}
 
-	public <T> IParameterEditor<T>[] getEditors( int index) {
+	public <T extends Value> IParameterEditor<T>[] getEditors( int index) {
 		IParameter<T> parameter = getParameter( index);
 		return getContext().getEditorsForParameter( parameter);
 	}

@@ -8,13 +8,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
-public class CellParameterEditorDialog extends Dialog {
+public class CellParameterEditorDialog<T extends Value> extends Dialog {
 
-	private IParameterEditor<Object> editor;
+	private IParameterEditor<T> editor;
 
-	public CellParameterEditorDialog( Shell parentShell, IParameterEditor<Object> editor) {
+	public CellParameterEditorDialog( Shell parentShell, IParameterEditor<T> editor) {
 		super( parentShell);
 		this.editor = editor;
 	}

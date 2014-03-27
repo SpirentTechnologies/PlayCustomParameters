@@ -7,9 +7,11 @@ import org.eclipse.swt.widgets.Group;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
+import com.testingtech.muttcn.kernel.Expression;
+import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class VerifyingRadio<P> extends VerifyingAdapter<Group,P>{
+public class VerifyingRadio<P extends Expression> extends VerifyingAdapter<Group,P>{
 
 	public VerifyingRadio( final IParameter<P> theParameter, Composite theParent, int theStyle, final IVerifier<String> ... theVerifiers) {
 		super( theParameter, theParent, theStyle, theVerifiers);

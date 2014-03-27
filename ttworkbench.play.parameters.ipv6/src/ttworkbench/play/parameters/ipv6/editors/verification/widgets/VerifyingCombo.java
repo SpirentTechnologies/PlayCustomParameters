@@ -7,13 +7,29 @@ import org.eclipse.swt.widgets.Event;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
+import com.testingtech.muttcn.kernel.Expression;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class VerifyingCombo<P> extends VerifyingAdapter<Combo,P>{
+public class VerifyingCombo<P extends Expression> extends VerifyingAdapter<Combo,P>{
+	
+	private final String defaultText;
 
 	public VerifyingCombo( final IParameter<P> theParameter, Composite theParent, int theStyle, final IVerifier<String> ... theVerifiers) {
-		super( theParameter, theParent, theStyle, theVerifiers);
+		this( theParameter, theParent, theStyle, "", theVerifiers);
 	}
+	
+	/**
+   * 
+   * @param theParameter
+   * @param theParent parent of the encapsulated control
+   * @param theStyle style of the encapsulated control
+   * @param theDefaultText text that is show instead of an empty field.
+   * @param theVerifiers verifiers which listen on SWT.Verify event.
+   */
+  public VerifyingCombo( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final String theDefaultText, final IVerifier<String> ... theVerifiers) {
+	  super( theParameter, theParent, theStyle, theVerifiers);
+	  this.defaultText = theDefaultText;
+  }
 
 	@Override
 	public void setText(String theText) {
@@ -36,6 +52,10 @@ public class VerifyingCombo<P> extends VerifyingAdapter<Combo,P>{
 		String leftString = currentText.substring( 0, beginIndex);
 		String rightString = currentText.substring( endIndex, currentText.length());
 		String modifiedText = leftString + insertion + rightString;
+		
+		if(modifiedText.length() > 17){
+			modifiedText = modifiedText.substring( 0, 17);
+		}
 
 		if ( modifiedText.isEmpty())
 			modifiedText = "00:00:00:00:00:00";

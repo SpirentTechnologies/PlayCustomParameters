@@ -8,6 +8,7 @@ import ttworkbench.play.parameters.ipv6.editors.ip.IPv6Verifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.OrVerifier;
 import ttworkbench.play.parameters.ipv6.widgets.IPWidget;
 
+import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfigurator;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
@@ -15,8 +16,8 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 public class IPWidgetComposer extends WidgetComposer {
 
 	// get relevant parameters
-	final IParameter<String> ipv4Parameter = getParametersMap().getParameterById( "PX_IPv4_ADDR_IUT");
-	final IParameter<String> floatParameter = getParametersMap().getParameterById( "PX_FLOAT_NUMBER");
+	final IParameter<StringValue> ipv4Parameter = getParametersMap().getParameterById( "PX_IPv4_ADDR_IUT");
+	final IParameter<StringValue> floatParameter = getParametersMap().getParameterById( "PX_FLOAT_NUMBER");
 
 	public IPWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 		super( theConfigurator, theParametersMap);

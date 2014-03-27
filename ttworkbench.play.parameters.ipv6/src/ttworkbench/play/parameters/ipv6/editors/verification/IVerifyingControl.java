@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Control;
 
+import com.testingtech.muttcn.kernel.Expression;
+
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
 
-public interface IVerifyingControl<C extends Control, P> extends IParameterControl<C, P> {
+public interface IVerifyingControl<C extends Control, P extends Expression> extends IParameterControl<C, P> {
 
 	/**
 	 * Set the text after a successfully passed verification process under use of

@@ -12,9 +12,9 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
-public class ValueLengthValidator extends FibValidator {
+public class ValueLengthValidator extends ContextualValidator {
 	public ValueLengthValidator() {
-		super("Parameter Value Length Validator");
+		super("Parameter Value Length Validator", "Checks if the value has the right length");
 	}
 	
 	@Override
@@ -30,12 +30,12 @@ public class ValueLengthValidator extends FibValidator {
     validationResults.add( new ValidationResultMessage(
     		
   		correctLength
-  			? String.format( "%s: The value of %s has not correct length. \"%s\" is not %s characters.",
+  			? String.format( "%s: This entry of %s doesn't have the correct length. \"%s\" doesn't contain %s characters.",
   					this.getTitle(),
   					parameter.getName(),
   					content,
   					value)
-  			: String.format( "%s: The value of %s has the correct number of characters.", this.getTitle(), parameter.getName()),
+  			: String.format( "%s: This entry of %s has the correct length.", this.getTitle(), parameter.getName()),
   			
   			correctLength
   			? ErrorKind.success
