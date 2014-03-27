@@ -36,6 +36,8 @@ import org.eclipse.swt.widgets.Text;
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
+import ttworkbench.play.parameters.ipv6.editors.octet.OctetRangeVerifier;
+import ttworkbench.play.parameters.ipv6.editors.octet.OctetType;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
@@ -43,16 +45,22 @@ import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
+import com.testingtech.muttcn.values.CharStringValue;
+import com.testingtech.muttcn.values.OctetStringValue;
 import com.testingtech.muttcn.values.StringValue;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class StringEditor extends VerifyingEditor<Text,StringValue> {
+public class StringEditor extends VerifyingEditor<Text,CharStringValue> {
 	
 	private static final String TITLE = "String Editor";
 	private static final String DESCRIPTION = "";
 	
+	private StringType stringType = StringType.STRING;
+	
 	private String regex;
 	
-	private IVerifier<String> regexVerifier;
+	private SimpleRegexVerifier regexVerifier;
+	private StringRangeVerifier stringRangeVerifier;
 	
 	public StringEditor() {
 		this( ".*");
@@ -62,6 +70,19 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 		super( TITLE, DESCRIPTION);
 		this.regex = theRegex;
 		regexVerifier = new SimpleRegexVerifier( regex);
+	}
+	
+	
+	@Override
+	public void setParameter(IParameter<CharStringValue> theParameter) {
+		super.setParameter( theParameter);
+		determineOctetType();
+	}
+	
+	private void determineOctetType() { 
+		String parameterType = getParameter().getType();
+		stringType = StringType.valueOfTypeName( parameterType);
+		stringRangeVerifier = new StringRangeVerifier( stringType);
 	}
 	
 	
@@ -76,7 +97,7 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 
 	
 	private void createInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Text, StringValue> inputControl = new VerifyingText<StringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, regexVerifier);
+		IVerifyingControl<Text, CharStringValue> inputControl = new VerifyingText<CharStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, regexVerifier, stringRangeVerifier);
 		
 		// assign input control to editor 
 		setInputControl( inputControl);
@@ -90,7 +111,7 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 	}
 	
 
-	private void setVerifyListenerToControl( final IVerifyingControl<Text,StringValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<Text,CharStringValue> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override
@@ -101,11 +122,29 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 			public void afterVerificationStep(final VerificationEvent<String> theEvent) {
 				final List<VerificationResult<String>> results = theEvent.verificationResults;
 				final VerificationResult<String> lastResult = results.get( results.size() -1);
-				if ( !lastResult.verified) {
-					getMessageView().flashMessages( lastResult.messages);
-				  // ignore after verification 
-					theEvent.skipVerification = true;
-					theEvent.doit = false;
+				
+				if ( lastResult.verifier instanceof SimpleRegexVerifier) {
+					if ( !lastResult.verified) {
+						getMessageView().flashMessages( lastResult.messages);
+						// ignore after verification 
+						theEvent.skipVerification = true;
+						theEvent.doit = false;
+					} else {
+						theEvent.doit = true;
+					}
+				}
+				
+				if ( lastResult.verifier instanceof StringRangeVerifier) {
+					if ( !lastResult.verified) {
+						getMessageView().showMessage( lastResult.messages.get( 0));
+						getMessageView().flashMessage( lastResult.messages.get( 1));
+						// ignore after verification 
+						theEvent.skipVerification = true;
+						theEvent.doit = true;
+					} else {
+						getMessageView().clearMessagesByTag( lastResult.messages.get( 0).tag);
+						theEvent.doit = true;
+					}
 				}
 			}
 			
@@ -117,8 +156,6 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 				validateDelayed( theInputControl);
 				theEvent.doit = true;
 			}
-			
-		
 		
 		});
 	}

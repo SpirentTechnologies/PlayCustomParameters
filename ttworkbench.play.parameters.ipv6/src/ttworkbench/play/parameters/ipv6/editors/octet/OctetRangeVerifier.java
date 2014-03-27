@@ -46,59 +46,59 @@ import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 public class OctetRangeVerifier implements IVerifier<String> {
 
 	final OctetType octetType;
-	
-	
+
+
 	public OctetRangeVerifier( final OctetType theOctetType) {
 		super();
 		this.octetType = theOctetType;
 	}
-	
-	
+
+
 	private static Long valueToOctets( BigInteger theValue) {
 		if ( theValue == null || theValue.compareTo( new BigInteger( "0")) <= 0)
 			return 0L;
-		
+
 		double valueLn = Math.log( theValue.doubleValue()) / Math.log(2);
 		long valueOctets = (long) Math.floor( valueLn / 8.0) +1;
-	  return valueOctets;
+		return valueOctets;
 	}
-	
+
 	private boolean isOctetPresentable( final Long theValueOctets, final Long theMaxAcceptedOctets) {
 		if ( theMaxAcceptedOctets == null)
 			return true;
 		return theMaxAcceptedOctets.compareTo( theValueOctets) >= 0;
 	}
-	
+
 	private String topOffValueWithZeros( final Long theValueOctets, final BigInteger theIntegerRepresentation, final Long theMinExpectedOctets) {
 		return StringUtils.repeat( "0", theMinExpectedOctets.intValue() -theValueOctets.intValue()) + theIntegerRepresentation.toString( 16);
 	}
 
-	
 
-	
-	
+
+
+
 	@Override
 	public VerificationResult<String> verify(String theInput, Object... theParams) {
 		BigInteger integerRepresentation = (BigInteger) theParams[0];
-		
+
 		Long valueOctets = valueToOctets( integerRepresentation);
 		Long minOctets = octetType.getMinOctets();
 		Long maxOctets = octetType.getMaxOctets();
- 
+
 		boolean rangeVerified = isOctetPresentable( valueOctets, maxOctets);
-		
+
 		String zeroFilledInput = topOffValueWithZeros( valueOctets, integerRepresentation, minOctets);
-		
+
 		String infty = DecimalFormatSymbols.getInstance().getInfinity();
-	  String minBound = octetType.getMinOctets() == null ? "0" : octetType.getMinOctets().toString();
-	  String maxBound = octetType.getMaxOctets() == null ? infty : octetType.getMaxOctets().toString();
-	  
+		String minBound = octetType.getMinOctets() == null ? "0" : octetType.getMinOctets().toString();
+		String maxBound = octetType.getMaxOctets() == null ? infty : octetType.getMaxOctets().toString();
+
 		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input \"%s\" violates format.", theInput), ErrorKind.warning); 
 		MessageRecord codomainInfo = new MessageRecord( "valid_chars_info", String.format( "Only values in range of [%s,%s] octets accepted.", minBound, maxBound), ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, codomainInfo); 
 		return new VerificationResult<String>( this, theInput, zeroFilledInput, rangeVerified, messages);
-}
+	}
 
-	
+
 
 }

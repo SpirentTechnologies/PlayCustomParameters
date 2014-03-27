@@ -147,6 +147,7 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 				    theEvent.skipVerification = true;
 				    theEvent.doit = false;
 					} else {
+						// pack resulting output as parameter for next verification step
 						theEvent.verifierParams = new Object[]{lastResult.output};
 						theEvent.doit = true;
 					}

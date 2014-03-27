@@ -31,7 +31,6 @@ import java.math.BigInteger;
 public enum OctetType {
 	UNDEFINED( "Undefined", null, null),
 	
-	// unsigned integer
 	OCT( "octetstring", 0L, null),
 	OCT_1( "Oct1", 1L, 1L),
 	OCT_2( "Oct2", 2L, 2L),
