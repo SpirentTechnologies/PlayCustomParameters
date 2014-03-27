@@ -95,7 +95,7 @@
 
 		<widget name="Strings">
 			<description>String editor</description>
-			<editor parameterId="PX_SOME_STRING"> 
+			<editor parameterId="PX_SOME_STRING" > 
 			  <attribute name="regex">^S.*</attribute>  
 			</editor>
 			<editor parameterId="PX_SOME_String10" />
