@@ -1,15 +1,13 @@
 package ttworkbench.play.parameters.ipv6.editors.verification.widgets;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 
-import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
-
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
+
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 
 public class VerifyingText<P> extends VerifyingAdapter<Text,P> {

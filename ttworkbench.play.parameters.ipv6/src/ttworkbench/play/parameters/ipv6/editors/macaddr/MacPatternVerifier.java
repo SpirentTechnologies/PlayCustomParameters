@@ -5,36 +5,39 @@ import java.util.List;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
+import ttworkbench.play.parameters.ipv6.editors.verification.RegexVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
-public class MacPatternVerifier implements IVerifier<String>{
+public class MacPatternVerifier extends RegexVerifier{
 
-	private static final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})$";
-	private static final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]){5}([0-9a-fA-F]{2})$";
+	private static final String MAC_PATTERN1 = "^(?:[a-fA-F0-9]{2}([-:]))(?:[a-fA-F0-9]{2}\\1){4}[a-fA-F0-9]{2}$";
 	
 	private static final String  MAC_VALID_ENTRY_MESSAGE = "valid entries: Alphanumerical (a-f) seperated with \":\" or \"-\"";
-	
-	private boolean isMac( String theInput){
-		if(theInput.length() < 17){
-			return true;
-		}else {
-			System.out.println(theInput);	
-			return (theInput.matches( MAC_PATTERN1)) || (theInput.matches( MAC_PATTERN2));
-		}
-		
+
+	@Override
+	protected String regex() {
+		// TODO Auto-generated method stub
+		return MAC_PATTERN1;
 	}
 	@Override
-	public VerificationResult<String> verify(String theInput, Object... theParams) {
+	protected String validMessageText(String theInput) {
 		// TODO Auto-generated method stub
-		boolean isMac = isMac(theInput);
-		
-		MessageRecord invalidEntryMessage = new MessageRecord("invalid_input_warning", "The Entry is rejected", ErrorKind.warning);
-		MessageRecord macValidEntryInfo = new MessageRecord("valid_entry_info", MAC_VALID_ENTRY_MESSAGE, ErrorKind.info);
-		List<MessageRecord> messages = Arrays.asList( invalidEntryMessage, macValidEntryInfo);
-		
-		return new VerificationResult<String>( this, theInput, isMac, messages);
+		String validMessage = "This entry is valid MAC-Address";
+		return validMessage;
+	}
+	@Override
+	protected String notValidMessageText(String theInput) {
+		// TODO Auto-generated method stub
+		System.out.println("result of my regular expression: " + MAC_PATTERN1.matches( theInput.trim()));
+		System.out.println("my input: "+ theInput);
+		return String.format( "\"%s\" is not a valid MAC-Address.", theInput);
+	}
+	@Override
+	protected String helpValue() {
+		// TODO Auto-generated method stub
+		return "MAC-Address";
 	}
 
 }

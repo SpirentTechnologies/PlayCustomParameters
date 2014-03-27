@@ -38,6 +38,7 @@ import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
 import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
 import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
+import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
@@ -64,11 +65,15 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 	private  MacCharVerifier macCharVerifier = new MacCharVerifier();
 	
 	private IParameterValueProvider macValueProvider = new MacValueProvider();
-	
-	
+	private IVerifier<String> verifier;
 	
 	public MacAddressEditor() {
 		  super( TITLE, DESCRIPTION);
+	}
+	
+	public MacAddressEditor( final IVerifier<String> verifier) {
+		this();
+		this.verifier = verifier;
 	}
 		
 
@@ -92,7 +97,8 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 	}
 	
 	private void createComboBox( Composite theComposite, Object theLayoutData){
-		IVerifyingControl<Combo, StringValue> inputControl = new VerifyingCombo<StringValue>( getParameter(), theComposite, SWT.BORDER, macCharVerifier, macRangeVerifier, macPatternVerifier);
+		IVerifyingControl<Combo, StringValue> inputControl = new VerifyingCombo<StringValue>( getParameter(), theComposite, SWT.BORDER);
+		inputControl.addVerifierToEvent( verifier, SWT.Verify);
 		setInputControl( inputControl);
 		final Combo macCombo = inputControl.getControl();
 		final Rectangle dimensions = new Rectangle(50, 50, 200, 65);
@@ -112,6 +118,9 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 		
 		macCombo.setForeground(theComposite.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		setVerifyListenerToControl( inputControl);
+		
+		// set the Default Parameter Value
+		inputControl.forceText( getParameter().getDefaultValue().getTheContent());
 	}
 	
 	private void setVerifyListenerToControl( final IVerifyingControl<?,StringValue> theInputControl) {
@@ -125,10 +134,10 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 				final List<VerificationResult<String>> results = theEvent.verificationResults;
 				final VerificationResult<String> lastResult = results.get( results.size() -1);
 				if ( !lastResult.verified) {
-					getMessageView().flashMessages( lastResult.messages);
+					theEvent.doit = true;
 					theEvent.skipVerification = true;
-					theEvent.doit = false;
 				}
+				getMessageView().showMessages( lastResult.messages);
 			}
 			
 			@Override
@@ -136,9 +145,7 @@ public class MacAddressEditor extends VerifyingEditor<Combo,StringValue> {
 				// verification passed, then write the value to parameter
 				forceParameterValue( theEvent.inputToVerify);
 				System.out.println("my parameter" + getParameter().getValue().getTheContent());
-				// and start the validation process
 				validateDelayed(theInputControl);
-				
 				theEvent.doit = true;
 			}
 		});
