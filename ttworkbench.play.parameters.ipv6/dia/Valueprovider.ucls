@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.5" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" language="java" name="ttworkbench.play.parameters.ipv6.valueproviders.EnumValueProvider" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/valueproviders/EnumValueProvider.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="169" width="247" x="124" y="77"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="ttworkbench.play.parameters.ipv6.valueproviders.IPValueProvider" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/valueproviders/IPValueProvider.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="534" y="220"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="ttworkbench.play.parameters.ipv6.valueproviders.MacValueProvider" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/valueproviders/MacValueProvider.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="823" y="160"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="4" language="java" name="com.testingtech.ttworkbench.ttman.parameters.api.IParameterValueProvider" 
+    project="com.testingtech.ttworkbench.ttman.parameters" 
+    file="/com.testingtech.ttworkbench.ttman.parameters/src/com/testingtech/ttworkbench/ttman/parameters/api/IParameterValueProvider.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="535" y="-19"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <realization id="5">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <realization id="6">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <realization id="7">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="false" static="true"/>    
+    <operations public="true" package="true" protected="true" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
