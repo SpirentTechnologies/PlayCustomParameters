@@ -97,7 +97,7 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 		String parameterString = ParameterValueUtil.getValue( getParameter());
 		String currentString = getInputControl().getText();
 		if ( !parameterString.equals( currentString)) {
-			getInputControl().forceText( ParameterValueUtil.getValue( getParameter()));
+			getInputControl().setText( ParameterValueUtil.getValue( getParameter()));
 			getControl().layout();
 		}
 	}

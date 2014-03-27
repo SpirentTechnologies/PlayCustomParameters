@@ -47,7 +47,7 @@ import com.testingtech.muttcn.values.FloatValue;
 
 public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 	
-	private static final String TITLE = "Integer Editor";
+	private static final String TITLE = "Floating Point Editor";
 	private static final String DESCRIPTION = "";
 	
 	private List<Locale> locales;
