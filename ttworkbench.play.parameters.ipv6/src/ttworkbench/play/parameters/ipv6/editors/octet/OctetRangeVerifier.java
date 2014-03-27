@@ -93,7 +93,7 @@ public class OctetRangeVerifier implements IVerifier<String> {
 		String minBound = octetType.getMinOctets() == null ? "0" : octetType.getMinOctets().toString();
 		String maxBound = octetType.getMaxOctets() == null ? infty : octetType.getMaxOctets().toString();
 
-		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input \"%s\" violates format.", theInput), ErrorKind.warning); 
+		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input \"%s\" violates range.", theInput), ErrorKind.warning); 
 		MessageRecord codomainInfo = new MessageRecord( "valid_chars_info", String.format( "Only values in range of [%s,%s] octets accepted.", minBound, maxBound), ErrorKind.info);
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, codomainInfo); 
 		return new VerificationResult<String>( this, theInput, zeroFilledInput, rangeVerified, messages);

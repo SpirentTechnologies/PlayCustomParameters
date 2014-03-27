@@ -46,16 +46,16 @@ public class OctetTypeVerifier implements IVerifier<String> {
 //	private static final String REGEX_DECIMAL = "^(-|\\+)?([1-9][0-9]*)$";
 //	private static final String REGEX_HEXADECIMAL = "^(-|\\+)?([0-9A-Fa-f]+)$";
 //	private static final String REGEX_HEX_0x = "(-|\\+)?0[x|X]([0-9A-Fa-f]+)$";
-//	private static final String REGEX_HEX_h = "^(-|\\+)?([0-9A-Fa-f])+h$";
-//	private static final String REGEX_HEX_SHARP = "^(-|\\+)?#([0-9A-Fa-f])+$";
+//	private static final String REGEX_HEX_h = "^(-|\\+)?([0-9A-Fa-f]+)h$";
+//	private static final String REGEX_HEX_SHARP = "^(-|\\+)?#([0-9A-Fa-f]+)$";
 //	private static final String REGEX_HEX_STRING = "^'(-|\\+)?([0-9A-Fa-f]+)'O$";
 //
 	private static final String REGEX_OCTAL = "^0([0-7]+)$";
 	private static final String REGEX_DECIMAL = "^([1-9][0-9]*)$";
 	private static final String REGEX_HEXADECIMAL = "^([0-9A-Fa-f]+)$";
 	private static final String REGEX_HEX_0x = "0[x|X]([0-9A-Fa-f]+)$";
-	private static final String REGEX_HEX_h = "^([0-9A-Fa-f])+h$";
-	private static final String REGEX_HEX_SHARP = "^#([0-9A-Fa-f])+$";
+	private static final String REGEX_HEX_h = "^([0-9A-Fa-f]+)h$";
+	private static final String REGEX_HEX_SHARP = "^#([0-9A-Fa-f]+)$";
 	private static final String REGEX_HEX_STRING = "^'([0-9A-Fa-f]+)'O$";
 	
 	private static String extract( final String theValue, final String thePattern) {
@@ -118,7 +118,7 @@ public class OctetTypeVerifier implements IVerifier<String> {
 	 
 		boolean typeVerified = integerRepresentation != null;
 	
-		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", theInput), ErrorKind.warning); 
+		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input \"%s\" violates format.", theInput), ErrorKind.warning); 
 		MessageRecord acceptedValuesInfo = new MessageRecord( "valid_chars_info", "Valid notations of 8 are e.g. 010, 8, 8h, #8, 0x8, '8'O .", ErrorKind.info); 
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, acceptedValuesInfo); 
 		return new VerificationResult<String>( this, theInput, integerRepresentation, typeVerified, messages);

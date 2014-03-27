@@ -141,13 +141,18 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 				final List<VerificationResult<String>> results = theEvent.verificationResults;
 				final VerificationResult<String> lastResult = results.get( results.size() -1);
 				
+				
 				if ( lastResult.verifier instanceof OctetTypeVerifier) {
 					if ( !lastResult.verified) {
-						getMessageView().flashMessages( lastResult.messages);
+						// insert not acceptable key
+						getMessageView().showMessage( lastResult.messages.get( 0));
+						getMessageView().flashMessage( lastResult.messages.get( 1));
 				    theEvent.skipVerification = true;
-				    theEvent.doit = false;
+				    theEvent.doit = true;
 					} else {
 						// pack resulting output as parameter for next verification step
+						theEvent.verifierParams = new Object[]{lastResult.output};
+						getMessageView().clearMessagesByTag( lastResult.messages.get( 0).tag);
 						theEvent.verifierParams = new Object[]{lastResult.output};
 						theEvent.doit = true;
 					}
