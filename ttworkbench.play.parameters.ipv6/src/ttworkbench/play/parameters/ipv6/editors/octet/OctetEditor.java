@@ -212,7 +212,7 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 
 	@Override
 	public IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour() {
-		return new IntegerEditorLookAndBehaviour();
+		return new OctetEditorLookAndBehaviour();
 	}
 	
 

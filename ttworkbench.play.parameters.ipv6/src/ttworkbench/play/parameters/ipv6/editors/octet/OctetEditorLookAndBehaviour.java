@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Layout;
 
 import ttworkbench.play.parameters.ipv6.customize.DefaultEditorLookAndBehaviour;
 
-public class IntegerEditorLookAndBehaviour extends DefaultEditorLookAndBehaviour {
+public class OctetEditorLookAndBehaviour extends DefaultEditorLookAndBehaviour {
 
 	@Override
 	public Layout getLayout() {
