@@ -93,24 +93,39 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 			 theTextControl.setSize( theTextControl.computeSize( minWidth, SWT.DEFAULT));
 	}
 	
+	private void reloadAndSetParameterValue() {
+		String parameterString = ParameterValueUtil.getValue( getParameter());
+		String currentString = getInputControl().getText();
+		if ( !parameterString.equals( currentString)) {
+			getInputControl().forceText( ParameterValueUtil.getValue( getParameter()));
+			getControl().layout();
+		}
+	}
 
-	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
 		IVerifyingControl<Text, OctetStringValue> inputControl = new VerifyingText<OctetStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, octetTypeVerifier, octetRangeVerifier);
 		setInputControl( inputControl);
 		
 		setVerifyListenerToControl( inputControl);
 		
-		Text text = inputControl.getControl();
+		final Text text = inputControl.getControl();
 		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
 		
 		text.addListener( SWT.FocusOut, new Listener() {
 			
 			@Override
-			public void handleEvent(Event theArg0) {
-				if ( getInputControl().getText().isEmpty())
-					getInputControl().setText( "0");
+			public void handleEvent(Event theEvent) {
+				reloadAndSetParameterValue();
+			}
+		});
+
+		text.addListener( SWT.KeyDown, new Listener() {
+			@Override
+			public void handleEvent(Event theEvent) {
+				if ( theEvent.keyCode == SWT.CR) {
+					reloadAndSetParameterValue();
+				}
 			}
 		});
 	}
@@ -151,13 +166,17 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 			}
 			
 			@Override
-			public void afterVerification(final VerificationEvent<String> theEvent) {	
+			public void afterVerification(final VerificationEvent<String> theEvent) {
+				// get the normalized representation  
+				final List<VerificationResult<String>> results = theEvent.verificationResults;
+				final VerificationResult<String> lastResult = results.get( results.size() -1);
+				String zeroFilledInput = (String) lastResult.output;
+				
 				// verification passed, then write the value to parameter
-				forceParameterValue( theEvent.inputToVerify);
+				forceParameterValue( zeroFilledInput);
 				// and start the validation process
 				validateDelayed( theInputControl);
 				theEvent.doit = true;
-				//OctetEditor.this.getControl().update();
 			}
 			
 			

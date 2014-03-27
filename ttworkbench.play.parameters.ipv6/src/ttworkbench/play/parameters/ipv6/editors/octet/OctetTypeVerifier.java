@@ -119,7 +119,7 @@ public class OctetTypeVerifier implements IVerifier<String> {
 		boolean typeVerified = integerRepresentation != null;
 	
 		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", theInput), ErrorKind.warning); 
-		MessageRecord acceptedValuesInfo = new MessageRecord( "valid_chars_info", "Accept 0[0-7]+ as octal, [1-9][0-9]* as decimal and [0-9A-F]+h, #[0-9A-F], 0x[0-9A-F], '[0-9A-F]+'O as hexadecimal representations.", ErrorKind.info); 
+		MessageRecord acceptedValuesInfo = new MessageRecord( "valid_chars_info", "Valid notations of 8 are e.g. 010, 8, 8h, #8, 0x8, '8'O .", ErrorKind.info); 
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, acceptedValuesInfo); 
 		return new VerificationResult<String>( this, theInput, integerRepresentation, typeVerified, messages);
 
