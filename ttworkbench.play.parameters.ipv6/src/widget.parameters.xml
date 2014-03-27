@@ -29,6 +29,16 @@
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enums.EnumEditor">
 			<expression>^boolean$</expression>
 		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.string.StringEditor">
+			<expression>^charstring$</expression>
+		  <expression>^String\d+$</expression>
+		  <expression>^String\d+to\d+$</expression>
+		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.octet.OctetEditor">
+			<expression>^octetstring$</expression>
+			<expression>^Oct\d+$</expression>
+			<expression>^Oct\d+to\d+$</expression>
+		</editor>
 	</types>
 
 	<widgets>
@@ -79,6 +89,22 @@
 			<editor parameterId="PX_FLOAT_NUMBER">
 			  <attribute name="locale">en,de</attribute>
 			</editor>
+		</widget>
+
+		<widget name="Strings">
+			<description>String editor</description>
+			<editor parameterId="PX_SOME_STRING"> 
+			  <attribute name="regex">^S.*</attribute>  
+			</editor>
+			<editor parameterId="PX_SOME_String10" />
+			<editor parameterId="PX_SOME_String1to255" />
+		</widget>
+		
+		<widget name="Octets">
+			<description>Octet editor</description>
+			<editor parameterId="PX_SOME_OCTET" />
+			<editor parameterId="PX_SOME_Oct2" />
+			<editor parameterId="PX_SOME_Oct6to15" />
 		</widget>
 		
 		<widget name="Enum Widget">

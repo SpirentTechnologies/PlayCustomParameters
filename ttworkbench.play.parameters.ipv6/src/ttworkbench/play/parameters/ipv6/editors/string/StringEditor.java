@@ -1,6 +1,8 @@
 package ttworkbench.play.parameters.ipv6.editors.string;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -27,9 +29,9 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 	private static final String TITLE = "String Editor";
 	private static final String DESCRIPTION = "";
 	
-	private final String regex;
+	private String regex;
 	
-	private final IVerifier<String> regexVerifier;
+	private IVerifier<String> regexVerifier;
 	
 	public StringEditor() {
 		this( ".*");
@@ -42,9 +44,14 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 	}
 	
 	
-
-
-	
+	@Override
+	public void setAttribute(String theName, String theValue) {
+		if ( theName.equalsIgnoreCase( "regex")) {
+			regex = theValue.isEmpty() ? ".*" : theValue;
+			regexVerifier = new SimpleRegexVerifier( regex);
+		}
+		super.setAttribute( theName, theValue);
+	}
 
 	
 	private void createInputWidget( Composite theComposite, Object theLayoutData) {
@@ -52,13 +59,13 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 		
 		// assign input control to editor 
 		setInputControl( inputControl);
+		
+		setVerifyListenerToControl( inputControl);
 
 		// initialize input control
 		Text text = inputControl.getControl();
 		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
-		
-		setVerifyListenerToControl( inputControl);
 	}
 	
 
@@ -107,7 +114,7 @@ public class StringEditor extends VerifyingEditor<Text,StringValue> {
 		labelId.setToolTipText( toolTipString);
 		
 		createInputWidget( theContainer, layoutData[0]);
-			
+		
 		Button reset = new Button (theContainer, SWT.PUSH);
 		reset.setText ("Reset");
 		reset.addSelectionListener( new SelectionAdapter() {
