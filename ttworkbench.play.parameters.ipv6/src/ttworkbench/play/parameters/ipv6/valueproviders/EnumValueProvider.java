@@ -80,6 +80,10 @@ public class EnumValueProvider<T extends Expression> implements IParameterValueP
 		public NamedConstantValue() {
 			super();
 		}
+		@Override
+		public String toString() {
+			return getTheName().getTheName();
+		}
 		public NamedConstantValue(String theName) {
 			this(new NameImpl() {
 				@Override
@@ -229,16 +233,18 @@ public class EnumValueProvider<T extends Expression> implements IParameterValueP
 			}
       
 
-	    ArrayList<String> listNames = typeInterpreter.getAllEnumNames();
-	    for(String nam : listNames) {
-		    ValueGenerator gen = new ValueGenerator(repositoryView);
-		    Expression exp = gen.generateEnumeratedValue( typeInterpreter, nam);
-		    System.out.println(exp.getTheName());
-		    enumValues.add( (T) exp);
-	    }
-	    if(listNames.size()<1) {
-	    	throw new Exception("The TypeInterpreter could not find any enum names.");
-	    }
+      if(enumValues.isEmpty()) {
+		    ArrayList<String> listNames = typeInterpreter.getAllEnumNames();
+		    for(String nam : listNames) {
+			    ValueGenerator gen = new ValueGenerator(repositoryView);
+			    Expression exp = gen.generateEnumeratedValue( typeInterpreter, nam);
+			    System.out.println(exp.getTheName());
+			    enumValues.add( (T) exp);
+		    }
+		    if(listNames.size()<1) {
+		    	throw new Exception("The TypeInterpreter could not find any enum names.");
+		    }
+      }
 		}
 		catch(Exception e) {
 			System.err.println("Could not find available values for \""+theParameter.getName()+"\": "+e.getMessage());

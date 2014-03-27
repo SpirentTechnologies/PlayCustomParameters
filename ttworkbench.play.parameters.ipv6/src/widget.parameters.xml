@@ -27,9 +27,17 @@
 			<attribute name="verifiers">ipv4,ipv6</attribute>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enums.EnumEditor">
-			<!-- <expression>^boolean$</expression>-->
+			<expression>^boolean$</expression>
 			<expression>^CampaignType$</expression>
 			<expression>^IpSecSwitch$</expression>
+			<expression>^IpSecControl$</expression>
+			<expression>^IpSecProtocolMode$</expression>
+			<expression>^ConfigId$</expression>
+			<expression>^EncryptionAlgo$</expression>
+			<expression>^PseudoRandomFunction$</expression>
+			<expression>^IntegrityAlgo$</expression>
+			<expression>^DiffieHellmanGroup$</expression>
+			<expression>^IutRole$</expression>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.string.StringEditor">
 			<expression>^charstring$</expression>

@@ -7,7 +7,6 @@ import org.etsi.ttcn.tci.UniversalCharValue;
 
 import com.testingtech.muttcn.expressions.ValueExpression;
 import com.testingtech.muttcn.kernel.Expression;
-import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.muttcn.values.BitStringValue;
 import com.testingtech.muttcn.values.CallValue;
 import com.testingtech.muttcn.values.CharStringValue;
@@ -109,7 +108,7 @@ public class ParameterValueUtil {
    		return ( (ValueExpression) value).toString();
   	
   	// unknown
-  	return value.toString();
+  	return value!=null ? value.toString() : null;
   }
   
   
