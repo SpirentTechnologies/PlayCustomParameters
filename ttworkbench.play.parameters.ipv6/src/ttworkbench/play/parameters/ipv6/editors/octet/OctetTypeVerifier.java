@@ -20,24 +20,29 @@ import de.tu_berlin.cs.uebb.muttcn.runtime.Default;
 
 public class OctetTypeVerifier implements IVerifier<String> {
 
-	
-	private static final String REGEX_OCTAL = "^(-|\\+)?0([0-7]+)$";
-	private static final String REGEX_DECIMAL = "^(-|\\+)?([1-9][0-9]*)$";
-	private static final String REGEX_HEXADECIMAL = "^(-|\\+)?([0-9A-Fa-f]+)$";
-	private static final String REGEX_HEX_0x = "(-|\\+)?0[x|X]([0-9A-Fa-f]+)$";
-	private static final String REGEX_HEX_h = "^(-|\\+)?([0-9A-Fa-f])+h$";
-	private static final String REGEX_HEX_SHARP = "^(-|\\+)?#([0-9A-Fa-f])+$";
-	private static final String REGEX_HEX_STRING = "^'(-|\\+)?([0-9A-Fa-f]+)'O$";
-
+//	// allow negative values 
+//	private static final String REGEX_OCTAL = "^(-|\\+)?0([0-7]+)$";
+//	private static final String REGEX_DECIMAL = "^(-|\\+)?([1-9][0-9]*)$";
+//	private static final String REGEX_HEXADECIMAL = "^(-|\\+)?([0-9A-Fa-f]+)$";
+//	private static final String REGEX_HEX_0x = "(-|\\+)?0[x|X]([0-9A-Fa-f]+)$";
+//	private static final String REGEX_HEX_h = "^(-|\\+)?([0-9A-Fa-f])+h$";
+//	private static final String REGEX_HEX_SHARP = "^(-|\\+)?#([0-9A-Fa-f])+$";
+//	private static final String REGEX_HEX_STRING = "^'(-|\\+)?([0-9A-Fa-f]+)'O$";
+//
+	private static final String REGEX_OCTAL = "^0([0-7]+)$";
+	private static final String REGEX_DECIMAL = "^([1-9][0-9]*)$";
+	private static final String REGEX_HEXADECIMAL = "^([0-9A-Fa-f]+)$";
+	private static final String REGEX_HEX_0x = "0[x|X]([0-9A-Fa-f]+)$";
+	private static final String REGEX_HEX_h = "^([0-9A-Fa-f])+h$";
+	private static final String REGEX_HEX_SHARP = "^#([0-9A-Fa-f])+$";
+	private static final String REGEX_HEX_STRING = "^'([0-9A-Fa-f]+)'O$";
 	
 	private static String extract( final String theValue, final String thePattern) {
 		Pattern pattern = Pattern.compile( thePattern);
     Matcher matcher = pattern.matcher( theValue);
     if (matcher.find() &&
-      matcher.groupCount() > 1) {
-    	String result = matcher.group( 1) != null ? matcher.group( 1) : "";
-    	result += matcher.group( 2) != null ? matcher.group( 2) : "";
-    	return result;
+      matcher.groupCount() > 0) {
+    	return matcher.group( 1);
     }
     return null;
 	}
@@ -82,18 +87,18 @@ public class OctetTypeVerifier implements IVerifier<String> {
 		return bigInteger;
 	}
 
-	
+
 	
 	
 	
 	@Override
 	public VerificationResult<String> verify( String theInput, Object... theParams) {
 		BigInteger integerRepresentation = extractOctet( theInput);
-		
+	 
 		boolean typeVerified = integerRepresentation != null;
 	
 		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", theInput), ErrorKind.warning); 
-		MessageRecord acceptedValuesInfo = new MessageRecord( "valid_chars_info", "Accept 0x[0-7]+ as octal, [1-9][0-9]* as decimal and [0-9A-F]+h, #[0-9A-F], 0x[0-9A-F], '[0-9A-F]+'O as hexadecimal representations.", ErrorKind.info); 
+		MessageRecord acceptedValuesInfo = new MessageRecord( "valid_chars_info", "Accept 0[0-7]+ as octal, [1-9][0-9]* as decimal and [0-9A-F]+h, #[0-9A-F], 0x[0-9A-F], '[0-9A-F]+'O as hexadecimal representations.", ErrorKind.info); 
 		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, acceptedValuesInfo); 
 		return new VerificationResult<String>( this, theInput, integerRepresentation, typeVerified, messages);
 
