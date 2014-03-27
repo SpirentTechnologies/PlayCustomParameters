@@ -45,7 +45,7 @@ public class IntegerRangeVerifier implements IVerifier<String> {
 			return maxValue.compareTo( value) >= 0;
 
   	if ( minValue != null && maxValue == null)
-		  return minValue.compareTo( value) >= 0;
+		  return minValue.compareTo( value) <= 0;
 
 		return false;
 	}

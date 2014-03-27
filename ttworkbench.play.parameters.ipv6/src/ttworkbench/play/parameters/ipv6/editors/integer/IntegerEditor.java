@@ -88,6 +88,8 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		IVerifyingControl<Text, IntegerValue> inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, "0", integerTypeVerifier, integerRangeVerifier);
 		setInputControl( inputControl);
 		
+		setVerifyListenerToControl( inputControl);
+		
 		Text text = inputControl.getControl();
 		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
@@ -96,8 +98,6 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		  text.setTextLimit( maxNeededChars);
 		  setWidthForText( text, maxNeededChars);
 		}
-		
-		setVerifyListenerToControl( inputControl);
 		
 		text.addListener( SWT.FocusOut, new Listener() {
 			
@@ -113,6 +113,8 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		IVerifyingControl<Spinner, IntegerValue> inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerifier, integerRangeVerifier);
 		setInputControl( inputControl);
 		
+		setVerifyListenerToControl( inputControl);	
+		
 		Spinner spinner = inputControl.getControl();
 		spinner.setMinimum( integerType.getMinValue().intValue());
 		spinner.setMaximum( integerType.getMaxValue().intValue());
@@ -121,8 +123,6 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		spinner.setPageIncrement( 100);
 		spinner.setTextLimit( integerType.getMaxValue().toString().length());
 		spinner.setLayoutData( theLayoutData);
-
-		setVerifyListenerToControl( inputControl);	
 	}
 
 	private void setVerifyListenerToControl( final IVerifyingControl<?,IntegerValue> theInputControl) {
@@ -186,6 +186,8 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 				super.widgetSelected( theEvent);
 			}
 		});
+		
+		theContainer.pack();
 	}
 
 	@Override

@@ -53,14 +53,14 @@ public class FloatTypeVerifier implements IVerifier<String> {
 	}
 
 	private boolean isValueAnFloatPreTest( String theValue) {
-		final String floatRegex = "(-|\\+)?[0-9]{1,3}(%s?[0-9]{3})*(%s([0-9]{3}%s?)*[0-9]{1,3})?(%s(-|\\+)?[0-9]+)?";
+		final String floatRegex = "(-|\\+)?[0-9]{1,3}(%s?[0-9]{3})*(%s[0-9]+)?(%s(-|\\+)?[0-9]+)?";
 		try {
 			DecimalFormatSymbols dfs = new DecimalFormatSymbols( locale);
 			final String groupingSeparator = escapeRegex( dfs.getGroupingSeparator());
 			final String decimalSeparator = escapeRegex( dfs.getDecimalSeparator());
 			final String exponentSeparator = escapeRegex( dfs.getExponentSeparator());
 			
-			String localizedFloatRegex = String.format( floatRegex, groupingSeparator, decimalSeparator, groupingSeparator, exponentSeparator);
+			String localizedFloatRegex = String.format( floatRegex, groupingSeparator, decimalSeparator, exponentSeparator);
 			return theValue.matches( localizedFloatRegex);
 		} catch (Exception e) {
 			return false;

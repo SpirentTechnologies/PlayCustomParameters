@@ -1,6 +1,5 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +17,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.internal.operations.AdvancedValidationUserApprover;
-
 
 import ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView;
 import ttworkbench.play.parameters.ipv6.components.messaging.views.MessageListener;

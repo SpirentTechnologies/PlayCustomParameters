@@ -10,26 +10,36 @@
 		  <expression>^float$</expression>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.macaddr.MacAddressEditor">	
-			<expression>^PC_MAC_UCA_HS01$</expression> <!-- valid? -->
+			<expression>^PX_MAC_UCA_HS01$</expression> <!-- valid? -->
 			<expression>^MacAddress$</expression> <!-- valid? -->
-			<expression>^MacLayer$</expression>
+			<expression>^MacAddress$</expression>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
-			<expression>^Ipv6Address$</expression>
+			<expression>^Ipv6AddressStr$</expression>
 			<attribute name="verifiers">ipv6</attribute>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
-			<expression>^Ipv4Address$</expression>			
+			<expression>^Ipv4AddressStr$</expression> <!-- not implemented yet -->			
 			<attribute name="verifiers">ipv4</attribute>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
-			<expression>^Address$</expression>						
+			<expression>^Address$</expression> <!-- not implemented yet -->						
 			<attribute name="verifiers">ipv4,ipv6</attribute>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enums.EnumEditor">
 			<!-- <expression>^boolean$</expression>-->
 			<expression>^CampaignType$</expression>
 			<expression>^IpSecSwitch$</expression>
+		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.string.StringEditor">
+			<expression>^charstring$</expression>
+		  <expression>^String\d+$</expression>
+		  <expression>^String\d+to\d+$</expression>
+		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.octet.OctetEditor">
+			<expression>^octetstring$</expression>
+			<expression>^Oct\d+$</expression>
+			<expression>^Oct\d+to\d+$</expression>
 		</editor>
 	</types>
 
@@ -52,12 +62,16 @@
 			<editor parameterId="PX_NET_DEVICE_ID_1" />
 			<editor parameterId="PX_MAC_LAYER" />
 			<editor parameterId="PX_TEST_CAMPAIGN" />
+			
+			<editor parameterId="PX_MAC_UCA_HS01" />
+			<editor parameterId="PX_MAC_UCA_HS02" />
 		</widget>
 		
 		
 		<widget name="Custom MAC Widget">
 			<description>MAC addresses editor</description>
 			<editor parameterId="PX_MAC_UCA_HS01" />
+			<editor parameterId="PX_MAC_UCA_HS02" />
 		</widget>
 	
 		<widget name="Fibonacci">
@@ -77,6 +91,22 @@
 			<editor parameterId="PX_FLOAT_NUMBER">
 			  <attribute name="locale">en,de</attribute>
 			</editor>
+		</widget>
+
+		<widget name="Strings">
+			<description>String editor</description>
+			<editor parameterId="PX_SOME_STRING"> 
+			  <attribute name="regex">^S.*</attribute>  
+			</editor>
+			<editor parameterId="PX_SOME_String10" />
+			<editor parameterId="PX_SOME_String1to255" />
+		</widget>
+		
+		<widget name="Octets">
+			<description>Octet editor</description>
+			<editor parameterId="PX_SOME_OCTET" />
+			<editor parameterId="PX_SOME_Oct2" />
+			<editor parameterId="PX_SOME_Oct6to15" />
 		</widget>
 		
 		<widget name="Enum Widget">
@@ -184,13 +214,11 @@
 	</widgets>
 		
 	<parameters>
-	
+
 		<parameter id="PC_MAC_UCA_HS01">
 			<validator id="vMAC" />
 		</parameter>
 		
-		
-
 		<parameter id="PX_N">
 			<description visible="true">Beschreibung</description>
 			
@@ -276,10 +304,21 @@
 		</parameter>
 		<parameter id="PX_PREFIX_LENGTH">			
 		</parameter>
-		<parameter id="PX_MAC_UCA_HS01">			
+
+		<parameter id="PX_MAC_UCA_HS01">
+			<validator id="vMAC">
+				<relation parameterId="PX_MAC_UCA_HS01" message="true" />
+				<relation parameterId="PX_MAC_UCA_HS02" message="true" />
+			</validator>
 		</parameter>
-		<parameter id="PX_MAC_UCA_HS02">			
+		
+		<parameter id="PX_MAC_UCA_HS02">
+			<validator id="vMAC">
+				<relation parameterId="PX_MAC_UCA_HS01" message="true" />
+				<relation parameterId="PX_MAC_UCA_HS02" message="true" />
+			</validator>
 		</parameter>
+		
 		<parameter id="PX_MAC_UCA_HS03">			
 		</parameter>
 		<parameter id="PX_MAC_UCA_RT01_A">			

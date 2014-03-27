@@ -3,13 +3,15 @@ package ttworkbench.play.parameters.ipv6.validators;
 import java.util.ArrayList;
 import java.util.List;
 
+import ttworkbench.play.parameters.ipv6.validators.FibValidator.ParameterKey;
+
 import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResult;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ValidationResultMessage;
 
-public class MacAddressValidator extends AbstractValidator {
+public class MacAddressValidator extends ContextualValidator {
 	
 	private static final String TITLE = "MAC Address Validator";
 	private static final String DESCRIPTION = "";
@@ -22,26 +24,16 @@ public class MacAddressValidator extends AbstractValidator {
 	protected List<ValidationResult> validateParameter( IParameter parameter, Object theClient) {
 		List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
 
-		String theValue = ((StringValue)parameter.getValue()).getTheContent();
-		System.out.println("this is my parameter value:  "+theValue);
-		if ( isMacAddress( theValue))
-			validationResults.add( new ValidationResultMessage("This entry has a valid MAC Address format.", ErrorKind.success, theClient, "tag_is_mac"));
-		else {
-			validationResults.add( new ValidationResultMessage( "This entry does not have a valid MAC Address format.", ErrorKind.error, theClient, "tag_is_mac"));
+		String mac1 = this.<StringValue>getParameter( 0).getValue().getTheContent();
+		String mac2 = this.<StringValue>getParameter( 1).getValue().getTheContent();
+		
+		if(mac1.equalsIgnoreCase( mac2)){
+			validationResults.add( new ValidationResultMessage(  "This configuration is not valid.", ErrorKind.error, theClient, "tag_val_mac"));
+			validationResults.add( new ValidationResultMessage(  "The MAC-Addresses cannot have the same value", ErrorKind.info, theClient, "tag_val_mac_hint"));
+		}else{
+			validationResults.add( new ValidationResultMessage(  "This configuration is valid.", ErrorKind.success, theClient, "tag_val_mac"));
 		}
 		return validationResults;
-	}
-
-	// Chechk if the entered Mac Address has a valid format
-	private boolean isMacAddress(String macEntry){
-		final String MAC_PATTERN1 = "^([0-9a-fA-F]{2}[:-]){5}([0-9a-fA-F]{2})$";
-		final String MAC_PATTERN2 = "^([0-9a-fA-F]{2}[-]){5}([0-9a-fA-F]{2})$";
-		final String MAC_PATTERN3 = "^([0-9a-fA-F]{12})$";
-		if (macEntry.matches( MAC_PATTERN1) || macEntry.matches( MAC_PATTERN2) || macEntry.matches( MAC_PATTERN3)){
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 }

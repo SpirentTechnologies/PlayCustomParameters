@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.ipv6.editors.octet;
 
 import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,14 +29,13 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 	
-	private static final String TITLE = "Floating Point Editor";
+	private static final String TITLE = "Octet Editor";
 	private static final String DESCRIPTION = "";
 	
 	private OctetType octetType = OctetType.OCT;
 	
 	private OctetTypeVerifier octetTypeVerifier = new OctetTypeVerifier();
 	private OctetRangeVerifier octetRangeVerifier = null;
-	
 	
 	public OctetEditor() {
 		super( TITLE, DESCRIPTION);
@@ -78,16 +78,11 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 		IVerifyingControl<Text, OctetStringValue> inputControl = new VerifyingText<OctetStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, octetTypeVerifier, octetRangeVerifier);
 		setInputControl( inputControl);
 		
+		setVerifyListenerToControl( inputControl);
+		
 		Text text = inputControl.getControl();
 		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
-		if ( octetType.getMaxOctets() != null) {
-			Long maxNeededChars = octetType.getMaxOctets() * 8L;
-		  text.setTextLimit( maxNeededChars.intValue());
-		  setWidthForText( text, maxNeededChars.intValue());
-		}
-		
-		setVerifyListenerToControl( inputControl);
 		
 		text.addListener( SWT.FocusOut, new Listener() {
 			
@@ -109,10 +104,26 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 			public void afterVerificationStep(final VerificationEvent<String> theEvent) {
 				final List<VerificationResult<String>> results = theEvent.verificationResults;
 				final VerificationResult<String> lastResult = results.get( results.size() -1);
-				if ( !lastResult.verified) {
-					getMessageView().flashMessages( lastResult.messages);
-					theEvent.skipVerification = true;
-					theEvent.doit = false;
+				
+				if ( lastResult.verifier instanceof OctetTypeVerifier) {
+					if ( !lastResult.verified) {
+						getMessageView().flashMessages( lastResult.messages);
+				    theEvent.skipVerification = true;
+				    theEvent.doit = false;
+					} else {
+						theEvent.verifierParams = new Object[]{lastResult.output};
+					}
+				}
+				
+				if ( lastResult.verifier instanceof OctetRangeVerifier) {
+					if ( !lastResult.verified) {
+						getMessageView().showMessages( lastResult.messages);
+						theEvent.skipVerification = true;
+						theEvent.doit = true;
+					} else {
+						getMessageView().clearMessagesByTag( lastResult.messages.get( 0).tag);
+						theEvent.doit = true;
+					}
 				}
 			}
 			
@@ -123,6 +134,7 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 				// and start the validation process
 				validateDelayed( theInputControl);
 				theEvent.doit = true;
+				//OctetEditor.this.getControl().update();
 			}
 			
 			
@@ -139,7 +151,7 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 		
 		String toolTipString = this.getParameter().getName() + ":\n" + this.getParameter().getDescription();
 		label.setToolTipText( toolTipString);
-		
+
 		createTextInputWidget( theContainer, layoutData[0]);
 		
 		Button reset = new Button (theContainer, SWT.PUSH);
@@ -152,6 +164,8 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 				super.widgetSelected( theEvent);
 			}
 		});
+	
+		theContainer.pack();
 	}
 
 	@Override

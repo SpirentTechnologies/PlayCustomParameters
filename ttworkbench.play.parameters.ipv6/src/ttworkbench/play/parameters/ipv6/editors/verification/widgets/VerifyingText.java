@@ -10,6 +10,7 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class VerifyingText<P extends Value> extends VerifyingAdapter<Text,P> {
 	
