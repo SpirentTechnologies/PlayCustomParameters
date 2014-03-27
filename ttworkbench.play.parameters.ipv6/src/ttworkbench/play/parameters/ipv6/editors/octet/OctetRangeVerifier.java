@@ -1,8 +1,10 @@
 package ttworkbench.play.parameters.ipv6.editors.octet;
 
 import java.math.BigInteger;
+import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
@@ -10,6 +12,13 @@ import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
+/**
+ * Verify only small octets.
+ * TODO for higher efficiency and precision impl square root algo with Newton's method
+ * or Karps trick.  
+ * 
+ *
+ */
 public class OctetRangeVerifier implements IVerifier<String> {
 
 	final OctetType octetType;
@@ -19,47 +28,64 @@ public class OctetRangeVerifier implements IVerifier<String> {
 		this.octetType = theOctetType;
 	}
 	
-	private boolean isValueInRange( final String theValue, final OctetType theOctetType) {
+	
+	private Long valueToOctets( BigInteger theValue) {
 		if ( theValue == null)
-			return false;
-
-		BigInteger value; 
-		try {
-			value = new BigInteger( theValue);
-		} catch ( NumberFormatException e) {
-			return false;
-		}
+			return 0L;
 		
-//		
-//		BigInteger minValue = theOctetType.getMinOctets();
-//		BigInteger maxValue = theOctetType.getMaxOctets();
-//		
-//		if ( minValue == null && maxValue == null)
-//			return true;
-//
-//		if ( minValue != null && maxValue != null)
-//			return ( minValue.compareTo( value) <= 0) &&
-//	    			 ( maxValue.compareTo( value) >= 0);
-//
-//		if ( minValue == null && maxValue != null)
-//			return maxValue.compareTo( value) >= 0;
-//
-//  	if ( minValue != null && maxValue == null)
-//		  return minValue.compareTo( value) >= 0;
+		double valueSqrt = Math.sqrt(theValue.doubleValue());
+		long valueOctets = (long) Math.ceil( valueSqrt / 8.0);
+	  return valueOctets;
+	}
+	
+	
+	/**
+	 * 
+	 * @param theValue
+	 * @param theMinValue output parameter
+	 * @param theMaxValue output parameter
+	 * @return
+	 */
+	private boolean isValueInRange(BigInteger theValue) {
+
+		Long valueOctets = valueToOctets( theValue);
+		Long minOctets = octetType.getMinOctets();
+		Long maxOctets = octetType.getMaxOctets();
+		
+		if ( minOctets == null && maxOctets == null)
+			return true;
+
+		if ( minOctets != null && maxOctets != null)
+			return ( minOctets.compareTo( valueOctets) <= 0) &&
+	    			 ( maxOctets.compareTo( valueOctets) >= 0);
+
+		if ( minOctets == null && maxOctets != null)
+			return maxOctets.compareTo( valueOctets) >= 0;
+
+  	if ( minOctets != null && maxOctets == null)
+		  return minOctets.compareTo( valueOctets) <= 0;
 
 		return false;
 	}
+
 	
 	
 	@Override
 	public VerificationResult<String> verify(String theInput, Object... theParams) {
-		boolean verified = isValueInRange( theInput, octetType);
-//		
-//		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input of \"%s\" rejected.", theInput), ErrorKind.warning); 
-//		MessageRecord codomainInfo = new MessageRecord( "valid_chars_info", String.format( "Only integers in range [%s,%s] accepted.", integerType.getMinValue(), integerType.getMaxValue()), ErrorKind.info);
-		List<MessageRecord> messages = null;// Arrays.asList( inputRejectedWarning, codomainInfo); 
-		return new VerificationResult<String>( this, theInput, verified, messages);
-	}
+		BigInteger integerRepresentation = (BigInteger) theParams[0];
+		
+		boolean rangeVerified = isValueInRange( integerRepresentation);
+		
+		String infty = DecimalFormatSymbols.getInstance().getInfinity();
+	  String minBound = octetType.getMinOctets() == null ? "0" : octetType.getMinOctets().toString();
+	  String maxBound = octetType.getMaxOctets() == null ? infty : octetType.getMaxOctets().toString();
+	  
+		
+		MessageRecord inputRejectedWarning = new MessageRecord( "invalid_input_warning", String.format( "Input \"%s\" violates format.", theInput), ErrorKind.warning); 
+		MessageRecord codomainInfo = new MessageRecord( "valid_chars_info", String.format( "Only values in range [%s,%s] accepted.", minBound, maxBound), ErrorKind.info);
+		List<MessageRecord> messages = Arrays.asList( inputRejectedWarning, codomainInfo); 
+		return new VerificationResult<String>( this, theInput, rangeVerified, messages);
+}
 
 	
 

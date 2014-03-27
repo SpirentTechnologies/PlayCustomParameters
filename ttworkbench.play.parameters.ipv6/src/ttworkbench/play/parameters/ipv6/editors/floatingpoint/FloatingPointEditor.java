@@ -97,12 +97,12 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 		// assign input control to editor 
 		setInputControl( inputControl);
 
+		setVerifyListenerToControl( inputControl);
+		
 		// initialize input control
 		Text text = inputControl.getControl();
 		text.setText( ParameterValueUtil.getValue( getParameter()));
 		text.setLayoutData( theLayoutData);
-		
-		setVerifyListenerToControl( inputControl);
 	}
 	
 
@@ -153,14 +153,13 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 	@Override
 	protected void createEditRow(Composite theContainer) {
 		Object[] layoutData = this.getLookAndBehaviour().getLayoutDataOfControls();
+		
 		CLabel labelId = new CLabel( theContainer, SWT.LEFT);
 		labelId.setText( this.getParameter().getId());
 		labelId.setLayoutData( layoutData[0]);
 		
 		String toolTipString = this.getParameter().getName() + ":\n" + this.getParameter().getDescription();
 		labelId.setToolTipText( toolTipString);
-		
-		createInputWidget( theContainer, layoutData[0]);
 			
 		Button reset = new Button (theContainer, SWT.PUSH);
 		reset.setText ("Reset");
@@ -179,6 +178,9 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 		
 		labelInterpretedValue = new CLabel( theContainer, SWT.LEFT);
 		labelInterpretation.setLayoutData( layoutData[0]);
+		
+		createInputWidget( theContainer, layoutData[0]);
+		getInputControl().getControl().moveAbove( reset);
 		
 		theContainer.pack(); 
 	}
