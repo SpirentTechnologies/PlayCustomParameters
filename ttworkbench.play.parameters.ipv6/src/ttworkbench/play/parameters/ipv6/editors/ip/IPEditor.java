@@ -1,6 +1,7 @@
 package ttworkbench.play.parameters.ipv6.editors.ip;
 
 import java.beans.EventHandler;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -24,7 +25,7 @@ import com.testingtech.muttcn.values.StringValue;
 
 public class IPEditor extends VerifyingEditor<Text, StringValue> {
 
-	private static final String TITLE = "Host Editor";
+	private static final String TITLE = "IP-Editor";
 	private static final String DESCRIPTION = "";
 
 	final Display display = Display.getCurrent();
@@ -52,36 +53,26 @@ public class IPEditor extends VerifyingEditor<Text, StringValue> {
 
 	@Override
 	protected void createEditRow(Composite theContainer) {
-		// TODO remove
-//		this.getAttribute("verifier") {
-//			
-//		}
-		
-		theContainer.setBackground( display.getSystemColor( SWT.COLOR_GREEN));
 
-	// Hartcodierte Verifier für die IP-Adressen aus der XML-Datei [bernehmen
-//			if (this.getAttribute( "verifiers") != null) {
-//				List<IVerifier<String>> vs = new LinkedList<IVerifier<String>>();
-//				for (String s : this.getAttribute( "verifiers").split( ",")) {
-//					if (s.equalsIgnoreCase( "IPv4")) {
-//						vs.add( new IPv4Verifier());
-//					} else if (s.equalsIgnoreCase( "IPv6")) {
-//						vs.add( new IPv6Verifier());
-//					} else if (s.equalsIgnoreCase( "Hostname")) {
-//						vs.add( new HostnameVerifier());
-//					}
-//				}
-//
-//				if (!vs.isEmpty()) {
-//					this.verifier = new OrVerifier( vs.toArray( new IVerifier[vs.size()]));
-//				} else {
-//					this.verifier = this.ALLVERIFIERS;
-//				}
-//			}
+	// Hartcodierte Verifier für die IP-Adressen aus der XML-Datei übernehmen
+			if (this.getAttribute( "verifiers") != null) {
+				List<IVerifier<String>> vs = new LinkedList<IVerifier<String>>();
+				for (String s : this.getAttribute( "verifiers").split( ",")) {
+					if (s.equalsIgnoreCase( "IPv4")) {
+						vs.add( new IPv4Verifier());
+					} else if (s.equalsIgnoreCase( "IPv6")) {
+						vs.add( new IPv6Verifier());
+					} else if (s.equalsIgnoreCase( "Hostname")) {
+						vs.add( new HostnameVerifier());
+					}
+				}
 
-			// this.getAttribute("verifier") {
-			//
-			// }
+				if (!vs.isEmpty()) {
+					this.verifier = new OrVerifier( vs.toArray( new IVerifier[vs.size()]));
+				} else {
+					this.verifier = this.ALLVERIFIERS;
+				}
+			}
 
 		
 		label = new CLabel( theContainer, SWT.LEFT);

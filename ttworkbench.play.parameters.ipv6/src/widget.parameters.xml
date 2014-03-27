@@ -6,16 +6,22 @@
 			<expression>^U?Int\d{0,2}$</expression>
 			<expression>^integer$</expression>
 		</editor>
-		<editor classpath="ttworkbench.play.parameters.ipv6.editors.floatingpoint.FloatingPointEditor">	
-		  <expression>^float$</expression>
-		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.macaddr.MacAddressEditor">	
 			<expression>^PC_MAC_UCA_HS01$</expression> <!-- valid? -->
 			<expression>^MacAddress$</expression> <!-- valid? -->
 			<expression>^MacLayer$</expression>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
-			<expression>^Ipv6AddressStr$</expression>
+			<expression>^Ipv6Address$</expression>
+			<attribute name="verifiers">ipv6</attribute>
+		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
+			<expression>^Ipv4Address$</expression>			
+			<attribute name="verifiers">ipv4</attribute>
+		</editor>
+		<editor classpath="ttworkbench.play.parameters.ipv6.editors.ip.IPEditor">
+			<expression>^Address$</expression>						
+			<attribute name="verifiers">ipv4,ipv6</attribute>
 		</editor>
 		<editor classpath="ttworkbench.play.parameters.ipv6.editors.enums.EnumEditor">
 			<expression>^boolean$</expression>
@@ -59,15 +65,18 @@
 				<attribute name="advanced" />
 			</editor>
 		</widget>
-
-		<widget name="Floats">
-			<description>Float editor</description>
-			<editor parameterId="PX_FLOAT_NUMBER" />
-		</widget>
 		
 		<widget name="Enum Widget">
 			<description>Enum editor</description>
 			<editor parameterId="PC_MAC_FILTER"/>
+		</widget>
+		
+		<widget name="IP Test">
+			<description>IP Editor</description>
+			<editor parameterId="PX_IPv4_ADDR_IUT"/>
+			<editor parameterId="PX_IPv4_ADDR_IUT"/>
+			<editor parameterId="PX_IPv4_ADDR_IUT"/>
+			<editor parameterId="PX_IPv4_ADDR_IUT"/>
 		</widget>
 		
 		<widget name="General Test">
@@ -186,6 +195,7 @@
 				<relation parameterId="PX_FIB_NUMBER" message="true" />
 			</validator>
 		</parameter>
+		
 		
 		<parameter id="PX_FIB_NUMBER">
 			<description visible="true">Beschreibung</description>
