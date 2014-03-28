@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+	<owner>Johannes Dahlke, Thomas Büttner, Alexander Dümont, Fares Mokrani</owner>
+	<copyright><![CDATA[Copyright (c)  ${year} ${owner}
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+You may not use this file except in compliance with the License.
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ 
+This project came to life under the cooperation of the Authors (cited below) and the Testing Technologies GmbH company in the frame of a University Project proposed by the FU-Berlin.
+
+The software is basically a plug-in for the company's eclipse-based framework TTWorkbench. The plug-in offers a new user-friendly view that enables easy configuration of parameters meant to test IPv6 environments.
+ 
+
+Contributors: ${owner}]]></copyright>
+	<header contentId="org.eclipse.pde.tocFile" excluded="true" />
+	<header contentId="org.eclipse.pde.ctxHelpFile" excluded="true" />
+	<header contentId="org.eclipse.jdt.core.JARManifest" excluded="true" />
+	<header contentId="org.eclipse.pde.categoryManifest" excluded="true" />
+	<header contentId="org.eclipse.pde.fragmentManifest" excluded="true" />
+	<header contentId="org.eclipse.pde.pluginProperties" excluded="true" />
+	<header contentId="org.eclipse.pde.buildProperties" excluded="true" />
+	<header contentId="org.eclipse.pde.productFile" excluded="true" />
+	<header contentId="org.eclipse.ui.views.log.log" excluded="true" />
+	<header contentId="org.eclipse.pde.siteManifest" excluded="true" />
+	<header contentId="org.eclipse.pde.bundleManifest" excluded="true" />
+	<header contentId="org.eclipse.pde.targetFile" excluded="true" />
+	<header contentId="org.eclipse.ant.core.antBuildFile" excluded="true" />
+	<header contentId="org.eclipse.pde.pluginManifest" excluded="true" />
+	<header contentId="org.eclipse.core.runtime.xml" postBlankLines="0" lineFormat="false" preserveFirstLine="true">
+		<beginLine><![CDATA[<!--]]></beginLine>
+		<linePrefix><![CDATA[  ]]></linePrefix>
+		<endLine><![CDATA[-->]]></endLine>
+		<firstLinePattern><![CDATA[<\?xml version=.*\?>]]></firstLinePattern>
+	</header>
+	<header contentId="org.eclipse.pde.simpleCheatSheet" excluded="true" />
+	<header contentId="org.eclipse.core.runtime.text" postBlankLines="0" lineFormat="true" preserveFirstLine="false">
+		<beginLine><![CDATA[#-------------------------------------------------------------------------------]]></beginLine>
+		<linePrefix><![CDATA[# ]]></linePrefix>
+		<endLine><![CDATA[#-------------------------------------------------------------------------------]]></endLine>
+	</header>
+	<header contentId="org.eclipse.pde.featureManifest" excluded="true" />
+	<header contentId="org.eclipse.jdt.core.javaSource" postBlankLines="0" lineFormat="true" preserveFirstLine="false">
+		<beginLine><![CDATA[/*******************************************************************************]]></beginLine>
+		<linePrefix><![CDATA[ * ]]></linePrefix>
+		<endLine><![CDATA[ ******************************************************************************/]]></endLine>
+	</header>
+	<header contentId="org.eclipse.pde.compositeCheatSheet" excluded="true" />
+	<header contentId="org.eclipse.pde.schema" excluded="true" />
+</project>
