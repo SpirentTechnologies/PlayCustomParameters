@@ -90,6 +90,8 @@ public class MacAddressEditor extends VerifyingEditor<Combo,OctetStringValue> {
 	}
 	
 	private void createComboBox( Composite theComposite, Object theLayoutData){
+		String defaultValue ="";
+		String formattedString = "";
 		IVerifyingControl<Combo, OctetStringValue> inputControl = new VerifyingCombo<OctetStringValue>( getParameter(), theComposite, SWT.BORDER);
 		inputControl.addVerifierToEvent( verifier, SWT.Verify);
 		setInputControl( inputControl);
@@ -103,14 +105,23 @@ public class MacAddressEditor extends VerifyingEditor<Combo,OctetStringValue> {
 
 		int index = 0;
 		for(StringValue value : availableValues){
-			macCombo.add(value.getTheContent().toString(), index);
+			if(!value.getTheContent().contains( ":") && !value.getTheContent().contains( "-") && !value.getTheContent().isEmpty()){
+				formattedString = value.getTheContent();
+				System.out.println(formattedString);
+				formattedString = formattedString.substring( 0, 2) + "-" + formattedString.substring( 2, 4) + "-" + formattedString.substring( 4, 6) + "-" + formattedString.substring( 6, 8) + "-" + formattedString.substring( 8, 10) + "-" + formattedString.substring( 10, 12);
+				macCombo.add(formattedString, index);
+			}else{
+				macCombo.add(value.getTheContent().toString(), index);
+			}
 			index++;
 		}
 		
 		setVerifyListenerToControl( inputControl);
 		
 		// set the Default Parameter Value
-		inputControl.forceText( getParameter().getDefaultValue().getTheContent());
+		defaultValue = getParameter().getDefaultValue().getTheContent();
+		defaultValue = defaultValue.substring( 0, 2) + "-" + defaultValue.substring( 2, 4) + "-" + defaultValue.substring( 4, 6) + "-" + defaultValue.substring( 6, 8) + "-" + defaultValue.substring( 8, 10) + "-" + defaultValue.substring( 10, 12);
+		inputControl.forceText( defaultValue);
 	}
 	
 	private void setVerifyListenerToControl( final IVerifyingControl<?,OctetStringValue> theInputControl) {

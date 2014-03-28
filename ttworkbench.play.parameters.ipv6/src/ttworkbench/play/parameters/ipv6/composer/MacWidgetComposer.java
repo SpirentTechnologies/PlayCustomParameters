@@ -31,7 +31,8 @@ import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
 public class MacWidgetComposer extends WidgetComposer {
 
 	// get relevant parameters
-	final IParameter<StringValue> parameter_MacAddress = getParametersMap().getParameterById( "PX_MAC_UCA_HS01");
+	final IParameter<StringValue> parameter_MacAddress1 = getParametersMap().getParameterById( "PX_MAC_UCA_HS01");
+	final IParameter<StringValue> parameter_MacAddress2 = getParametersMap().getParameterById( "PX_MAC_UCA_HS02");
 
 	public MacWidgetComposer( IConfigurator theConfigurator, ParameterMap theParametersMap) {
 		super( theConfigurator, theParametersMap);
@@ -45,7 +46,8 @@ public class MacWidgetComposer extends WidgetComposer {
 		// add the Mac widget to the frame work
 		getConfigurator().addWidget( macWidget);
 
-		getConfigurator().assign( new MacAddressEditor(), macWidget, parameter_MacAddress);
+		getConfigurator().assign( new MacAddressEditor(), macWidget, parameter_MacAddress1);
+		getConfigurator().assign( new MacAddressEditor(), macWidget, parameter_MacAddress2);
 
 	}
 }

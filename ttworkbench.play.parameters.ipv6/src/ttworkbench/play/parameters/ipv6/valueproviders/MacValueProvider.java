@@ -72,7 +72,7 @@ public class MacValueProvider implements IParameterValueProvider<OctetStringValu
 	        for (int i = 0; i < mac.length; i++) {
 	          sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
 	        }
-	        if(sb.toString().length() <= 17){
+	        if(sb.toString().length() <= 17 && !sb.toString().isEmpty()){
 	        	//to filter the invalid addresses
 	        	values.add( newString(sb.toString()));
 	        }
@@ -81,7 +81,7 @@ public class MacValueProvider implements IParameterValueProvider<OctetStringValu
 	  } catch (SocketException e){
 	    e.printStackTrace();
 	  }
-		//Add the default value to the combo box
+		//Add the default value to the combo box	
 		values.add( theParameter.getDefaultValue());
 		return values;
 	}
