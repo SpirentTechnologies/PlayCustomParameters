@@ -172,11 +172,27 @@ public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBe
 	
 	
 	public Color getFlashMessageForeground( final ErrorKind theErrorKind) {
-		return getFlashMessageLookAndBehaviour().getMessageForeground( theErrorKind);
+	  switch ( theErrorKind) {
+			case error:
+				return COLOR_DARK_RED;
+			case warning:
+				return COLOR_DARK_YELLOW;
+	    case info:
+	    	return COLOR_DARK_BLUE;
+			default:
+	    	return COLOR_DARK_GREEN;
+		}
 	}
 
 	public Color getFlashMessageBackground( final ErrorKind theErrorKind) {
-		return getFlashMessageLookAndBehaviour().getMessageBackground( theErrorKind);
+	  switch ( theErrorKind) {
+			case error:
+			case warning:
+			case info:
+			case success:	
+	    default:
+	    	return COLOR_BTN_FACE;
+		}
 	}
 
 	@Override
@@ -205,7 +221,44 @@ public class DefaultMessageViewLookAndBehaviour implements IMessageViewLookAndBe
 
 	@Override
 	public IMessageLookAndBehaviour getFlashMessageLookAndBehaviour() {
-		return this;
+		return new IMessageLookAndBehaviour() {
+			
+			@Override
+			public boolean isBeepEnabled() {
+				return DefaultMessageViewLookAndBehaviour.this.isBeepEnabled();
+			}
+			
+			@Override
+			public Image getMessageImage(ErrorKind theErrorKind) {
+				return DefaultMessageViewLookAndBehaviour.this.getMessageImage( theErrorKind);
+			}
+			
+			@Override
+			public Color getMessageForeground(ErrorKind theErrorKind) {
+				return DefaultMessageViewLookAndBehaviour.this.getFlashMessageForeground( theErrorKind);
+			}
+			
+			@Override
+			public Font getMessageFont(ErrorKind theErrorKind) {
+				// TODO Auto-generated method stub
+				return DefaultMessageViewLookAndBehaviour.this.getMessageFont( theErrorKind);
+			}
+			
+			@Override
+			public Color getMessageBackground(ErrorKind theErrorKind) {
+				return DefaultMessageViewLookAndBehaviour.this.getFlashMessageBackground( theErrorKind);
+			}
+			
+			@Override
+			public void enableBeep() {
+				DefaultMessageViewLookAndBehaviour.this.enableBeep();
+			}
+			
+			@Override
+			public void disableBeep() {
+				DefaultMessageViewLookAndBehaviour.this.disableBeep();
+			}
+		};
 	}
 
 
