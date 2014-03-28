@@ -92,6 +92,9 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 			
 			@Override
 			public void handleRegisterEvent( RegistryEvent theEvent) {
+				/*
+				 * Set error dependent colored frame to the editor
+				 */
 				ErrorKind highestErrorKind = theEvent.registry.getHighestErrorKind();
 				Color frameColor = lookAndBehaviour.getMessageLookAndBehaviour().getMessageBackground( highestErrorKind);
 				EditorMessageDisplay.this.setBackground( frameColor);
@@ -100,6 +103,10 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 			
 			@Override
 			public void handleDeregisterEvent(RegistryEvent theEvent) {
+				/*
+				 * Remove error dependent colored frame from editor 
+				 * only if there no further messages avail. 
+				 */
 				if ( !isDisposed() && !messagePopup.isDisposed()) {
 					ErrorKind highestErrorKind = theEvent.registry.getHighestErrorKind();
 					int messageCount = theEvent.registry.getCountOfMessagesWithErrorKind( EnumSet.of( highestErrorKind));
@@ -192,8 +199,11 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 				theMessageRecord.errorKind.equals( ErrorKind.success))
 			return; 
 		
+		// register only messages that are not displayed in default block 
+		RegisterDirective registerDirective = id.equals( getThisId()) ? RegisterDirective.NO_REGISTRATION : RegisterDirective.REGISTER;
+		
 		final MessageBlock messageBlock = messages.get( id);
-		messageBlock.putTaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
+		messageBlock.putTaggedMessage( theMessageRecord, registerDirective);
 		
 		if ( lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				theMessageRecord.errorKind.equals( ErrorKind.success)) {
@@ -217,8 +227,11 @@ public class EditorMessageDisplay extends Composite implements IMessageView<Comp
 	private void addUntaggedMessage( MessageRecord theMessageRecord) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
+	  // register only messages that are not displayed in default block 
+		RegisterDirective registerDirective = id.equals( getThisId()) ? RegisterDirective.NO_REGISTRATION : RegisterDirective.REGISTER;
+			
 		MessageBlock messageBlock = messages.get( id);
-		messageBlock.addUntaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
+		messageBlock.addUntaggedMessage( theMessageRecord, registerDirective);
 	
     tryOnChange();
 	} 

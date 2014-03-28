@@ -87,7 +87,6 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 	
 	private Lock updateLock = new ReentrantLock();
 	
-	private MessagePopup messageOverviewPopup;
 	private MessagePopup messagePopup;
 	private MessageHeader messageHeader;
 	private Composite wrappedComposite;
@@ -106,7 +105,6 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 		messages.put( getThisId(), theDefaultBlock);
 		// insert popup place holder 
 		messagePopup = new MessagePopup( this, messageHeader);
-		messageOverviewPopup = new MessagePopup( this, messageHeader);
 	}
 
 	private void initMessageRegistry() {
@@ -238,8 +236,11 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 				theMessageRecord.errorKind.equals( ErrorKind.success))
 			return; 
 		
+	  // register only messages that are not displayed in default block 
+		RegisterDirective registerDirective = id.equals( getThisId()) ? RegisterDirective.NO_REGISTRATION : RegisterDirective.REGISTER;
+			
 		final MessageBlock messageBlock = messages.get( id);
-		messageBlock.putTaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
+		messageBlock.putTaggedMessage( theMessageRecord, registerDirective);
 		
 		if ( lookAndBehaviour.isFlashingOfTaggedSuccessMessagesEnabled() && 
 				theMessageRecord.errorKind.equals( ErrorKind.success)) {
@@ -263,8 +264,11 @@ public class WidgetMessageDisplay extends Composite implements IMessageView<IWid
 	private void addUntaggedMessage( MessageRecord theMessageRecord) {
 		final Object id = ( currentSenderId != null) ? currentSenderId : getThisId();
 
+	  // register only messages that are not displayed in default block 
+		RegisterDirective registerDirective = id.equals( getThisId()) ? RegisterDirective.NO_REGISTRATION : RegisterDirective.REGISTER;
+			
 		MessageBlock messageBlock = messages.get( id);
-		messageBlock.addUntaggedMessage( theMessageRecord, RegisterDirective.REGISTER);
+		messageBlock.addUntaggedMessage( theMessageRecord, registerDirective);
 	
     tryOnChange();
 	} 
