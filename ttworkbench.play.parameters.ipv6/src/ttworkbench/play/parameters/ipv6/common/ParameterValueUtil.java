@@ -1,23 +1,21 @@
 /*******************************************************************************
- * Copyright (c)  .
+ * Copyright (c)  2014 Johannes Dahlke, Thomas Büttner, Alexander Dümont, Fares Mokrani
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
+ * are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * You may not use this file except in compliance with the License.
- * 
+ *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * 
+ *  
  * This project came to life under the cooperation of the Authors (cited below) and the Testing Technologies GmbH company in the frame of a University Project proposed by the FU-Berlin.
  * 
  * The software is basically a plug-in for the company's eclipse-based framework TTWorkbench. The plug-in offers a new user-friendly view that enables easy configuration of parameters meant to test IPv6 environments.
+ *  
  * 
- * 
- * Contributors:
- *     
+ * Contributors: Johannes Dahlke, Thomas Büttner, Alexander Dümont, Fares Mokrani
  ******************************************************************************/
 package ttworkbench.play.parameters.ipv6.common;
 
@@ -25,6 +23,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.etsi.ttcn.tci.UniversalCharValue;
+
+import ttworkbench.play.parameters.ipv6.widgets.tableviewer.TableViewerLabelProvider;
 
 import com.testingtech.muttcn.expressions.ValueExpression;
 import com.testingtech.muttcn.kernel.Expression;
@@ -51,9 +51,9 @@ import com.testingtech.muttcn.values.TupleValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class ParameterValueUtil {
-	
+  private static final boolean USE_TABLE_VIEWER_LABEL = true;
 
-  public static String getValue( final IParameter<?> theParameter) {
+	public static String getValue( final IParameter<?> theParameter) {
   	return getValue( theParameter.getValue());
   }
   public static String getDefaultValue( final IParameter<?> theParameter) {
@@ -61,6 +61,9 @@ public class ParameterValueUtil {
   }
   
   private static String getValue( final Object value) {
+  	if ( USE_TABLE_VIEWER_LABEL) {
+  		return TableViewerLabelProvider.getCellText( value);
+  	}
   	
    	if ( value instanceof BitStringValue) // extends StringValue
   		return ( (BitStringValue) value).getTheContent();  // untested
@@ -72,7 +75,7 @@ public class ParameterValueUtil {
   		return ( (CharStringValue) value).getTheContent();  // untested  	 	
 
    	if ( value instanceof ConstantValue) // extends Attribute
-  		return ( (ConstantValue) value).getTheName().toString();  // untested 
+  		return ( (ConstantValue) value).getTheName().getTheName();  // untested 
    	
    	if ( value instanceof Constraint) 
   		return ( (Constraint) value).getTheName().toString();  // untested 
