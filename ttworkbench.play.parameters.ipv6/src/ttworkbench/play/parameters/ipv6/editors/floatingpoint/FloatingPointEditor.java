@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c)  2014 Johannes Dahlke, Thomas Büttner, Alexander Dümont, Fares Mokrani
  * All rights reserved. This program and the accompanying materials
@@ -45,7 +46,7 @@ import com.testingtech.muttcn.values.FloatValue;
 
 public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 	
-	private static final String TITLE = "Integer Editor";
+	private static final String TITLE = "Floating Point Editor";
 	private static final String DESCRIPTION = "";
 	
 	private List<Locale> locales;
@@ -183,8 +184,5 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 	public IValidatingEditorLookAndBehaviour getDefaultLookAndBehaviour() {
 		return new FloatingPointEditorLookAndBehaviour();
 	}
-	
-
-
-
 }
+
