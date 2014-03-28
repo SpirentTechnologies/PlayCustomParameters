@@ -59,11 +59,11 @@ public class EnumEditor<T extends Expression> extends ValidatingEditor<T> {
 	private static final String DESCRIPTION = "Enum Editor";
 
 	private static final int ENUM_MAX_LENGTH = 20;
-	private IVerifyingControl<? extends Control, T> inputControl;
+	private IVerifyingControl<? extends Control, T, String> inputControl;
 
 	private final EnumValueProvider<T> enumValueProvider = new EnumValueProvider<T>();
 
-	private final EnumContextVerifier enumContextVerifier = new EnumContextVerifier();
+	private final EnumContextVerifier<String> enumContextVerifier = new EnumContextVerifier<String>();
 
 	public EnumEditor() {
 		super( TITLE, DESCRIPTION);

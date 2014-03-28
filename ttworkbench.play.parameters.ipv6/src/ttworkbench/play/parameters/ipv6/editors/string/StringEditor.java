@@ -97,7 +97,7 @@ public class StringEditor extends VerifyingEditor<Text,CharStringValue> {
 
 	
 	private void createInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Text, CharStringValue> inputControl = new VerifyingText<CharStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, regexVerifier, stringRangeVerifier);
+		IVerifyingControl<Text, CharStringValue, String> inputControl = new VerifyingText<CharStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, regexVerifier, stringRangeVerifier);
 		
 		// assign input control to editor 
 		setInputControl( inputControl);
@@ -111,7 +111,7 @@ public class StringEditor extends VerifyingEditor<Text,CharStringValue> {
 	}
 	
 
-	private void setVerifyListenerToControl( final IVerifyingControl<Text,CharStringValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<Text,CharStringValue,String> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override

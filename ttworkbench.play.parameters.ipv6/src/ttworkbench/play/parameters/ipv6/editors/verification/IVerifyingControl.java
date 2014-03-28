@@ -29,7 +29,7 @@ import com.testingtech.muttcn.kernel.Expression;
 
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
 
-public interface IVerifyingControl<C extends Control, P extends Expression> extends IParameterControl<C, P> {
+public interface IVerifyingControl<C extends Control, P extends Expression, T> extends IParameterControl<C, P> {
 
 	/**
 	 * Set the text after a successfully passed verification process under use of
@@ -59,7 +59,7 @@ public interface IVerifyingControl<C extends Control, P extends Expression> exte
 	 * 
 	 * @return Results of the last verification.
 	 */
-	List<VerificationResult<String>> getVerificationResults();
+	List<VerificationResult<T>> getVerificationResults();
 
 	/**
 	 * Set an ActionListener that will be invoked, if some actions on the Control
@@ -68,7 +68,7 @@ public interface IVerifyingControl<C extends Control, P extends Expression> exte
 	 * @param theListener
 	 *          the Listener to be invoked.
 	 */
-	void addListener(IVerificationListener<String> theListener);
+	void addListener(IVerificationListener<T> theListener);
 
 	/**
 	 * Add a verifier to an event. If the event is raised, the verifier will be
@@ -82,6 +82,6 @@ public interface IVerifyingControl<C extends Control, P extends Expression> exte
 	 * @see org.eclipse.swt.SWT
 	 * @see org.eclipse.swt.widgets.Control
 	 */
-	void addVerifierToEvent(IVerifier<String> theVerifier, int theEventType);
+	void addVerifierToEvent(IVerifier<T> theVerifier, int theEventType);
 
 }

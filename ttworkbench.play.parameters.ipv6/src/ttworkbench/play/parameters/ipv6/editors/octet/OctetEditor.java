@@ -103,7 +103,7 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 	}
 
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Text, OctetStringValue> inputControl = new VerifyingText<OctetStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, octetTypeVerifier, octetRangeVerifier);
+		IVerifyingControl<Text, OctetStringValue, String> inputControl = new VerifyingText<OctetStringValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, octetTypeVerifier, octetRangeVerifier);
 		setInputControl( inputControl);
 		
 		setVerifyListenerToControl( inputControl);
@@ -130,7 +130,7 @@ public class OctetEditor extends VerifyingEditor<Text,OctetStringValue> {
 		});
 	}
 	
-	private void setVerifyListenerToControl( final IVerifyingControl<Text,OctetStringValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<Text,OctetStringValue,String> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override

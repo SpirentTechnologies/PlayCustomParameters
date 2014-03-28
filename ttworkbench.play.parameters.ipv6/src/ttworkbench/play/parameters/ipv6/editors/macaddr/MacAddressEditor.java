@@ -92,7 +92,7 @@ public class MacAddressEditor extends VerifyingEditor<Combo,OctetStringValue> {
 	}
 	
 	private void createComboBox( Composite theComposite, Object theLayoutData){
-		IVerifyingControl<Combo, OctetStringValue> inputControl = new VerifyingCombo<OctetStringValue>( getParameter(), theComposite, SWT.BORDER);
+		IVerifyingControl<Combo, OctetStringValue, String> inputControl = new VerifyingCombo<OctetStringValue>( getParameter(), theComposite, SWT.BORDER);
 		inputControl.addVerifierToEvent( verifier, SWT.Verify);
 		setInputControl( inputControl);
 		final Combo macCombo = inputControl.getControl();
@@ -115,7 +115,7 @@ public class MacAddressEditor extends VerifyingEditor<Combo,OctetStringValue> {
 		inputControl.forceText( getParameter().getDefaultValue().getTheContent());
 	}
 	
-	private void setVerifyListenerToControl( final IVerifyingControl<?,OctetStringValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<?,OctetStringValue,String> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override

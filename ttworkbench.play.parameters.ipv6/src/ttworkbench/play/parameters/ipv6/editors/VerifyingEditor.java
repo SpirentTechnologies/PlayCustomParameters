@@ -33,14 +33,14 @@ import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 
 public abstract class VerifyingEditor<C extends Control, P extends Value> extends ValidatingEditor<P> {
 	
-	private IVerifyingControl<? extends C,P> inputControl;
+	private IVerifyingControl<? extends C, P, String> inputControl;
 	
 
 	public VerifyingEditor( final String theTitle, final String theDescription) {
 		super( theTitle, theDescription);
 	}
 	
-	public VerifyingEditor( final String theTitle, final String theDescription, final IVerifyingControl<C, P> theInputControl) {
+	public VerifyingEditor( final String theTitle, final String theDescription, final IVerifyingControl<C, P, String> theInputControl) {
 		this( theTitle, theDescription);
 		setInputControl( theInputControl);
 	}
@@ -63,7 +63,7 @@ public abstract class VerifyingEditor<C extends Control, P extends Value> extend
 		getState().unsetFlag( EditorStateFlag.SET_PARAMETER);
 	}
 	
-	protected void setInputControl( final IVerifyingControl<? extends C, P> theInputControl) {
+	protected void setInputControl( final IVerifyingControl<? extends C, P, String> theInputControl) {
 		this.inputControl = theInputControl;
 		this.inputControl.addListener( new IVerificationListener<String>() {
 			
@@ -84,7 +84,7 @@ public abstract class VerifyingEditor<C extends Control, P extends Value> extend
 		});
 	}
 	
-	public IVerifyingControl<? extends C, P> getInputControl() {
+	public IVerifyingControl<? extends C, P, String> getInputControl() {
 		return inputControl;
 	}
 	

@@ -81,7 +81,7 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 
 	
 	private void createInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Text, FloatValue> inputControl = new VerifyingText<FloatValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE);
+		IVerifyingControl<Text, FloatValue, String> inputControl = new VerifyingText<FloatValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE);
 		
 		// create and assign verifiers
 		FloatTypeVerifier verifier;
@@ -102,7 +102,7 @@ public class FloatingPointEditor extends VerifyingEditor<Text,FloatValue> {
 	}
 	
 
-	private void setVerifyListenerToControl( final IVerifyingControl<Text,FloatValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<Text,FloatValue,String> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override

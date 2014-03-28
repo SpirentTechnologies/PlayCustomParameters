@@ -37,10 +37,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import com.testingtech.muttcn.kernel.Expression;
-import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public abstract class VerifyingAdapter<C extends Control,P extends Expression> implements IVerifyingControl<C,P> {
+public abstract class VerifyingAdapter<C extends Control, P extends Expression, T> implements IVerifyingControl<C,P,T> {
 	
 	private class VerifyListener implements Listener {
 		
@@ -55,18 +54,18 @@ public abstract class VerifyingAdapter<C extends Control,P extends Expression> i
 			
 			verificationResults.clear();
 
-			String modifiedText = getModifiedTextByEvent( theOriginalEvent);
+			T modifiedText = getModifiedTextByEvent( theOriginalEvent);
 
-      VerificationEvent<String> verificationEvent = new VerificationEvent<String>( theOriginalEvent.type, modifiedText, verificationResults);
+      VerificationEvent<T> verificationEvent = new VerificationEvent<T>( theOriginalEvent.type, modifiedText, verificationResults);
 			
       try {
 				beforeVerification( verificationEvent);
 				if ( verificationEvent.skipVerification)
 					return;
 
-				List<IVerifier<String>> verifiers = verifierMap.get( theOriginalEvent.type);
-				for ( IVerifier<String> verifier : verifiers) {
-					VerificationResult<String> verificationResult = verifier.verify( modifiedText, verificationEvent.verifierParams);
+				List<IVerifier<T>> verifiers = verifierMap.get( theOriginalEvent.type);
+				for ( IVerifier<T> verifier : verifiers) {
+					VerificationResult<T> verificationResult = verifier.verify( modifiedText, verificationEvent.verifierParams);
 					verificationResults.add( verificationResult);
 
 					afterVerificationStep( verificationEvent);
@@ -80,20 +79,20 @@ public abstract class VerifyingAdapter<C extends Control,P extends Expression> i
 			}
 		}
 
-		private void beforeVerification( VerificationEvent<String> theEvent) {
-			for ( IVerificationListener listener : listeners) {
+		private void beforeVerification( VerificationEvent<T> theEvent) {
+			for ( IVerificationListener<T> listener : listeners) {
 				listener.beforeVerification( theEvent);
 			}
     }
 		
-		private void afterVerificationStep( VerificationEvent<String> theEvent) {
-			for ( IVerificationListener<String> listener : listeners) {
+		private void afterVerificationStep( VerificationEvent<T> theEvent) {
+			for ( IVerificationListener<T> listener : listeners) {
 				listener.afterVerificationStep( theEvent);
 			}
 		}
 		
-		private void afterVerification( VerificationEvent<String> theEvent) {
-			for ( IVerificationListener listener : listeners) {
+		private void afterVerification( VerificationEvent<T> theEvent) {
+			for ( IVerificationListener<T> listener : listeners) {
 				listener.afterVerification( theEvent);
 			}
 		}
@@ -104,12 +103,12 @@ public abstract class VerifyingAdapter<C extends Control,P extends Expression> i
 	private ReentrantLock lock = new ReentrantLock();
 	private final C control;
 	private final IParameter<P> parameter;
-	private final Map<Integer, List<IVerifier<String>>> verifierMap = new HashMap<Integer, List<IVerifier<String>>>();
-	private final Set<IVerificationListener<String>> listeners = new HashSet<IVerificationListener<String>>();
-	private final List<VerificationResult<String>> verificationResults = new ArrayList<VerificationResult<String>>();
+	private final Map<Integer, List<IVerifier<T>>> verifierMap = new HashMap<Integer, List<IVerifier<T>>>();
+	private final Set<IVerificationListener<T>> listeners = new HashSet<IVerificationListener<T>>();
+	private final List<VerificationResult<T>> verificationResults = new ArrayList<VerificationResult<T>>();
 	private boolean verificationEnabled = true;
 	
-	public VerifyingAdapter( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<String> ... theVerifiers) {
+	public VerifyingAdapter( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<T> ... theVerifiers) {
 		super();
 		this.control = createControl( theParent, theStyle);
 		this.parameter = theParameter;
@@ -122,7 +121,7 @@ public abstract class VerifyingAdapter<C extends Control,P extends Expression> i
 	}
 
 	@Override
-	public void addVerifierToEvent( final IVerifier<String> theVerifier, final int theEventType) {
+	public void addVerifierToEvent( final IVerifier<T> theVerifier, final int theEventType) {
 		if ( !verifierMap.containsKey( theEventType))
 			verifierMap.put( theEventType, new ArrayList( Arrays.asList( theVerifier)));
 		else
@@ -146,18 +145,18 @@ public abstract class VerifyingAdapter<C extends Control,P extends Expression> i
 		return new VerifyListener();
 	}
 
-	protected abstract String getModifiedTextByEvent( final Event theEvent);
+	protected abstract T getModifiedTextByEvent( final Event theEvent);
 	
 	protected abstract C createControl( final Composite theParent, final int theStyle);
 	
 
 	@Override
-	public List<VerificationResult<String>> getVerificationResults() {
+	public List<VerificationResult<T>> getVerificationResults() {
 		return verificationResults;
 	}
 	
 	@Override
-	public void addListener( final IVerificationListener<String> theListener) {
+	public void addListener( final IVerificationListener<T> theListener) {
 		listeners.add( theListener);
 	}
 	

@@ -33,7 +33,7 @@ import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 import com.testingtech.muttcn.kernel.Expression;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
-public class VerifyingCombo<P extends Expression> extends VerifyingAdapter<Combo,P>{
+public class VerifyingCombo<P extends Expression> extends VerifyingAdapter<Combo,P, String>{
 	
 	private final String defaultText;
 

@@ -106,7 +106,7 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 
 	
 	private void createTextInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Text, IntegerValue> inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, "0", integerTypeVerifier, integerRangeVerifier);
+		IVerifyingControl<Text, IntegerValue, String> inputControl = new VerifyingText<IntegerValue>( getParameter(), theComposite, SWT.BORDER | SWT.SINGLE, "0", integerTypeVerifier, integerRangeVerifier);
 		setInputControl( inputControl);
 		
 		setVerifyListenerToControl( inputControl);
@@ -131,7 +131,7 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 	}
 	
 	private void createSpinnerInputWidget( Composite theComposite, Object theLayoutData) {
-		IVerifyingControl<Spinner, IntegerValue> inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerifier, integerRangeVerifier);
+		IVerifyingControl<Spinner, IntegerValue, String> inputControl = new VerifyingSpinner<IntegerValue>( getParameter(), theComposite, SWT.BORDER, integerTypeVerifier, integerRangeVerifier);
 		setInputControl( inputControl);
 		
 		setVerifyListenerToControl( inputControl);	
@@ -146,7 +146,7 @@ public class IntegerEditor extends VerifyingEditor<Control,IntegerValue> {
 		spinner.setLayoutData( theLayoutData);
 	}
 
-	private void setVerifyListenerToControl( final IVerifyingControl<?,IntegerValue> theInputControl) {
+	private void setVerifyListenerToControl( final IVerifyingControl<?,IntegerValue,String> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 			
 			@Override

@@ -32,7 +32,7 @@ import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerifyingAdapter;
 
 
-public class VerifyingSpinner<P extends Value> extends VerifyingAdapter<Spinner,P> {
+public class VerifyingSpinner<P extends Value> extends VerifyingAdapter<Spinner,P,String> {
 
 	
 	public VerifyingSpinner( final IParameter<P> theParameter, final Composite theParent, final int theStyle, final IVerifier<String> ... theVerifiers) {

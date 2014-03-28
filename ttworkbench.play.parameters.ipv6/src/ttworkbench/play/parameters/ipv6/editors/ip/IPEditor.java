@@ -101,7 +101,7 @@ public class IPEditor extends VerifyingEditor<Text, StringValue> {
 		label = new CLabel( theContainer, SWT.LEFT);
 		label.setText( this.getParameter().getName());
 
-		IVerifyingControl<Text,StringValue> inputControl = new VerifyingText<StringValue>( getParameter(), theContainer, SWT.BORDER | SWT.SINGLE);
+		IVerifyingControl<Text,StringValue,String> inputControl = new VerifyingText<StringValue>( getParameter(), theContainer, SWT.BORDER | SWT.SINGLE);
 		inputControl.addVerifierToEvent( verifier, SWT.Verify);
 		setInputControl(inputControl);		
 		setVerifyerListenerToControl(inputControl);
@@ -117,7 +117,7 @@ public class IPEditor extends VerifyingEditor<Text, StringValue> {
 		
 	}
 
-	private void setVerifyerListenerToControl(final IVerifyingControl<?, StringValue> theInputControl) {
+	private void setVerifyerListenerToControl(final IVerifyingControl<?, StringValue, String> theInputControl) {
 		theInputControl.addListener( new IVerificationListener<String>() {
 
 			@Override
