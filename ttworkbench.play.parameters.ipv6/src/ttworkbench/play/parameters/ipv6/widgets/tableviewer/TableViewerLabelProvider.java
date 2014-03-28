@@ -78,7 +78,7 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 			out = getCellText( ( (IParameter<?>) obj).getValue());
 		}
 		else if (obj instanceof EObject) {
-			out = CLTextGenerator.getFormattedText( (EObject) obj, ManagementPlugin.getRepositoryView());
+			out = CLTextGenerator.getUnformattedText( (EObject) obj, ManagementPlugin.getRepositoryView());
 		}
 		else {
 			out = String.valueOf( obj);

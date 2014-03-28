@@ -121,7 +121,12 @@ public class EnumEditor<T extends Expression> extends ValidatingEditor<T> {
 				for (Entry<String, T> entry : availableValues.entrySet()) {
 					String key = entry.getKey();
 					T value = entry.getValue();
-					if(currentValue!=null && currentValue.getTheName().getTheName().equals( value.getTheName().getTheName())) {
+					if(currentValue!=null &&
+						currentValue.getTheName()!=null &&
+						currentValue.getTheName().getTheName()!=null &&
+						value!=null && value.getTheName()!=null &&
+						currentValue.getTheName().getTheName().equals( value.getTheName().getTheName())
+					) {
 						radios.get( key).setSelection( true);
 					}
 				}
@@ -155,7 +160,12 @@ public class EnumEditor<T extends Expression> extends ValidatingEditor<T> {
 				for (Entry<String, T> entry : availableValues.entrySet()) {
 					String key = entry.getKey();
 					T value = entry.getValue();
-					if(currentValue!=null && currentValue.getTheName().getTheName().equals( value.getTheName().getTheName())) {
+					if(currentValue!=null &&
+						currentValue.getTheName()!=null &&
+						currentValue.getTheName().getTheName()!=null &&
+						value!=null && value.getTheName()!=null &&
+						currentValue.getTheName().getTheName().equals( value.getTheName().getTheName())
+					) {
 						enumCombo.setText( key);
 					}
 				}
