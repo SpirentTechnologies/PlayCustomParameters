@@ -32,6 +32,7 @@ import org.eclipse.swt.graphics.Image;
 
 import com.testingtech.ttworkbench.metamodel.muttcn.generator.CLTextGenerator;
 import com.testingtech.ttworkbench.ttman.ManagementPlugin;
+import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 
@@ -71,12 +72,25 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 	public String getColumnText(Object element, int columnIndex) {
 		IParameterEditor<?> editor = (IParameterEditor<?>) element;
 		Object value = registeredColumns.get( columnIndex).valueOf( editor);
-		if (value instanceof EObject) {
-			return CLTextGenerator.getUnformattedText( (EObject) value, ManagementPlugin.getRepositoryView());
+		return getCellText(value);
+	}
+	
+	
+	public static String getCellText(Object obj) {
+		String out = null;
+		if (obj instanceof IParameter<?>) {
+			out = getCellText( ( (IParameter<?>) obj).getValue());
+		}
+		else if (obj instanceof EObject) {
+			out = CLTextGenerator.getFormattedText( (EObject) obj, ManagementPlugin.getRepositoryView());
 		}
 		else {
-			return String.valueOf( value);
+			out = String.valueOf( obj);
 		}
+		if(out.startsWith( "\"") && out.endsWith( "\"")) {
+			out = out.substring( 1, out.length()-1);
+		}
+		return out;
 	}
 
 	/**

@@ -58,7 +58,8 @@ public abstract class CellParameterEditor<T extends Value> extends DialogCellEdi
 	protected Control createContents(Composite cell) {
 		if(SHOW_ONLY_VALUE_IN_TABLE) {
 			Label label = new Label(cell, SWT.NONE);
-			label.setText( String.valueOf( getEditor().getParameter().getValue()));
+			String value = TableViewerLabelProvider.getCellText( getEditor().getParameter().getValue());
+			label.setText( value);
 			return label;
 		}
 		else {
@@ -118,10 +119,7 @@ public abstract class CellParameterEditor<T extends Value> extends DialogCellEdi
 		IParameterEditor<T> editor = getEditor();
 		
 		Dialog dialog = new CellParameterEditorDialog(cellEditorWindow.getShell(), editor);
-		if (dialog.open() == Window.OK) {
-			return editor.getParameter().getValue();
-		} else {
-			return null;
-		}
+		dialog.open();
+		return editor.getParameter().getValue();
 	}
 }

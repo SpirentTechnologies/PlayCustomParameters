@@ -63,7 +63,9 @@ public class WidgetTableViewerAdvancedControl extends WidgetTableViewerControl {
 				if(obj instanceof IParameterEditor<?>) {
 					IParameterEditor<?> editor = (IParameterEditor<?>) obj;
 					checkCellListener(editor);
-					cell.setText( String.valueOf( coldef.columnType.valueOf( editor)));
+					Object editorValue = coldef.columnType.valueOf( editor);
+					String value = TableViewerLabelProvider.getCellText( editorValue);
+					cell.setText( value);
 				}
 			}
 		});

@@ -26,6 +26,8 @@ import java.math.BigInteger;
 
 import org.etsi.ttcn.tci.UniversalCharValue;
 
+import ttworkbench.play.parameters.ipv6.widgets.tableviewer.TableViewerLabelProvider;
+
 import com.testingtech.muttcn.expressions.ValueExpression;
 import com.testingtech.muttcn.kernel.Expression;
 import com.testingtech.muttcn.values.BitStringValue;
@@ -51,9 +53,9 @@ import com.testingtech.muttcn.values.TupleValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class ParameterValueUtil {
-	
+  private static final boolean USE_TABLE_VIEWER_LABEL = true;
 
-  public static String getValue( final IParameter<?> theParameter) {
+	public static String getValue( final IParameter<?> theParameter) {
   	return getValue( theParameter.getValue());
   }
   public static String getDefaultValue( final IParameter<?> theParameter) {
@@ -61,6 +63,9 @@ public class ParameterValueUtil {
   }
   
   private static String getValue( final Object value) {
+  	if ( USE_TABLE_VIEWER_LABEL) {
+  		return TableViewerLabelProvider.getCellText( value);
+  	}
   	
    	if ( value instanceof BitStringValue) // extends StringValue
   		return ( (BitStringValue) value).getTheContent();  // untested
@@ -72,7 +77,7 @@ public class ParameterValueUtil {
   		return ( (CharStringValue) value).getTheContent();  // untested  	 	
 
    	if ( value instanceof ConstantValue) // extends Attribute
-  		return ( (ConstantValue) value).getTheName().toString();  // untested 
+  		return ( (ConstantValue) value).getTheName().getTheName();  // untested 
    	
    	if ( value instanceof Constraint) 
   		return ( (Constraint) value).getTheName().toString();  // untested 
