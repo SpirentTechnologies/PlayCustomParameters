@@ -51,7 +51,9 @@ import com.testingtech.muttcn.values.TupleValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class ParameterValueUtil {
-  private static final boolean USE_TABLE_VIEWER_LABEL = true;
+  
+	// only for test reasons
+	private static final boolean USE_TABLE_VIEWER_LABEL = false;
 
 	public static String getValue( final IParameter<?> theParameter) {
   	return getValue( theParameter.getValue());
