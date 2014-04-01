@@ -1,126 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.5" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
   realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
-  <class id="1" language="java" name="ttworkbench.play.parameters.ipv6.validators.AbstractValidator" 
+  <interface id="1" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IRegistryListener" 
     project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/AbstractValidator.java" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/components/registry/IRegistryListener.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="246" y="148"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="false" static="true"/>    
-    </display>  
-  </class>  
-  <class id="2" language="java" name="ttworkbench.play.parameters.ipv6.validators.ContextualValidator" 
-    project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/ContextualValidator.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="245" y="500"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="false" static="true"/>    
-    </display>  
-  </class>  
-  <interface id="3" language="java" name="ttworkbench.play.parameters.ipv6.validators.IValidatorContext" 
-    project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/IValidatorContext.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="689" y="500"/>    
+    <position height="-1" width="-1" x="140" y="310"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="4" language="java" name="ttworkbench.play.parameters.ipv6.validators.MacAddressValidator" 
+  <interface id="2" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry" 
     project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/MacAddressValidator.java" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/components/registry/IMessageRegistry.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="-195" y="148"/>    
+    <position height="-1" width="-1" x="567" y="54"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
-  </class>  
-  <class id="5" language="java" name="ttworkbench.play.parameters.ipv6.validators.SimpleValidatorContext" 
+  </interface>  
+  <interface id="3" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation" 
     project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/SimpleValidatorContext.java" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/components/registry/IMessageInformation.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="689" y="738"/>    
+    <position height="-1" width="-1" x="567" y="310"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
-  </class>  
-  <class id="6" language="java" name="ttworkbench.play.parameters.ipv6.validators.ValueLengthValidator" 
+  </interface>  
+  <interface id="4" language="java" name="ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageLabel" 
     project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/ValueLengthValidator.java" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/controls/IMessageLabel.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="-164" y="719"/>    
+    <position height="-1" width="-1" x="-249" y="595"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
-  </class>  
-  <class id="7" language="java" name="ttworkbench.play.parameters.ipv6.validators.VisibilityToggleValidator" 
+  </interface>  
+  <interface id="5" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer" 
     project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/VisibilityToggleValidator.java" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/controls/IMessageContainer.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="-164" y="498"/>    
+    <position height="-1" width="-1" x="567" y="595"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
-  </class>  
-  <class id="8" language="java" name="ttworkbench.play.parameters.ipv6.validators.DisjunctionValidator" 
+  </interface>  
+  <interface id="6" language="java" name="ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHydra" 
     project="ttworkbench.play.parameters.ipv6" 
-    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/validators/DisjunctionValidator.java" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/controls/IMessageHydra.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="248" y="719"/>    
+    <position height="-1" width="-1" x="139" y="595"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
-  </class>  
-  <generalization id="9">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <realization id="10">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="3"/>  
-  </realization>  
-  <association id="11">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="12" name="context"/>      
-      <multiplicity id="13" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="14">    
+  </interface>  
+  <interface id="7" language="java" name="ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/views/IMessageView.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="986" y="310"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <dependency id="8">    
     <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="15">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="16">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <generalization id="17">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="9">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="12">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="false" static="true"/>    
