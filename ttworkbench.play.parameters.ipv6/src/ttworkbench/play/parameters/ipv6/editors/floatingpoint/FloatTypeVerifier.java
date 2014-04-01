@@ -20,16 +20,12 @@
 package ttworkbench.play.parameters.ipv6.editors.floatingpoint;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
-
-import org.apache.xalan.xsltc.compiler.Pattern;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;

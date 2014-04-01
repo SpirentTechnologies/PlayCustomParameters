@@ -32,13 +32,11 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 
 import ttworkbench.play.parameters.ipv6.components.design.ComponentState;
 import ttworkbench.play.parameters.ipv6.components.design.ControlState;
 import ttworkbench.play.parameters.ipv6.components.design.ControlStateFlag;
-import ttworkbench.play.parameters.ipv6.components.design.EditorState;
 import ttworkbench.play.parameters.ipv6.components.design.WidgetState;
 import ttworkbench.play.parameters.ipv6.components.design.WidgetStateFlag;
 

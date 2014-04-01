@@ -20,13 +20,12 @@
 package ttworkbench.play.parameters.ipv6.editors.string;
 
 import java.util.Arrays;
-import java.util.Locale;
-
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
+
+import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class SimpleRegexVerifier implements IVerifier<String> {
 	

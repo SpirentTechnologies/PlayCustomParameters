@@ -23,7 +23,6 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public interface IMessageInformation {

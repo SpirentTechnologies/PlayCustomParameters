@@ -20,11 +20,13 @@
 package ttworkbench.play.parameters.ipv6.widgets.grid;
 
 import java.util.Collection;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 
 public class WidgetGridControl {

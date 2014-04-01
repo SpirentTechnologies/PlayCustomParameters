@@ -20,6 +20,7 @@
 package ttworkbench.play.parameters.ipv6.components.messaging.components.registry;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageLabel;
+
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class RegistryEvent {

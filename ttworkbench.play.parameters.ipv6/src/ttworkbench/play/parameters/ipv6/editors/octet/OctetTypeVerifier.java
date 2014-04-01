@@ -19,23 +19,17 @@
  ******************************************************************************/
 package ttworkbench.play.parameters.ipv6.editors.octet;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.omg.CORBA.UNKNOWN;
 
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
-
-import de.tu_berlin.cs.uebb.muttcn.runtime.Default;
 
 public class OctetTypeVerifier implements IVerifier<String> {
 

@@ -19,9 +19,7 @@
  ******************************************************************************/
 package ttworkbench.play.parameters.ipv6.editors.string;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -34,18 +32,13 @@ import org.eclipse.swt.widgets.Text;
 import ttworkbench.play.parameters.ipv6.common.ParameterValueUtil;
 import ttworkbench.play.parameters.ipv6.customize.IValidatingEditorLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.editors.VerifyingEditor;
-import ttworkbench.play.parameters.ipv6.editors.octet.OctetRangeVerifier;
-import ttworkbench.play.parameters.ipv6.editors.octet.OctetType;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerificationListener;
-import ttworkbench.play.parameters.ipv6.editors.verification.IVerifier;
 import ttworkbench.play.parameters.ipv6.editors.verification.IVerifyingControl;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationEvent;
 import ttworkbench.play.parameters.ipv6.editors.verification.VerificationResult;
 import ttworkbench.play.parameters.ipv6.editors.verification.widgets.VerifyingText;
 
 import com.testingtech.muttcn.values.CharStringValue;
-import com.testingtech.muttcn.values.OctetStringValue;
-import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 
 public class StringEditor extends VerifyingEditor<Text,CharStringValue> {

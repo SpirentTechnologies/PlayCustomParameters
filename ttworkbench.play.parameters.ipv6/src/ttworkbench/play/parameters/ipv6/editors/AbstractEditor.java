@@ -41,7 +41,6 @@ import ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageCo
 import ttworkbench.play.parameters.ipv6.customize.IEditorLookAndBehaviour;
 
 import com.testingtech.muttcn.kernel.Expression;
-import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.ttworkbench.ttman.parameters.api.IConfiguration;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;

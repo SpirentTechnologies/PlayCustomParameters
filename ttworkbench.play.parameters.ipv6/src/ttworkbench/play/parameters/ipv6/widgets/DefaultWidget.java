@@ -24,10 +24,9 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
-import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerAdvancedControl;
 import ttworkbench.play.parameters.ipv6.widgets.tableviewer.ParameterEditorColumnType;
+import ttworkbench.play.parameters.ipv6.widgets.tableviewer.WidgetTableViewerAdvancedControl;
 
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 

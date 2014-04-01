@@ -33,14 +33,9 @@ import org.eclipse.swt.widgets.Control;
 import ttworkbench.play.parameters.ipv6.common.Globals;
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
 import ttworkbench.play.parameters.ipv6.editors.AbstractEditor;
-import org.eclipse.ui.part.WorkbenchPart;
 
-import com.testingtech.ttworkbench.core.ui.CommonImages;
-import com.testingtech.ttworkbench.core.ui.ComposedImageDescriptor;
-import com.testingtech.ttworkbench.core.ui.CommonImages.CommonImage;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameterEditor;
 import com.testingtech.ttworkbench.ttman.parameters.api.IWidget;
-import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class WidgetUtil {
 	

@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Control;
 
-import com.testingtech.muttcn.kernel.Expression;
-
 import ttworkbench.play.parameters.ipv6.common.IParameterControl;
+
+import com.testingtech.muttcn.kernel.Expression;
 
 public interface IVerifyingControl<C extends Control, P extends Expression, T> extends IParameterControl<C, P> {
 

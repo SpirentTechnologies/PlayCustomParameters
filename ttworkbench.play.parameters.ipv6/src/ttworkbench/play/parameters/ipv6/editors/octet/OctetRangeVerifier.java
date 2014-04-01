@@ -19,12 +19,10 @@
  ******************************************************************************/
 package ttworkbench.play.parameters.ipv6.editors.octet;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 

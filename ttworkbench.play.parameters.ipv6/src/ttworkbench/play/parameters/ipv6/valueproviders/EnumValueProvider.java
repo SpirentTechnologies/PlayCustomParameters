@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.NotImplementedException;
+
 import com.testingtech.muttcn.compilerkernel.Name;
 import com.testingtech.muttcn.compilerkernel.impl.NameImpl;
 import com.testingtech.muttcn.kernel.Element;

@@ -22,8 +22,6 @@ package ttworkbench.play.parameters.ipv6.validators;
 import java.util.ArrayList;
 import java.util.List;
 
-import ttworkbench.play.parameters.ipv6.validators.FibValidator.ParameterKey;
-
 import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;

@@ -38,6 +38,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.MessageBlock.RegisterDirective;
 import ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation;
@@ -50,6 +51,7 @@ import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessagePop
 import ttworkbench.play.parameters.ipv6.components.messaging.data.MessageRecord;
 import ttworkbench.play.parameters.ipv6.customize.DefaultMessageViewLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IMessageViewLookAndBehaviour;
+
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 public class EditorMessageDisplay extends Composite implements IMessageView<Composite> {

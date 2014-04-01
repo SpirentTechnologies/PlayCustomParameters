@@ -20,8 +20,8 @@
 package ttworkbench.play.parameters.ipv6.composer;
 
 import ttworkbench.play.parameters.ipv6.ParameterMap;
-import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.editors.ValidatingEditor;
+import ttworkbench.play.parameters.ipv6.editors.integer.IntegerEditor;
 import ttworkbench.play.parameters.ipv6.validators.FibValidator;
 import ttworkbench.play.parameters.ipv6.validators.FibValidator_ERRORS;
 import ttworkbench.play.parameters.ipv6.validators.FibValidator_NUMBER;

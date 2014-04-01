@@ -35,7 +35,6 @@ import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageCha
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageChangeListener;
 import ttworkbench.play.parameters.ipv6.components.messaging.controls.MessageLabel;
 
-
 import com.testingtech.ttworkbench.ttman.parameters.validation.ErrorKind;
 
 /**

@@ -20,6 +20,7 @@
 package ttworkbench.play.parameters.ipv6.widgets;
 
 import org.eclipse.swt.graphics.Image;
+
 import ttworkbench.play.parameters.ipv6.customize.DefaultWidgetLookAndBehaviour;
 import ttworkbench.play.parameters.ipv6.customize.IWidgetLookAndBehaviour;
 

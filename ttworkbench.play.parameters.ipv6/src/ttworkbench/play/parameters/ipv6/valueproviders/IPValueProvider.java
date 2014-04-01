@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.testingtech.muttcn.kernel.Value;
 import com.testingtech.muttcn.values.StringValue;
 import com.testingtech.muttcn.values.impl.StringValueImpl;
 import com.testingtech.ttworkbench.ttman.parameters.api.IParameter;

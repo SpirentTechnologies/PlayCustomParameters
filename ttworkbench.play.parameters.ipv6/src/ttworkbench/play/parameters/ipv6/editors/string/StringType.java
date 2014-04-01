@@ -19,7 +19,6 @@
  ******************************************************************************/
 package ttworkbench.play.parameters.ipv6.editors.string;
 
-import java.math.BigInteger;
 
 
 /**
