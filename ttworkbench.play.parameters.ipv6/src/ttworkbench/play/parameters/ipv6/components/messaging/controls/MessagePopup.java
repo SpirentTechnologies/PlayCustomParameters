@@ -262,7 +262,6 @@ public class MessagePopup extends Composite implements IMessageContainer {
 		}
 		setSize( computeSize( SWT.DEFAULT, SWT.DEFAULT));
 		layout( true);
-		//System.out.println( label.getBounds() + "  " + this.getParent().getParent().getClass().getSimpleName());
 	}
 
 	public void setLabelTextFormat(String theLabelTextFormat) {

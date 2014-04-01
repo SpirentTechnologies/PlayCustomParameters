@@ -64,7 +64,6 @@ public class MessageLabel extends Composite implements IMessageLabel {
 		setDefaultLayoutData();
 		label = createLabel();
 	  setMessage( getMessage(), getErrorKind());
-	  //System.out.println( String.format( "MessageLabel@%d( %s)",hashCode(), messageRecord.toString()));
 	}
 	
 	private void setDefaultLayoutData() {
@@ -136,7 +135,6 @@ public class MessageLabel extends Composite implements IMessageLabel {
 
 	@Override
 	public void navigateToCauser() {
-		System.out.println( "Causer: " + messageRecord.causer);
 		if ( messageRecord.causer != null)
 			focusBestEditorForCauser();
 	}
