@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.5" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <interface id="1" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IRegistryListener" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/components/registry/IRegistryListener.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="140" y="310"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="2" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageRegistry" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/components/registry/IMessageRegistry.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="567" y="54"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="3" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.components.registry.IMessageInformation" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/components/registry/IMessageInformation.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="567" y="310"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="4" language="java" name="ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageLabel" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/controls/IMessageLabel.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-249" y="595"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="5" language="java" 
+    name="ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageContainer" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/controls/IMessageContainer.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="567" y="595"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="6" language="java" name="ttworkbench.play.parameters.ipv6.components.messaging.controls.IMessageHydra" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/controls/IMessageHydra.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="139" y="595"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="7" language="java" name="ttworkbench.play.parameters.ipv6.components.messaging.views.IMessageView" 
+    project="ttworkbench.play.parameters.ipv6" 
+    file="/ttworkbench.play.parameters.ipv6/src/ttworkbench/play/parameters/ipv6/components/messaging/views/IMessageView.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="986" y="310"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="9">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="12">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="false" static="true"/>    
+    <operations public="true" package="true" protected="true" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
